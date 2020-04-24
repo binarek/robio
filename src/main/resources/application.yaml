@@ -1,1 +1,6 @@
-
+spring:
+  datasource:
+    url: jdbc:postgresql:robio
+    username: robio
+    password: robio
+    driverClassName: org.postgresql.Driver
