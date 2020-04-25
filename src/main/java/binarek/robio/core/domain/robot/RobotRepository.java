@@ -8,4 +8,8 @@ public interface RobotRepository {
     Optional<Robot> getById(UUID id);
 
     Robot insert(Robot robot);
+
+    Robot insertOrUpdate(Robot entity);
+
+    boolean delete(UUID entityId);
 }
