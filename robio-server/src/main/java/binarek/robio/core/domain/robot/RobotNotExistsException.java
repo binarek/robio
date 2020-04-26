@@ -4,9 +4,9 @@ import binarek.robio.common.domain.DomainException;
 
 import java.util.UUID;
 
-public class RobotNotExistException extends DomainException {
+public class RobotNotExistsException extends DomainException {
 
-    public RobotNotExistException(UUID id) {
+    public RobotNotExistsException(UUID id) {
         super("Robot with id " + id + " does not exist");
     }
 }

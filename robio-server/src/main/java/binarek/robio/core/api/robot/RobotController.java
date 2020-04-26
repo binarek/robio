@@ -2,8 +2,7 @@ package binarek.robio.core.api.robot;
 
 import binarek.robio.core.domain.robot.ImmutableRobot;
 import binarek.robio.core.domain.robot.Robot;
-import binarek.robio.core.domain.robot.RobotNotExistException;
-import binarek.robio.core.domain.robot.RobotRepository;
+import binarek.robio.core.domain.robot.RobotService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -12,32 +11,29 @@ import java.util.UUID;
 @RequestMapping("/robots")
 public class RobotController {
 
-    private final RobotRepository robotRepository;
+    private final RobotService robotService;
 
-    public RobotController(RobotRepository robotRepository) {
-        this.robotRepository = robotRepository;
+    public RobotController(RobotService robotService) {
+        this.robotService = robotService;
     }
 
     @GetMapping("/{id}")
     public Robot getRobot(@PathVariable UUID id) {
-        return robotRepository.getById(id)
-                .orElseThrow(() -> new RobotNotExistException(id));
+        return robotService.getRobot(id);
     }
 
     @PostMapping
     public Robot postRobot(@RequestBody Robot robot) {
-        return robotRepository.insert(robot);
+        return robotService.createRobot(robot);
     }
 
     @PutMapping("/{id}")
-    public Robot putRobot(@PathVariable UUID id, @RequestBody ImmutableRobot robot) {
-        return robotRepository.insertOrUpdate(robot.withId(id));
+    public Robot putRobot(@PathVariable UUID id, @RequestBody Robot robot) {
+        return robotService.saveRobot(ImmutableRobot.copyOf(robot).withId(id));
     }
 
     @DeleteMapping("/{id}")
     public void deleteRobot(@PathVariable UUID id) {
-        if (!robotRepository.delete(id)) {
-            throw new RobotNotExistException(id);
-        }
+        robotService.deleteRobot(id);
     }
 }
