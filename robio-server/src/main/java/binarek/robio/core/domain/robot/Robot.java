@@ -6,10 +6,13 @@ import org.immutables.value.Value;
 import org.springframework.lang.Nullable;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableRobot.class)
 public interface Robot extends DomainEntity {
+
+    UUID getTeamId();
 
     @Nullable
     BigDecimal getWeight();

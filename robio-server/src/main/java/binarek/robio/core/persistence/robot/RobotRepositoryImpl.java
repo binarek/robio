@@ -31,6 +31,11 @@ public class RobotRepositoryImpl implements RobotRepository {
     }
 
     @Override
+    public boolean existsByName(String name) {
+        return robotTableHelper.existsByName(name);
+    }
+
+    @Override
     public boolean existsByIdOrName(@Nullable UUID id, String name) {
         return robotTableHelper.existsByExternalIdOrName(id, name);
     }

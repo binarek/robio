@@ -9,11 +9,13 @@ public interface RobotRepository {
 
     Optional<Robot> getById(UUID id);
 
+    boolean existsByName(String name);
+
     boolean existsByIdOrName(@Nullable UUID id, String name);
 
     Robot insert(Robot robot);
 
-    Robot insertOrUpdate(Robot entity);
+    Robot insertOrUpdate(Robot robot);
 
-    boolean delete(UUID entityId);
+    boolean delete(UUID robot);
 }

@@ -1,10 +1,6 @@
 package binarek.robio.common.persistence;
 
-import org.jooq.DSLContext;
-import org.jooq.Field;
-import org.jooq.Table;
-import org.jooq.UpdatableRecord;
-import org.jooq.impl.DSL;
+import org.jooq.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.Nullable;
@@ -62,15 +58,20 @@ public class DomainEntityTableHelper<R extends UpdatableRecord<R>> {
         return Optional.ofNullable(dsl.fetchOne(table, externalIdField.eq(externalId)));
     }
 
+    public boolean existsByExternalId(UUID externalId) {
+        return existsByCondition(externalIdField.eq(externalId));
+    }
+
+    public boolean existsByName(String name) {
+        return existsByCondition(nameField.eq(name));
+    }
+
     public boolean existsByExternalIdOrName(@Nullable UUID externalId, String name) {
-        var existsCondition = DSL.exists(dsl.selectOne().from(table).where(nameField.eq(name)));
+        var condition = nameField.eq(name);
         if (externalId != null) {
-            existsCondition = existsCondition.and(externalIdField.eq(externalId));
+            condition = condition.and(externalIdField.eq(externalId));
         }
-        return dsl.select(DSL.val(1))
-                .from(table)
-                .where(existsCondition)
-                .execute() == 1;
+        return existsByCondition(condition);
     }
 
     private R store(R record, Consumer<R> updateRecord) {
@@ -80,5 +81,12 @@ public class DomainEntityTableHelper<R extends UpdatableRecord<R>> {
         }
         record.store();
         return record;
+    }
+
+    private boolean existsByCondition(Condition condition) {
+        return dsl.selectOne()
+                .from(table)
+                .where(condition)
+                .fetchOne() != null;
     }
 }
