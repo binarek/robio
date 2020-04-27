@@ -1,6 +1,7 @@
 package binarek.robio.core.domain.team;
 
 import binarek.robio.common.domain.DomainEntityDetailsLevel;
+import binarek.robio.common.domain.DomainEntityServiceHelper;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -8,35 +9,27 @@ import java.util.UUID;
 @Service
 public class TeamService {
 
-    private final TeamRepository teamRepository;
+    private final DomainEntityServiceHelper<Team, TeamBasicInfo> serviceHelper;
 
     public TeamService(TeamRepository teamRepository) {
-        this.teamRepository = teamRepository;
+        this.serviceHelper = new DomainEntityServiceHelper<>(teamRepository,
+                TeamNotExistsException::new, TeamAlreadyExistsException::new);
     }
 
     public Team createTeam(Team team) {
-        if (teamRepository.existsByIdOrName(team.getId(), team.getName())) {
-            throw new TeamAlreadyExistsException(team.getId(), team.getName());
-        }
-        return teamRepository.insert(team);
+        return serviceHelper.createEntity(team);
     }
 
     public Team saveTeam(Team team) {
-        if (team.getId() == null && teamRepository.existsByName(team.getName())) {
-            throw new TeamAlreadyExistsException(team.getId(), team.getName());
-        }
-        return teamRepository.insertOrUpdate(team);
+        return serviceHelper.saveEntity(team);
     }
 
     public void deleteTeam(UUID id) {
-        if (!teamRepository.delete(id)) {
-            throw new TeamNotExistsException(id);
-        }
+        serviceHelper.deleteEntity(id);
     }
 
-    public <T extends TeamBasicInfo> T getTeam(UUID id, DomainEntityDetailsLevel domainEntityDetailsLevel, Class<T> resultType) {
-        return teamRepository.getById(id, domainEntityDetailsLevel)
-                .map(resultType::cast)
-                .orElseThrow(() -> new TeamNotExistsException(id));
+    @SuppressWarnings("unchecked")
+    public <T extends TeamBasicInfo> T getTeam(UUID id, DomainEntityDetailsLevel detailsLevel, Class<? extends T> resultType) {
+        return (T) serviceHelper.getEntity(id, detailsLevel, resultType);
     }
 }

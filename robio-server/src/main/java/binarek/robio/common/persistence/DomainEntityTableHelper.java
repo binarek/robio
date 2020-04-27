@@ -31,16 +31,16 @@ public class DomainEntityTableHelper<R extends UpdatableRecord<R>> {
         this.nameField = (Field<String>) Objects.requireNonNull(table.field(NAME_FIELD));
     }
 
-    public R insert(Consumer<R> updateRecord) {
-        return store(dsl.newRecord(table), updateRecord);
+    public R insert(Consumer<R> setRecordValues) {
+        return store(dsl.newRecord(table), setRecordValues);
     }
 
-    public R insertOrUpdate(@Nullable UUID externalId, Consumer<R> updateRecord) {
+    public R insertOrUpdate(@Nullable UUID externalId, Consumer<R> setRecordValues) {
         var record = dsl.fetchOne(table, externalIdField.eq(externalId));
         if (record != null) {
-            return store(record, updateRecord);
+            return store(record, setRecordValues);
         } else {
-            return store(dsl.newRecord(table), updateRecord);
+            return store(dsl.newRecord(table), setRecordValues);
         }
     }
 

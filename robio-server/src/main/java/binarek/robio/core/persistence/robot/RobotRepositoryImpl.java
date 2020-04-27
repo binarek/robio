@@ -1,5 +1,6 @@
 package binarek.robio.core.persistence.robot;
 
+import binarek.robio.common.domain.DomainEntityDetailsLevel;
 import binarek.robio.common.persistence.DomainEntityTableHelper;
 import binarek.robio.core.domain.robot.Robot;
 import binarek.robio.core.domain.robot.RobotRepository;
@@ -25,7 +26,7 @@ public class RobotRepositoryImpl implements RobotRepository {
     }
 
     @Override
-    public Optional<Robot> getById(UUID id) {
+    public Optional<Robot> getById(UUID id, @Nullable DomainEntityDetailsLevel detailsLevel) {
         return robotTableHelper.getByExternalId(id)
                 .map(robotRecordMapper::toRobot);
     }

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-import static binarek.robio.common.api.ApiConsts.DEFAULT_DETAILS_LEVEL;
+import static binarek.robio.common.api.ApiUtil.DEFAULT_DETAILS_LEVEL;
 
 @RestController
 @RequestMapping("/teams")

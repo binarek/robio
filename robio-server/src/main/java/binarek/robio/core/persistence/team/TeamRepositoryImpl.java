@@ -39,12 +39,12 @@ public class TeamRepositoryImpl implements TeamRepository {
     }
 
     @Override
-    public Optional<TeamWithAssociations> getById(UUID id, DomainEntityDetailsLevel domainEntityDetailsLevel) {
+    public Optional<TeamWithAssociations> getById(UUID id, @Nullable DomainEntityDetailsLevel detailsLevel) {
         return teamTableHelper.getByExternalId(id)
                 .map(teamRecord -> teamRecordMapper.toTeam(
                         teamRecord,
-                        domainEntityDetailsLevel != BASIC ? fetchMembersRecords(teamRecord.getId()) : null,
-                        domainEntityDetailsLevel == FULL ? fetchRobotsIds(teamRecord.getExternalId()) : null));
+                        detailsLevel != BASIC ? fetchMembersRecords(teamRecord.getId()) : List.of(),
+                        detailsLevel == FULL ? fetchRobotsIds(teamRecord.getExternalId()) : List.of()));
     }
 
     @Override
@@ -66,14 +66,14 @@ public class TeamRepositoryImpl implements TeamRepository {
     public Team insert(Team team) {
         var teamRecord = teamTableHelper.insert(record -> teamRecordMapper.updateRecord(record, team));
         var teamMembers = insertTeamMembers(team.getMembers(), teamRecord.getId());
-        return teamRecordMapper.toTeam(teamRecord, teamMembers, null);
+        return teamRecordMapper.toTeam(teamRecord, teamMembers, List.of());
     }
 
     @Override
     public Team insertOrUpdate(Team team) {
         var teamRecord = teamTableHelper.insertOrUpdate(team.getId(), record -> teamRecordMapper.updateRecord(record, team));
         var teamMembers = insertTeamMembers(team.getMembers(), teamRecord.getId());
-        return teamRecordMapper.toTeam(teamRecord, teamMembers, null);
+        return teamRecordMapper.toTeam(teamRecord, teamMembers, List.of());
     }
 
     @Override
