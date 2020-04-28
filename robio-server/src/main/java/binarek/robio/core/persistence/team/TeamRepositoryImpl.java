@@ -9,6 +9,7 @@ import org.jooq.DSLContext;
 import org.jooq.Record1;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +35,7 @@ public class TeamRepositoryImpl implements TeamRepository {
                               TeamMemberRecordMapper teamMemberRecordMapper) {
         this.dsl = dsl;
         this.teamRecordMapper = teamRecordMapper;
-        this.teamTableHelper = new DomainEntityTableHelper<>(dsl, TEAM);
+        this.teamTableHelper = new DomainEntityTableHelper<>(dsl, TEAM, TeamChangedException::new);
         this.teamMemberRecordMapper = teamMemberRecordMapper;
     }
 
@@ -63,28 +64,31 @@ public class TeamRepositoryImpl implements TeamRepository {
     }
 
     @Override
+    @Transactional
     public Team insert(Team team) {
         var teamRecord = teamTableHelper.insert(record -> teamRecordMapper.updateRecord(record, team));
-        var teamMembers = insertTeamMembers(team.getMembers(), teamRecord.getId());
+        var teamMembers = insertMembers(team.getMembers(), teamRecord.getId());
         return teamRecordMapper.toTeam(teamRecord, teamMembers, List.of());
     }
 
     @Override
+    @Transactional
     public Team insertOrUpdate(Team team) {
         var teamRecord = teamTableHelper.insertOrUpdate(team.getId(), record -> teamRecordMapper.updateRecord(record, team));
-        var teamMembers = insertTeamMembers(team.getMembers(), teamRecord.getId());
+        var teamMembers = insertOrUpdateMembers(team.getMembers(), teamRecord.getId());
         return teamRecordMapper.toTeam(teamRecord, teamMembers, List.of());
     }
 
     @Override
-    public boolean delete(UUID id) {
+    @Transactional
+    public boolean deleteById(UUID id) {
+        deleteMembersByTeamExternalId(id);
         return teamTableHelper.deleteByExternalId(id);
     }
 
     private List<TeamMemberRecord> fetchMembersRecords(Long teamId) {
         return dsl.fetch(TEAM_MEMBER, TEAM_MEMBER.TEAM_ID.eq(teamId));
     }
-
 
     private List<UUID> fetchRobotsIds(UUID teamExternalId) {
         return dsl.select(ROBOT.EXTERNAL_ID)
@@ -94,7 +98,7 @@ public class TeamRepositoryImpl implements TeamRepository {
                 .map(Record1::value1);
     }
 
-    private List<TeamMemberRecord> insertTeamMembers(List<TeamMember> teamMembers, Long teamId) {
+    private List<TeamMemberRecord> insertMembers(List<TeamMember> teamMembers, Long teamId) {
         if (!teamMembers.isEmpty()) {
             var memberRecords = teamMembers.stream()
                     .map(member -> createRecord(member, teamId))
@@ -104,6 +108,25 @@ public class TeamRepositoryImpl implements TeamRepository {
         } else {
             return List.of();
         }
+    }
+
+    private List<TeamMemberRecord> insertOrUpdateMembers(List<TeamMember> teamMembers, Long teamId) {
+        deleteMembersByTeamId(teamId);
+        return insertMembers(teamMembers, teamId);
+    }
+
+    private void deleteMembersByTeamId(Long teamId) {
+        dsl.deleteFrom(TEAM_MEMBER)
+                .where(TEAM_MEMBER.TEAM_ID.eq(teamId))
+                .execute();
+    }
+
+    private void deleteMembersByTeamExternalId(UUID teamExternalId) {
+        dsl.deleteFrom(TEAM_MEMBER)
+                .where(TEAM_MEMBER.TEAM_ID.eq(
+                        dsl.select(TEAM.ID).from(TEAM).where(TEAM.EXTERNAL_ID.eq(teamExternalId))
+                ))
+                .execute();
     }
 
     private TeamMemberRecord createRecord(TeamMember teamMember, Long teamId) {

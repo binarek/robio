@@ -126,6 +126,7 @@
                                     <javaTimeTypes>true</javaTimeTypes>
                                 </generate>
                                 <database>
+                                    <recordVersionFields>VERSION</recordVersionFields>
                                     <name>org.jooq.meta.extensions.ddl.DDLDatabase</name>
                                     <inputCatalog></inputCatalog>
                                     <inputSchema>PUBLIC</inputSchema>

@@ -40,7 +40,9 @@ public class JooqConfiguration {
         DefaultConfiguration config = new DefaultConfiguration();
         config.set(connectionProvider);
         config.set(SQLDialect.POSTGRES);
-        config.set(new Settings().withRenderNameStyle(RenderNameStyle.AS_IS));
+        config.set(new Settings()
+                .withRenderNameStyle(RenderNameStyle.AS_IS)
+                .withExecuteWithOptimisticLocking(true));
         config.set(new DefaultExecuteListenerProvider(new JooqExceptionTranslator()));
         return config;
     }

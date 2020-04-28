@@ -1,6 +1,8 @@
 package binarek.robio.common.persistence;
 
+import binarek.robio.common.domain.DomainEntityChangedException;
 import org.jooq.*;
+import org.jooq.exception.DataChangedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.Nullable;
@@ -9,6 +11,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import static binarek.robio.common.persistence.DomainEntityRecordUtil.EXTERNAL_ID_FIELD;
 import static binarek.robio.common.persistence.DomainEntityRecordUtil.NAME_FIELD;
@@ -19,14 +22,18 @@ public class DomainEntityTableHelper<R extends UpdatableRecord<R>> {
 
     private final DSLContext dsl;
     private final Table<R> table;
+    private final Function<UUID, ? extends DomainEntityChangedException> buildChangedException;
 
     private final Field<UUID> externalIdField;
     private final Field<String> nameField;
 
     @SuppressWarnings("unchecked")
-    public DomainEntityTableHelper(DSLContext dsl, Table<R> table) {
+    public DomainEntityTableHelper(DSLContext dsl, Table<R> table,
+                                   Function<UUID, ? extends DomainEntityChangedException> buildChangedException) {
         this.dsl = dsl;
         this.table = table;
+        this.buildChangedException = buildChangedException;
+
         this.externalIdField = (Field<UUID>) Objects.requireNonNull(table.field(EXTERNAL_ID_FIELD));
         this.nameField = (Field<String>) Objects.requireNonNull(table.field(NAME_FIELD));
     }
@@ -79,7 +86,11 @@ public class DomainEntityTableHelper<R extends UpdatableRecord<R>> {
         if (record.get(externalIdField) == null) {
             record.set(externalIdField, UUID.randomUUID());
         }
-        record.store();
+        try {
+            record.store();
+        } catch (DataChangedException e) {
+            throw buildChangedException.apply((UUID) record.get(EXTERNAL_ID_FIELD));
+        }
         return record;
     }
 

@@ -2,6 +2,7 @@ CREATE TABLE robot
 (
     id bigserial PRIMARY KEY,
     external_id uuid UNIQUE NOT NULL,
+    version bigint NOT NULL,
     name varchar(100) UNIQUE NOT NULL,
     notes varchar(1000),
     weight numeric,
@@ -13,3 +14,5 @@ CREATE TABLE robot
 CREATE UNIQUE INDEX robot_external_id_idx ON robot (external_id);
 
 CREATE UNIQUE INDEX robot_name_idx ON robot (name);
+
+CREATE INDEX robot_version_idx ON robot (version);

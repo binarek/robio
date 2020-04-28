@@ -17,5 +17,5 @@ public interface DomainEntityRepository<E extends DomainEntity> {
 
     E insertOrUpdate(E team);
 
-    boolean delete(UUID id);
+    boolean deleteById(UUID id);
 }

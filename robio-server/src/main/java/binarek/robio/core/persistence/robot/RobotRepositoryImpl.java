@@ -3,6 +3,7 @@ package binarek.robio.core.persistence.robot;
 import binarek.robio.common.domain.DomainEntityDetailsLevel;
 import binarek.robio.common.persistence.DomainEntityTableHelper;
 import binarek.robio.core.domain.robot.Robot;
+import binarek.robio.core.domain.robot.RobotChangedException;
 import binarek.robio.core.domain.robot.RobotRepository;
 import binarek.robio.db.tables.records.RobotRecord;
 import org.jooq.DSLContext;
@@ -17,12 +18,14 @@ import static binarek.robio.db.tables.Robot.ROBOT;
 @Repository
 public class RobotRepositoryImpl implements RobotRepository {
 
+    private final DSLContext dsl;
     private final RobotRecordMapper robotRecordMapper;
     private final DomainEntityTableHelper<RobotRecord> robotTableHelper;
 
     public RobotRepositoryImpl(DSLContext dsl, RobotRecordMapper robotRecordMapper) {
+        this.dsl = dsl;
         this.robotRecordMapper = robotRecordMapper;
-        this.robotTableHelper = new DomainEntityTableHelper<>(dsl, ROBOT);
+        this.robotTableHelper = new DomainEntityTableHelper<>(dsl, ROBOT, RobotChangedException::new);
     }
 
     @Override
@@ -55,7 +58,12 @@ public class RobotRepositoryImpl implements RobotRepository {
     }
 
     @Override
-    public boolean delete(UUID id) {
+    public boolean deleteById(UUID id) {
         return robotTableHelper.deleteByExternalId(id);
+    }
+
+    @Override
+    public boolean existsByTeamId(UUID teamId) {
+        return dsl.selectOne().from(ROBOT).where(ROBOT.TEAM_ID.eq(teamId)).fetchOne() != null;
     }
 }

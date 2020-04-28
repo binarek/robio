@@ -39,7 +39,7 @@ public class DomainEntityServiceHelper<E extends DomainEntity, ME extends Domain
     }
 
     public void deleteEntity(UUID id) {
-        if (!entityRepository.delete(id)) {
+        if (!entityRepository.deleteById(id)) {
             throw buildNotExistsException.apply(id);
         }
     }

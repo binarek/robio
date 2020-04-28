@@ -1,6 +1,7 @@
-package binarek.robio.core.api;
+package binarek.robio.common.api;
 
 import binarek.robio.common.domain.DomainEntityAlreadyExistsException;
+import binarek.robio.common.domain.DomainEntityChangedException;
 import binarek.robio.common.domain.DomainEntityNotExistsException;
 import binarek.robio.common.domain.DomainException;
 import org.springframework.http.ResponseEntity;
@@ -27,5 +28,10 @@ public class DefaultExceptionHandler implements ProblemHandling {
     @ExceptionHandler(DomainEntityAlreadyExistsException.class)
     public ResponseEntity<Problem> handleDomainEntityAlreadyExistsException(Exception exception, NativeWebRequest request) {
         return create(Status.BAD_REQUEST, exception, request);
+    }
+
+    @ExceptionHandler(DomainEntityChangedException.class)
+    public ResponseEntity<Problem> handleDomainEntityChangedException(Exception exception, NativeWebRequest request) {
+        return create(Status.CONFLICT, exception, request);
     }
 }

@@ -9,6 +9,9 @@ public interface DomainEntity {
     @Nullable
     UUID getId();
 
+    @Nullable
+    Long getVersion();
+
     String getName();
 
     @Nullable

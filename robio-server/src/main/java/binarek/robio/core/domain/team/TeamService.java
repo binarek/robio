@@ -2,6 +2,7 @@ package binarek.robio.core.domain.team;
 
 import binarek.robio.common.domain.DomainEntityDetailsLevel;
 import binarek.robio.common.domain.DomainEntityServiceHelper;
+import binarek.robio.core.domain.robot.RobotRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -10,10 +11,12 @@ import java.util.UUID;
 public class TeamService {
 
     private final DomainEntityServiceHelper<Team, TeamBasicInfo> serviceHelper;
+    private final RobotRepository robotRepository;
 
-    public TeamService(TeamRepository teamRepository) {
+    public TeamService(TeamRepository teamRepository, RobotRepository robotRepository) {
         this.serviceHelper = new DomainEntityServiceHelper<>(teamRepository,
                 TeamNotExistsException::new, TeamAlreadyExistsException::new);
+        this.robotRepository = robotRepository;
     }
 
     public Team createTeam(Team team) {
@@ -25,6 +28,9 @@ public class TeamService {
     }
 
     public void deleteTeam(UUID id) {
+        if (robotRepository.existsByTeamId(id)) {
+            throw new TeamHasRobotsException(id);
+        }
         serviceHelper.deleteEntity(id);
     }
 
