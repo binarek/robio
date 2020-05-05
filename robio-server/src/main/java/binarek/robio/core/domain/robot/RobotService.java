@@ -1,7 +1,8 @@
 package binarek.robio.core.domain.robot;
 
+import binarek.robio.common.domain.DomainEntityNotExistsException;
 import binarek.robio.common.domain.DomainEntityServiceHelper;
-import binarek.robio.core.domain.team.TeamNotExistsException;
+import binarek.robio.core.domain.team.Team;
 import binarek.robio.core.domain.team.TeamRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +16,12 @@ public class RobotService {
 
     public RobotService(RobotRepository robotRepository, TeamRepository teamRepository) {
         this.teamRepository = teamRepository;
-        this.serviceHelper = new DomainEntityServiceHelper<>(robotRepository,
-                RobotNotExistsException::new, RobotAlreadyExistsException::new);
+        this.serviceHelper = new DomainEntityServiceHelper<>(robotRepository, Robot.ENTITY_NAME);
     }
 
     public Robot createRobot(Robot robot) {
         if (!teamRepository.existsById(robot.getTeamId())) {
-            throw new TeamNotExistsException(robot.getTeamId());
+            throw new DomainEntityNotExistsException(Team.ENTITY_NAME, robot.getTeamId());
         }
         return serviceHelper.createEntity(robot);
     }

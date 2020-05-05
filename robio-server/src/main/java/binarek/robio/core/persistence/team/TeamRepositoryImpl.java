@@ -2,7 +2,10 @@ package binarek.robio.core.persistence.team;
 
 import binarek.robio.common.domain.DomainEntityDetailsLevel;
 import binarek.robio.common.persistence.DomainEntityTableHelper;
-import binarek.robio.core.domain.team.*;
+import binarek.robio.core.domain.team.Team;
+import binarek.robio.core.domain.team.TeamMember;
+import binarek.robio.core.domain.team.TeamRepository;
+import binarek.robio.core.domain.team.TeamWithAssociations;
 import binarek.robio.db.tables.records.TeamMemberRecord;
 import binarek.robio.db.tables.records.TeamRecord;
 import org.jooq.DSLContext;
@@ -35,7 +38,7 @@ public class TeamRepositoryImpl implements TeamRepository {
                               TeamMemberRecordMapper teamMemberRecordMapper) {
         this.dsl = dsl;
         this.teamRecordMapper = teamRecordMapper;
-        this.teamTableHelper = new DomainEntityTableHelper<>(dsl, TEAM, TeamChangedException::new);
+        this.teamTableHelper = new DomainEntityTableHelper<>(dsl, TEAM, Team.ENTITY_NAME);
         this.teamMemberRecordMapper = teamMemberRecordMapper;
     }
 

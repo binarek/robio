@@ -14,8 +14,7 @@ public class TeamService {
     private final RobotRepository robotRepository;
 
     public TeamService(TeamRepository teamRepository, RobotRepository robotRepository) {
-        this.serviceHelper = new DomainEntityServiceHelper<>(teamRepository,
-                TeamNotExistsException::new, TeamAlreadyExistsException::new);
+        this.serviceHelper = new DomainEntityServiceHelper<>(teamRepository, Team.ENTITY_NAME);
         this.robotRepository = robotRepository;
     }
 

@@ -12,6 +12,8 @@ import java.util.UUID;
 @JsonDeserialize(as = ImmutableRobot.class)
 public interface Robot extends DomainEntity {
 
+    String ENTITY_NAME = "Robot";
+
     UUID getTeamId();
 
     @Nullable

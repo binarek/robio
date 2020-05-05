@@ -3,7 +3,6 @@ package binarek.robio.core.persistence.robot;
 import binarek.robio.common.domain.DomainEntityDetailsLevel;
 import binarek.robio.common.persistence.DomainEntityTableHelper;
 import binarek.robio.core.domain.robot.Robot;
-import binarek.robio.core.domain.robot.RobotChangedException;
 import binarek.robio.core.domain.robot.RobotRepository;
 import binarek.robio.db.tables.records.RobotRecord;
 import org.jooq.DSLContext;
@@ -25,7 +24,7 @@ public class RobotRepositoryImpl implements RobotRepository {
     public RobotRepositoryImpl(DSLContext dsl, RobotRecordMapper robotRecordMapper) {
         this.dsl = dsl;
         this.robotRecordMapper = robotRecordMapper;
-        this.robotTableHelper = new DomainEntityTableHelper<>(dsl, ROBOT, RobotChangedException::new);
+        this.robotTableHelper = new DomainEntityTableHelper<>(dsl, ROBOT, Robot.ENTITY_NAME);
     }
 
     @Override

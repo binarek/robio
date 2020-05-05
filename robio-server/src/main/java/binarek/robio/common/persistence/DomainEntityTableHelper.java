@@ -11,7 +11,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import static binarek.robio.common.persistence.DomainEntityRecordUtil.EXTERNAL_ID_FIELD;
 import static binarek.robio.common.persistence.DomainEntityRecordUtil.NAME_FIELD;
@@ -22,17 +21,16 @@ public class DomainEntityTableHelper<R extends UpdatableRecord<R>> {
 
     private final DSLContext dsl;
     private final Table<R> table;
-    private final Function<UUID, ? extends DomainEntityChangedException> buildChangedException;
+    private final String entityName;
 
     private final Field<UUID> externalIdField;
     private final Field<String> nameField;
 
     @SuppressWarnings("unchecked")
-    public DomainEntityTableHelper(DSLContext dsl, Table<R> table,
-                                   Function<UUID, ? extends DomainEntityChangedException> buildChangedException) {
+    public DomainEntityTableHelper(DSLContext dsl, Table<R> table, String entityName) {
         this.dsl = dsl;
         this.table = table;
-        this.buildChangedException = buildChangedException;
+        this.entityName = entityName;
 
         this.externalIdField = (Field<UUID>) Objects.requireNonNull(table.field(EXTERNAL_ID_FIELD));
         this.nameField = (Field<String>) Objects.requireNonNull(table.field(NAME_FIELD));
@@ -89,7 +87,7 @@ public class DomainEntityTableHelper<R extends UpdatableRecord<R>> {
         try {
             record.store();
         } catch (DataChangedException e) {
-            throw buildChangedException.apply((UUID) record.get(EXTERNAL_ID_FIELD));
+            throw new DomainEntityChangedException(entityName, (UUID) record.get(EXTERNAL_ID_FIELD));
         }
         return record;
     }
