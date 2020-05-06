@@ -4,14 +4,15 @@ import binarek.robio.core.domain.team.Team;
 import binarek.robio.core.domain.team.TeamWithAssociations;
 import binarek.robio.db.tables.records.TeamMemberRecord;
 import binarek.robio.db.tables.records.TeamRecord;
-import org.mapstruct.*;
+import binarek.robio.mapstruct.BaseMapperConfig;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 import java.util.List;
 import java.util.UUID;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.ERROR, nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT,
-        uses = TeamMemberRecordMapper.class,
-        injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+@Mapper(config = BaseMapperConfig.class, uses = TeamMemberRecordMapper.class)
 public interface TeamRecordMapper {
 
     @Mapping(target = "id", ignore = true)
