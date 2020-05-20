@@ -1,9 +1,7 @@
 package binarek.robio.core.api.team;
 
-import binarek.robio.common.domain.entity.EntityDetailsLevel;
-import binarek.robio.core.domain.team.Team;
+import binarek.robio.common.api.DetailsLevel;
 import binarek.robio.core.domain.team.TeamService;
-import binarek.robio.core.domain.team.TeamWithAssociations;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -16,26 +14,35 @@ import static binarek.robio.common.api.ApiUtil.validateEntityPutRequest;
 public class TeamController {
 
     private final TeamService teamService;
+    private final TeamDtoMapper teamDtoMapper;
 
-    public TeamController(TeamService teamService) {
+    public TeamController(TeamService teamService, TeamDtoMapper teamDtoMapper) {
         this.teamService = teamService;
+        this.teamDtoMapper = teamDtoMapper;
     }
 
     @GetMapping("/{id}")
-    public TeamWithAssociations getTeam(@PathVariable UUID id,
-                                        @RequestParam(defaultValue = DEFAULT_DETAILS_LEVEL) EntityDetailsLevel detailsLevel) {
-        return teamService.getTeam(id, detailsLevel, TeamWithAssociations.class);
+    public TeamDto getTeam(@PathVariable UUID id,
+                           @RequestParam(defaultValue = DEFAULT_DETAILS_LEVEL) DetailsLevel detailsLevel) {
+        if (detailsLevel == DetailsLevel.BASIC) {
+            return teamDtoMapper.toTeamDto(teamService.getTeamBasicInfo(id));
+        } else {
+            return teamDtoMapper.toTeamDto(
+                    teamService.getTeam(id),
+                    detailsLevel == DetailsLevel.FULL ? teamService.getTeamRobotsIds(id) : null);
+        }
     }
 
     @PostMapping
-    public Team postTeam(@RequestBody Team team) {
-        return teamService.createTeam(team);
+    public TeamDto postTeam(@RequestBody TeamDto teamDto) {
+        return teamDtoMapper.toTeamDto(teamService.createTeam(teamDtoMapper.toTeam(teamDto)));
     }
 
     @PutMapping("/{id}")
-    public Team putTeam(@PathVariable UUID id, @RequestBody Team team) {
+    public TeamDto putTeam(@PathVariable UUID id, @RequestBody TeamDto teamDto) {
+        var team = teamDtoMapper.toTeam(teamDto);
         validateEntityPutRequest(id, team);
-        return teamService.saveTeam(team);
+        return teamDtoMapper.toTeamDto(teamService.saveTeam(team));
     }
 
     @DeleteMapping("/{id}")

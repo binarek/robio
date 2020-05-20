@@ -1,11 +1,10 @@
 package binarek.robio.core.persistence.team;
 
-import binarek.robio.common.domain.entity.EntityDetailsLevel;
 import binarek.robio.common.persistence.EntityTableHelper;
 import binarek.robio.core.domain.team.Team;
+import binarek.robio.core.domain.team.TeamFetchLevel;
 import binarek.robio.core.domain.team.TeamMember;
 import binarek.robio.core.domain.team.TeamRepository;
-import binarek.robio.core.domain.team.TeamWithAssociations;
 import binarek.robio.db.tables.records.TeamMemberRecord;
 import binarek.robio.db.tables.records.TeamRecord;
 import org.jooq.DSLContext;
@@ -19,8 +18,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static binarek.robio.common.domain.entity.EntityDetailsLevel.BASIC;
-import static binarek.robio.common.domain.entity.EntityDetailsLevel.FULL;
 import static binarek.robio.db.tables.Robot.ROBOT;
 import static binarek.robio.db.tables.Team.TEAM;
 import static binarek.robio.db.tables.TeamMember.TEAM_MEMBER;
@@ -43,12 +40,11 @@ public class TeamRepositoryImpl implements TeamRepository {
     }
 
     @Override
-    public Optional<TeamWithAssociations> getById(UUID id, @Nullable EntityDetailsLevel detailsLevel) {
+    public Optional<Team> getById(UUID id, @Nullable TeamFetchLevel detailsLevel) {
         return teamTableHelper.getByExternalId(id)
                 .map(teamRecord -> teamRecordMapper.toTeam(
                         teamRecord,
-                        detailsLevel != BASIC ? fetchMembersRecords(teamRecord.getId()) : List.of(),
-                        detailsLevel == FULL ? fetchRobotsIds(teamRecord.getExternalId()) : List.of()));
+                        detailsLevel == TeamFetchLevel.TEAM ? fetchMembersRecords(teamRecord.getId()) : List.of()));
     }
 
     @Override
@@ -71,7 +67,7 @@ public class TeamRepositoryImpl implements TeamRepository {
     public Team insert(Team team) {
         var teamRecord = teamTableHelper.insert(record -> teamRecordMapper.updateRecord(record, team));
         var teamMembers = insertMembers(team.getMembers(), teamRecord.getId());
-        return teamRecordMapper.toTeam(teamRecord, teamMembers, List.of());
+        return teamRecordMapper.toTeam(teamRecord, teamMembers);
     }
 
     @Override
@@ -79,7 +75,7 @@ public class TeamRepositoryImpl implements TeamRepository {
     public Team insertOrUpdate(Team team) {
         var teamRecord = teamTableHelper.insertOrUpdate(team.getId(), record -> teamRecordMapper.updateRecord(record, team));
         var teamMembers = insertOrUpdateMembers(team.getMembers(), teamRecord.getId());
-        return teamRecordMapper.toTeam(teamRecord, teamMembers, List.of());
+        return teamRecordMapper.toTeam(teamRecord, teamMembers);
     }
 
     @Override

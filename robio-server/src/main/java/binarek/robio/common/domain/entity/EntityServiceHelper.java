@@ -1,19 +1,19 @@
 package binarek.robio.common.domain.entity;
 
+import binarek.robio.common.persistence.EntityFetchProperties;
 import org.springframework.lang.Nullable;
 
 import java.util.UUID;
 
 /**
  * @param <E>  entity class
- * @param <ME> minimal domain entity interface
  */
-public class EntityServiceHelper<E extends ME, ME extends Entity> {
+public class EntityServiceHelper<E extends Entity, FE extends EntityFetchProperties> {
 
-    private final EntityRepository<E> entityRepository;
+    private final EntityRepository<E, FE> entityRepository;
     private final String entityName;
 
-    public EntityServiceHelper(EntityRepository<E> entityRepository,
+    public EntityServiceHelper(EntityRepository<E, FE> entityRepository,
                                String entityName) {
         this.entityRepository = entityRepository;
         this.entityName = entityName;
@@ -39,9 +39,8 @@ public class EntityServiceHelper<E extends ME, ME extends Entity> {
         }
     }
 
-    public ME getEntity(UUID id, @Nullable EntityDetailsLevel detailsLevel, Class<? extends ME> resultType) {
-        return entityRepository.getById(id, detailsLevel)
-                .map(resultType::cast)
+    public E getEntity(UUID id, @Nullable FE fetchLevel) {
+        return entityRepository.getById(id, fetchLevel)
                 .orElseThrow(() -> new EntityNotExistsException(entityName, id));
     }
 }

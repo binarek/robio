@@ -1,16 +1,16 @@
 package binarek.robio.core.domain.team;
 
-import binarek.robio.common.domain.entity.EntityDetailsLevel;
 import binarek.robio.common.domain.entity.EntityServiceHelper;
 import binarek.robio.core.domain.robot.RobotRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
 public class TeamService {
 
-    private final EntityServiceHelper<Team, TeamBasicInfo> serviceHelper;
+    private final EntityServiceHelper<Team, TeamFetchLevel> serviceHelper;
     private final RobotRepository robotRepository;
 
     public TeamService(TeamRepository teamRepository, RobotRepository robotRepository) {
@@ -33,8 +33,15 @@ public class TeamService {
         serviceHelper.deleteEntity(id);
     }
 
-    @SuppressWarnings("unchecked")
-    public <T extends TeamBasicInfo> T getTeam(UUID id, EntityDetailsLevel detailsLevel, Class<? extends T> resultType) {
-        return (T) serviceHelper.getEntity(id, detailsLevel, resultType);
+    public Team getTeam(UUID id) {
+        return serviceHelper.getEntity(id, TeamFetchLevel.TEAM);
+    }
+
+    public TeamBasicInfo getTeamBasicInfo(UUID id) {
+        return serviceHelper.getEntity(id, TeamFetchLevel.TEAM_BASIC_INFO);
+    }
+
+    public List<UUID> getTeamRobotsIds(UUID id) {
+        return robotRepository.getIdsByTeamId(id);
     }
 }

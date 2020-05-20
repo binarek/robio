@@ -1,10 +1,14 @@
 package binarek.robio.core.domain.team;
 
+import binarek.robio.codegen.BaseStyle;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.immutables.value.Value;
 
 import java.util.List;
 
-@JsonDeserialize(as = ImmutableTeamWithAssociations.class)
+@Value.Immutable
+@BaseStyle
+@JsonDeserialize(as = ImmutableTeam.class)
 public interface Team extends TeamBasicInfo {
 
     String ENTITY_NAME = "Team";

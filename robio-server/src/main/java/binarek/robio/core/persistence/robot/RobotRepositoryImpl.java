@@ -1,6 +1,6 @@
 package binarek.robio.core.persistence.robot;
 
-import binarek.robio.common.domain.entity.EntityDetailsLevel;
+import binarek.robio.common.persistence.EntityFetchProperties;
 import binarek.robio.common.persistence.EntityTableHelper;
 import binarek.robio.core.domain.robot.Robot;
 import binarek.robio.core.domain.robot.RobotRepository;
@@ -9,6 +9,7 @@ import org.jooq.DSLContext;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,7 +29,7 @@ public class RobotRepositoryImpl implements RobotRepository {
     }
 
     @Override
-    public Optional<Robot> getById(UUID id, @Nullable EntityDetailsLevel detailsLevel) {
+    public Optional<Robot> getById(UUID id, @Nullable EntityFetchProperties.NotSupported fetchLevel) {
         return robotTableHelper.getByExternalId(id)
                 .map(robotRecordMapper::toRobot);
     }
@@ -64,5 +65,10 @@ public class RobotRepositoryImpl implements RobotRepository {
     @Override
     public boolean existsByTeamId(UUID teamId) {
         return dsl.selectOne().from(ROBOT).where(ROBOT.TEAM_ID.eq(teamId)).fetchOne() != null;
+    }
+
+    @Override
+    public List<UUID> getIdsByTeamId(UUID teamId) {
+        return dsl.select().from(ROBOT).where(ROBOT.TEAM_ID.eq(teamId)).fetch(ROBOT.EXTERNAL_ID);
     }
 }
