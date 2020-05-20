@@ -1,6 +1,6 @@
 package binarek.robio.core.api.team;
 
-import binarek.robio.common.domain.DomainEntityDetailsLevel;
+import binarek.robio.common.domain.entity.EntityDetailsLevel;
 import binarek.robio.core.domain.team.Team;
 import binarek.robio.core.domain.team.TeamService;
 import binarek.robio.core.domain.team.TeamWithAssociations;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 import static binarek.robio.common.api.ApiUtil.DEFAULT_DETAILS_LEVEL;
-import static binarek.robio.common.api.ApiUtil.validateDomainEntityPutRequest;
+import static binarek.robio.common.api.ApiUtil.validateEntityPutRequest;
 
 @RestController
 @RequestMapping("/teams")
@@ -23,7 +23,7 @@ public class TeamController {
 
     @GetMapping("/{id}")
     public TeamWithAssociations getTeam(@PathVariable UUID id,
-                                        @RequestParam(defaultValue = DEFAULT_DETAILS_LEVEL) DomainEntityDetailsLevel detailsLevel) {
+                                        @RequestParam(defaultValue = DEFAULT_DETAILS_LEVEL) EntityDetailsLevel detailsLevel) {
         return teamService.getTeam(id, detailsLevel, TeamWithAssociations.class);
     }
 
@@ -34,7 +34,7 @@ public class TeamController {
 
     @PutMapping("/{id}")
     public Team putTeam(@PathVariable UUID id, @RequestBody Team team) {
-        validateDomainEntityPutRequest(id, team);
+        validateEntityPutRequest(id, team);
         return teamService.saveTeam(team);
     }
 

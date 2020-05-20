@@ -1,6 +1,10 @@
 package binarek.robio.common.api;
 
 import binarek.robio.common.domain.*;
+import binarek.robio.common.domain.entity.EntityAlreadyExistsException;
+import binarek.robio.common.domain.entity.EntityChangedException;
+import binarek.robio.common.domain.entity.EntityInvalidIdentityException;
+import binarek.robio.common.domain.entity.EntityNotExistsException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -17,23 +21,23 @@ public class DefaultExceptionHandler implements ProblemHandling {
         return create(Status.BAD_REQUEST, exception, request);
     }
 
-    @ExceptionHandler(DomainEntityNotExistsException.class)
-    public ResponseEntity<Problem> handleDomainEntityNotExistsException(Exception exception, NativeWebRequest request) {
+    @ExceptionHandler(EntityNotExistsException.class)
+    public ResponseEntity<Problem> handleEntityNotExistsException(Exception exception, NativeWebRequest request) {
         return create(Status.NOT_FOUND, exception, request);
     }
 
-    @ExceptionHandler(DomainEntityAlreadyExistsException.class)
-    public ResponseEntity<Problem> handleDomainEntityAlreadyExistsException(Exception exception, NativeWebRequest request) {
+    @ExceptionHandler(EntityAlreadyExistsException.class)
+    public ResponseEntity<Problem> handleEntityAlreadyExistsException(Exception exception, NativeWebRequest request) {
         return create(Status.UNPROCESSABLE_ENTITY, exception, request);
     }
 
-    @ExceptionHandler(DomainEntityChangedException.class)
-    public ResponseEntity<Problem> handleDomainEntityChangedException(Exception exception, NativeWebRequest request) {
+    @ExceptionHandler(EntityChangedException.class)
+    public ResponseEntity<Problem> handleEntityChangedException(Exception exception, NativeWebRequest request) {
         return create(Status.CONFLICT, exception, request);
     }
 
-    @ExceptionHandler(DomainEntityInvalidIdentityException.class)
-    public ResponseEntity<Problem> handleDomainEntityInvalidIdentityException(Exception exception, NativeWebRequest request) {
+    @ExceptionHandler(EntityInvalidIdentityException.class)
+    public ResponseEntity<Problem> handleEntityInvalidIdentityException(Exception exception, NativeWebRequest request) {
         return create(Status.UNPROCESSABLE_ENTITY, exception, request);
     }
 }

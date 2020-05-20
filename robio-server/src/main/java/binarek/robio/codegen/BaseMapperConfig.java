@@ -1,4 +1,4 @@
-package binarek.robio.mapstruct;
+package binarek.robio.codegen;
 
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.MapperConfig;

@@ -1,7 +1,7 @@
 package binarek.robio.core.persistence.robot;
 
-import binarek.robio.common.domain.DomainEntityDetailsLevel;
-import binarek.robio.common.persistence.DomainEntityTableHelper;
+import binarek.robio.common.domain.entity.EntityDetailsLevel;
+import binarek.robio.common.persistence.EntityTableHelper;
 import binarek.robio.core.domain.robot.Robot;
 import binarek.robio.core.domain.robot.RobotRepository;
 import binarek.robio.db.tables.records.RobotRecord;
@@ -19,16 +19,16 @@ public class RobotRepositoryImpl implements RobotRepository {
 
     private final DSLContext dsl;
     private final RobotRecordMapper robotRecordMapper;
-    private final DomainEntityTableHelper<RobotRecord> robotTableHelper;
+    private final EntityTableHelper<RobotRecord> robotTableHelper;
 
     public RobotRepositoryImpl(DSLContext dsl, RobotRecordMapper robotRecordMapper) {
         this.dsl = dsl;
         this.robotRecordMapper = robotRecordMapper;
-        this.robotTableHelper = new DomainEntityTableHelper<>(dsl, ROBOT, Robot.ENTITY_NAME);
+        this.robotTableHelper = new EntityTableHelper<>(dsl, ROBOT, Robot.ENTITY_NAME);
     }
 
     @Override
-    public Optional<Robot> getById(UUID id, @Nullable DomainEntityDetailsLevel detailsLevel) {
+    public Optional<Robot> getById(UUID id, @Nullable EntityDetailsLevel detailsLevel) {
         return robotTableHelper.getByExternalId(id)
                 .map(robotRecordMapper::toRobot);
     }

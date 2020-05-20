@@ -1,12 +1,13 @@
-package binarek.robio.common.domain;
+package binarek.robio.common.domain.entity;
 
+import binarek.robio.common.domain.DomainException;
 import org.springframework.lang.Nullable;
 
 import java.util.UUID;
 
-public class DomainEntityAlreadyExistsException extends DomainException {
+public class EntityAlreadyExistsException extends DomainException {
 
-    public DomainEntityAlreadyExistsException(String entityName, @Nullable UUID id, String name) {
+    public EntityAlreadyExistsException(String entityName, @Nullable UUID id, String name) {
         super(buildMessage(entityName, id, name));
     }
 

@@ -1,23 +1,26 @@
 package binarek.robio.core.domain.team;
 
+import binarek.robio.codegen.BaseStyle;
+import binarek.robio.common.domain.value.PersonFirstName;
+import binarek.robio.common.domain.value.PersonLastName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@Value.Style(redactedMask = "***")
+@BaseStyle
 @JsonDeserialize(as = ImmutableTeamMember.class)
 public interface TeamMember {
 
     @Value.Redacted
-    String getFirstName();
+    PersonFirstName getFirstName();
 
     @Value.Redacted
-    String getLastName();
+    PersonLastName getLastName();
 
     Role getRole();
 
     enum Role {
         CONSTRUCTOR,
-        OTHER
+        OTHER,
     }
 }

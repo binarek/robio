@@ -21,7 +21,7 @@ CREATE UNIQUE INDEX team_external_id_idx ON team (external_id);
 
 CREATE UNIQUE INDEX team_name_idx ON team (name);
 
-CREATE INDEX team_version_idx ON robot (version);
+CREATE INDEX team_version_idx ON team (version);
 
 CREATE INDEX team_member_team_id_idx ON team_member (team_id);
 

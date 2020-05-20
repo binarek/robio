@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-import static binarek.robio.common.api.ApiUtil.validateDomainEntityPutRequest;
+import static binarek.robio.common.api.ApiUtil.validateEntityPutRequest;
 
 @RestController
 @RequestMapping("/robots")
@@ -30,7 +30,7 @@ public class RobotController {
 
     @PutMapping("/{id}")
     public Robot putRobot(@PathVariable UUID id, @RequestBody Robot robot) {
-        validateDomainEntityPutRequest(id, robot);
+        validateEntityPutRequest(id, robot);
         return robotService.saveRobot(robot);
     }
 

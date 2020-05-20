@@ -1,7 +1,7 @@
 package binarek.robio.core.persistence.team;
 
-import binarek.robio.common.domain.DomainEntityDetailsLevel;
-import binarek.robio.common.persistence.DomainEntityTableHelper;
+import binarek.robio.common.domain.entity.EntityDetailsLevel;
+import binarek.robio.common.persistence.EntityTableHelper;
 import binarek.robio.core.domain.team.Team;
 import binarek.robio.core.domain.team.TeamMember;
 import binarek.robio.core.domain.team.TeamRepository;
@@ -19,8 +19,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static binarek.robio.common.domain.DomainEntityDetailsLevel.BASIC;
-import static binarek.robio.common.domain.DomainEntityDetailsLevel.FULL;
+import static binarek.robio.common.domain.entity.EntityDetailsLevel.BASIC;
+import static binarek.robio.common.domain.entity.EntityDetailsLevel.FULL;
 import static binarek.robio.db.tables.Robot.ROBOT;
 import static binarek.robio.db.tables.Team.TEAM;
 import static binarek.robio.db.tables.TeamMember.TEAM_MEMBER;
@@ -31,19 +31,19 @@ public class TeamRepositoryImpl implements TeamRepository {
     private final DSLContext dsl;
     private final TeamRecordMapper teamRecordMapper;
     private final TeamMemberRecordMapper teamMemberRecordMapper;
-    private final DomainEntityTableHelper<TeamRecord> teamTableHelper;
+    private final EntityTableHelper<TeamRecord> teamTableHelper;
 
     public TeamRepositoryImpl(DSLContext dsl,
                               TeamRecordMapper teamRecordMapper,
                               TeamMemberRecordMapper teamMemberRecordMapper) {
         this.dsl = dsl;
         this.teamRecordMapper = teamRecordMapper;
-        this.teamTableHelper = new DomainEntityTableHelper<>(dsl, TEAM, Team.ENTITY_NAME);
         this.teamMemberRecordMapper = teamMemberRecordMapper;
+        this.teamTableHelper = new EntityTableHelper<>(dsl, TEAM, Team.ENTITY_NAME);
     }
 
     @Override
-    public Optional<TeamWithAssociations> getById(UUID id, @Nullable DomainEntityDetailsLevel detailsLevel) {
+    public Optional<TeamWithAssociations> getById(UUID id, @Nullable EntityDetailsLevel detailsLevel) {
         return teamTableHelper.getByExternalId(id)
                 .map(teamRecord -> teamRecordMapper.toTeam(
                         teamRecord,

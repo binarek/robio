@@ -1,6 +1,6 @@
 package binarek.robio.common.persistence;
 
-import binarek.robio.common.domain.DomainEntityChangedException;
+import binarek.robio.common.domain.entity.EntityChangedException;
 import org.jooq.*;
 import org.jooq.exception.DataChangedException;
 import org.slf4j.Logger;
@@ -12,12 +12,12 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import static binarek.robio.common.persistence.DomainEntityRecordUtil.EXTERNAL_ID_FIELD;
-import static binarek.robio.common.persistence.DomainEntityRecordUtil.NAME_FIELD;
+import static binarek.robio.common.persistence.EntityRecordUtil.EXTERNAL_ID_FIELD;
+import static binarek.robio.common.persistence.EntityRecordUtil.NAME_FIELD;
 
-public class DomainEntityTableHelper<R extends UpdatableRecord<R>> {
+public class EntityTableHelper<R extends UpdatableRecord<R>> {
 
-    private static final Logger logger = LoggerFactory.getLogger(DomainEntityTableHelper.class);
+    private static final Logger logger = LoggerFactory.getLogger(EntityTableHelper.class);
 
     private final DSLContext dsl;
     private final Table<R> table;
@@ -27,7 +27,7 @@ public class DomainEntityTableHelper<R extends UpdatableRecord<R>> {
     private final Field<String> nameField;
 
     @SuppressWarnings("unchecked")
-    public DomainEntityTableHelper(DSLContext dsl, Table<R> table, String entityName) {
+    public EntityTableHelper(DSLContext dsl, Table<R> table, String entityName) {
         this.dsl = dsl;
         this.table = table;
         this.entityName = entityName;
@@ -87,7 +87,7 @@ public class DomainEntityTableHelper<R extends UpdatableRecord<R>> {
         try {
             record.store();
         } catch (DataChangedException e) {
-            throw new DomainEntityChangedException(entityName, (UUID) record.get(EXTERNAL_ID_FIELD));
+            throw new EntityChangedException(entityName, (UUID) record.get(EXTERNAL_ID_FIELD));
         }
         return record;
     }

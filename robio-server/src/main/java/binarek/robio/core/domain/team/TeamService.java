@@ -1,7 +1,7 @@
 package binarek.robio.core.domain.team;
 
-import binarek.robio.common.domain.DomainEntityDetailsLevel;
-import binarek.robio.common.domain.DomainEntityServiceHelper;
+import binarek.robio.common.domain.entity.EntityDetailsLevel;
+import binarek.robio.common.domain.entity.EntityServiceHelper;
 import binarek.robio.core.domain.robot.RobotRepository;
 import org.springframework.stereotype.Service;
 
@@ -10,11 +10,11 @@ import java.util.UUID;
 @Service
 public class TeamService {
 
-    private final DomainEntityServiceHelper<Team, TeamBasicInfo> serviceHelper;
+    private final EntityServiceHelper<Team, TeamBasicInfo> serviceHelper;
     private final RobotRepository robotRepository;
 
     public TeamService(TeamRepository teamRepository, RobotRepository robotRepository) {
-        this.serviceHelper = new DomainEntityServiceHelper<>(teamRepository, Team.ENTITY_NAME);
+        this.serviceHelper = new EntityServiceHelper<>(teamRepository, Team.ENTITY_NAME);
         this.robotRepository = robotRepository;
     }
 
@@ -34,7 +34,7 @@ public class TeamService {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends TeamBasicInfo> T getTeam(UUID id, DomainEntityDetailsLevel detailsLevel, Class<? extends T> resultType) {
+    public <T extends TeamBasicInfo> T getTeam(UUID id, EntityDetailsLevel detailsLevel, Class<? extends T> resultType) {
         return (T) serviceHelper.getEntity(id, detailsLevel, resultType);
     }
 }
