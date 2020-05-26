@@ -29,7 +29,7 @@ public class RobotRepositoryImpl implements RobotRepository {
     }
 
     @Override
-    public Optional<Robot> getById(UUID id, @Nullable EntityFetchProperties.NotSupported fetchLevel) {
+    public Optional<Robot> getById(UUID id, @Nullable EntityFetchProperties.NotSupported fetchProperties) {
         return robotTableHelper.getByExternalId(id)
                 .map(robotRecordMapper::toRobot);
     }

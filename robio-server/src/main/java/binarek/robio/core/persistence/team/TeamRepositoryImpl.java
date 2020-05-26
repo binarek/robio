@@ -40,11 +40,11 @@ public class TeamRepositoryImpl implements TeamRepository {
     }
 
     @Override
-    public Optional<Team> getById(UUID id, @Nullable TeamFetchLevel detailsLevel) {
+    public Optional<Team> getById(UUID id, @Nullable TeamFetchLevel fetchLevel) {
         return teamTableHelper.getByExternalId(id)
                 .map(teamRecord -> teamRecordMapper.toTeam(
                         teamRecord,
-                        detailsLevel == TeamFetchLevel.TEAM ? fetchMembersRecords(teamRecord.getId()) : List.of()));
+                        fetchLevel == TeamFetchLevel.TEAM ? fetchMembersRecords(teamRecord.getId()) : List.of()));
     }
 
     @Override

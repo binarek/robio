@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface EntityRepository<E extends Entity, FP extends EntityFetchProperties> {
 
-    Optional<? extends E> getById(UUID id, @Nullable FP fetchLevel);
+    Optional<? extends E> getById(UUID id, @Nullable FP fetchProperties);
 
     boolean existsByName(String name);
 

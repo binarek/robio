@@ -8,12 +8,12 @@ import java.util.UUID;
 /**
  * @param <E>  entity class
  */
-public class EntityServiceHelper<E extends Entity, FE extends EntityFetchProperties> {
+public class EntityServiceHelper<E extends Entity, FP extends EntityFetchProperties> {
 
-    private final EntityRepository<E, FE> entityRepository;
+    private final EntityRepository<E, FP> entityRepository;
     private final String entityName;
 
-    public EntityServiceHelper(EntityRepository<E, FE> entityRepository,
+    public EntityServiceHelper(EntityRepository<E, FP> entityRepository,
                                String entityName) {
         this.entityRepository = entityRepository;
         this.entityName = entityName;
@@ -39,8 +39,8 @@ public class EntityServiceHelper<E extends Entity, FE extends EntityFetchPropert
         }
     }
 
-    public E getEntity(UUID id, @Nullable FE fetchLevel) {
-        return entityRepository.getById(id, fetchLevel)
+    public E getEntity(UUID id, @Nullable FP fetchProperties) {
+        return entityRepository.getById(id, fetchProperties)
                 .orElseThrow(() -> new EntityNotExistsException(entityName, id));
     }
 }
