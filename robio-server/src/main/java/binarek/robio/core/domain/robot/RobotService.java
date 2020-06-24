@@ -17,12 +17,12 @@ public class RobotService {
 
     public RobotService(RobotRepository robotRepository, TeamRepository teamRepository) {
         this.teamRepository = teamRepository;
-        this.serviceHelper = new EntityServiceHelper<>(robotRepository, Robot.ENTITY_NAME);
+        this.serviceHelper = new EntityServiceHelper<>(Robot.class, robotRepository);
     }
 
     public Robot createRobot(Robot robot) {
         if (!teamRepository.existsById(robot.getTeamId())) {
-            throw new EntityNotExistsException(Team.ENTITY_NAME, robot.getTeamId());
+            throw new EntityNotExistsException(Team.class, robot.getTeamId());
         }
         return serviceHelper.createEntity(robot);
     }
@@ -36,6 +36,6 @@ public class RobotService {
     }
 
     public Robot getRobot(UUID id) {
-        return serviceHelper.getEntity(id, null);
+        return serviceHelper.getEntity(id);
     }
 }

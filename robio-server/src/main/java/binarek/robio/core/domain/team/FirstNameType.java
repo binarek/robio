@@ -1,4 +1,4 @@
-package binarek.robio.common.domain.value;
+package binarek.robio.core.domain.team;
 
 import binarek.robio.codegen.ValueTypeStyle;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -10,10 +10,10 @@ import java.util.regex.Pattern;
 
 @Value.Immutable
 @ValueTypeStyle
-@JsonDeserialize(as = PersonFirstName.class)
-interface PersonFirstNameType {
+@JsonDeserialize(as = FirstName.class)
+interface FirstNameType {
 
-    Pattern VALUE_PATTERN = Pattern.compile("^[A-Z][a-z]+$"); // TODO
+    Pattern VALUE_PATTERN = Pattern.compile("^[^\\s\\d]+$");
 
     @JsonValue
     @Value.Parameter
@@ -21,6 +21,7 @@ interface PersonFirstNameType {
 
     @Value.Check
     default void validate() {
-        Assert.state(VALUE_PATTERN.matcher(getValue()).find(), "Invalid first name format");
+        Assert.state(VALUE_PATTERN.matcher(getValue()).find(), "Invalid character exists");
+        Assert.state(Character.isUpperCase(getValue().charAt(0)), "Name has to start with uppercase character");
     }
 }

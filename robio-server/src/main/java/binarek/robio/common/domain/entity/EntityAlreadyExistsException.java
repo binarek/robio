@@ -5,10 +5,12 @@ import org.springframework.lang.Nullable;
 
 import java.util.UUID;
 
+import static binarek.robio.common.domain.entity.EntityUtil.name;
+
 public class EntityAlreadyExistsException extends DomainException {
 
-    public EntityAlreadyExistsException(String entityName, @Nullable UUID id, String name) {
-        super(buildMessage(entityName, id, name));
+    public EntityAlreadyExistsException(Class<? extends Entity> entityClass, @Nullable UUID id, String name) {
+        super(buildMessage(name(entityClass), id, name));
     }
 
     private static String buildMessage(String entityName, @Nullable UUID id, String name) {

@@ -15,6 +15,9 @@ public interface TeamDtoMapper {
 
     Team toTeam(TeamDto dto);
 
+    @Mapping(target = "id", source = "teamId")
+    Team toTeam(TeamDto dto, UUID teamId);
+
     @Mapping(target = "members", ignore = true)
     @Mapping(target = "robotIds", ignore = true)
     TeamDto toTeamDto(TeamBasicInfo team);

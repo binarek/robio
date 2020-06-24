@@ -1,4 +1,4 @@
-package binarek.robio.common.domain.value;
+package binarek.robio.core.domain.robot;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

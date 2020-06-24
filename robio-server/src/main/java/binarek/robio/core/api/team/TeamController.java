@@ -40,8 +40,8 @@ public class TeamController {
 
     @PutMapping("/{id}")
     public TeamDto putTeam(@PathVariable UUID id, @RequestBody TeamDto teamDto) {
-        var team = teamDtoMapper.toTeam(teamDto);
-        validateEntityPutRequest(id, team);
+        var team = teamDtoMapper.toTeam(teamDto, id);
+        validateEntityPutRequest(id, team); // TODO remove?
         return teamDtoMapper.toTeamDto(teamService.saveTeam(team));
     }
 

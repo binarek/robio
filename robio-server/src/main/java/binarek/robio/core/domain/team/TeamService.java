@@ -14,7 +14,7 @@ public class TeamService {
     private final RobotRepository robotRepository;
 
     public TeamService(TeamRepository teamRepository, RobotRepository robotRepository) {
-        this.serviceHelper = new EntityServiceHelper<>(teamRepository, Team.ENTITY_NAME);
+        this.serviceHelper = new EntityServiceHelper<>(Team.class, teamRepository);
         this.robotRepository = robotRepository;
     }
 

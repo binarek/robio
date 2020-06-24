@@ -36,7 +36,7 @@ public class TeamRepositoryImpl implements TeamRepository {
         this.dsl = dsl;
         this.teamRecordMapper = teamRecordMapper;
         this.teamMemberRecordMapper = teamMemberRecordMapper;
-        this.teamTableHelper = new EntityTableHelper<>(dsl, TEAM, Team.ENTITY_NAME);
+        this.teamTableHelper = new EntityTableHelper<>(Team.class, dsl, TEAM);
     }
 
     @Override

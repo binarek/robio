@@ -10,7 +10,7 @@ class EntityServiceHelperTest extends Specification {
     def entityRepository = Mock(EntityRepository)
 
     @Subject
-    def entityServiceHelper = new EntityServiceHelper(entityRepository, 'Competition')
+    def entityServiceHelper = new EntityServiceHelper(Entity, entityRepository)
 
     @Shared
     def entityWithId = Stub(Entity) {
@@ -112,6 +112,15 @@ class EntityServiceHelperTest extends Specification {
     }
 
     def "gets existing entity by id"() {
+        when:
+        def result = entityServiceHelper.getEntity(entityWithId.id)
+        then:
+        entityRepository.getById(entityWithId.id, null) >> Optional.of(entityWithId)
+        and:
+        result == entityWithId
+    }
+
+    def "gets existing entity by id using fetch properties"() {
         given:
         def fetchProperties = Stub(EntityFetchProperties)
         when:

@@ -11,7 +11,5 @@ import java.util.List;
 @JsonDeserialize(as = ImmutableTeam.class)
 public interface Team extends TeamBasicInfo {
 
-    String ENTITY_NAME = "Team";
-
     List<TeamMember> getMembers();
 }

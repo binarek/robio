@@ -1,4 +1,4 @@
-package binarek.robio.common.domain.value;
+package binarek.robio.core.domain.team;
 
 import binarek.robio.codegen.ValueTypeStyle;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -10,8 +10,8 @@ import java.util.regex.Pattern;
 
 @Value.Immutable
 @ValueTypeStyle
-@JsonDeserialize(as = PersonLastName.class)
-interface PersonLastNameType {
+@JsonDeserialize(as = LastName.class)
+interface LastNameType {
 
     Pattern VALUE_PATTERN = Pattern.compile("^[A-Z][A-Za-z -']+$");  // todo
 

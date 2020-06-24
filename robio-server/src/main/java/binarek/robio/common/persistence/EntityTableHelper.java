@@ -1,5 +1,6 @@
 package binarek.robio.common.persistence;
 
+import binarek.robio.common.domain.entity.Entity;
 import binarek.robio.common.domain.entity.EntityChangedException;
 import org.jooq.*;
 import org.jooq.exception.DataChangedException;
@@ -19,18 +20,18 @@ public class EntityTableHelper<R extends UpdatableRecord<R>> {
 
     private static final Logger logger = LoggerFactory.getLogger(EntityTableHelper.class);
 
+    private final Class<? extends Entity> entityClass;
     private final DSLContext dsl;
     private final Table<R> table;
-    private final String entityName;
 
     private final Field<UUID> externalIdField;
     private final Field<String> nameField;
 
     @SuppressWarnings("unchecked")
-    public EntityTableHelper(DSLContext dsl, Table<R> table, String entityName) {
+    public EntityTableHelper(Class<? extends Entity> entityClass, DSLContext dsl, Table<R> table) {
+        this.entityClass = entityClass;
         this.dsl = dsl;
         this.table = table;
-        this.entityName = entityName;
 
         this.externalIdField = (Field<UUID>) Objects.requireNonNull(table.field(EXTERNAL_ID_FIELD));
         this.nameField = (Field<String>) Objects.requireNonNull(table.field(NAME_FIELD));
@@ -60,7 +61,7 @@ public class EntityTableHelper<R extends UpdatableRecord<R>> {
     }
 
     public Optional<R> getByExternalId(UUID externalId) {
-        return Optional.ofNullable(dsl.fetchOne(table, externalIdField.eq(externalId)));
+        return dsl.fetchOptional(table, externalIdField.eq(externalId));
     }
 
     public boolean existsByExternalId(UUID externalId) {
@@ -87,7 +88,7 @@ public class EntityTableHelper<R extends UpdatableRecord<R>> {
         try {
             record.store();
         } catch (DataChangedException e) {
-            throw new EntityChangedException(entityName, (UUID) record.get(EXTERNAL_ID_FIELD));
+            throw new EntityChangedException(entityClass, (UUID) record.get(EXTERNAL_ID_FIELD));
         }
         return record;
     }

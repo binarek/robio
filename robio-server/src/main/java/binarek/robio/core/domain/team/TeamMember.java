@@ -1,8 +1,6 @@
 package binarek.robio.core.domain.team;
 
 import binarek.robio.codegen.BaseStyle;
-import binarek.robio.common.domain.value.PersonFirstName;
-import binarek.robio.common.domain.value.PersonLastName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 
@@ -12,10 +10,10 @@ import org.immutables.value.Value;
 public interface TeamMember {
 
     @Value.Redacted
-    PersonFirstName getFirstName();
+    FirstName getFirstName();
 
     @Value.Redacted
-    PersonLastName getLastName();
+    LastName getLastName();
 
     Role getRole();
 

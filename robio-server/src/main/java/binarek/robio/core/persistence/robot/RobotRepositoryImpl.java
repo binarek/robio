@@ -25,7 +25,7 @@ public class RobotRepositoryImpl implements RobotRepository {
     public RobotRepositoryImpl(DSLContext dsl, RobotRecordMapper robotRecordMapper) {
         this.dsl = dsl;
         this.robotRecordMapper = robotRecordMapper;
-        this.robotTableHelper = new EntityTableHelper<>(dsl, ROBOT, Robot.ENTITY_NAME);
+        this.robotTableHelper = new EntityTableHelper<>(Robot.class, dsl, ROBOT);
     }
 
     @Override

@@ -4,9 +4,11 @@ import binarek.robio.common.domain.DomainException;
 
 import java.util.UUID;
 
+import static binarek.robio.common.domain.entity.EntityUtil.name;
+
 public class EntityChangedException extends DomainException {
 
-    public EntityChangedException(String entityName, UUID id) {
-        super(entityName + " with id " + id + " has been changed");
+    public EntityChangedException(Class<? extends Entity> entityClass, UUID id) {
+        super(name(entityClass) + " with id " + id + " has been changed");
     }
 }
