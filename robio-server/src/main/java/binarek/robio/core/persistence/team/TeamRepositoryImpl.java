@@ -85,6 +85,25 @@ public class TeamRepositoryImpl implements TeamRepository {
         return teamTableHelper.deleteByExternalId(id);
     }
 
+    @Override
+    public boolean doesCompetitorBelongToAnyTeam(UUID competitorId) {
+        return dsl.selectOne()
+                .from(TEAM_MEMBER)
+                .where(TEAM_MEMBER.COMPETITOR_ID.eq(competitorId))
+                .fetchOne() != null;
+    }
+
+    @Override
+    public boolean doesCompetitorBelongToOtherTeam(UUID competitorId, UUID teamId) {
+        return dsl.selectOne()
+                .from(TEAM_MEMBER)
+                .where(TEAM_MEMBER.COMPETITOR_ID.eq(competitorId))
+                .andNot(TEAM_MEMBER.TEAM_ID.eq(
+                        dsl.select(TEAM.ID).from(TEAM).where(TEAM.EXTERNAL_ID.eq(teamId))
+                ))
+                .fetchOne() != null;
+    }
+
     private List<TeamMemberRecord> fetchMembersRecords(Long teamId) {
         return dsl.fetch(TEAM_MEMBER, TEAM_MEMBER.TEAM_ID.eq(teamId));
     }

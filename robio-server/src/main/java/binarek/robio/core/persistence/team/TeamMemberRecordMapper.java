@@ -13,8 +13,6 @@ public interface TeamMemberRecordMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "teamId", source = "teamId")
-    @Mapping(target = "firstName", source = "teamMember.firstName")
-    @Mapping(target = "lastName", source = "teamMember.lastName")
     void updateRecord(@MappingTarget TeamMemberRecord teamMemberRecord, TeamMember teamMember, Long teamId);
 
     TeamMember toTeamMember(TeamMemberRecord teamMemberRecord);

@@ -29,12 +29,18 @@ public class EntityTableHelper<R extends UpdatableRecord<R>> {
 
     @SuppressWarnings("unchecked")
     public EntityTableHelper(Class<? extends Entity> entityClass, DSLContext dsl, Table<R> table) {
+        this(entityClass, dsl, table, (Field<String>) Objects.requireNonNull(table.field(NAME_FIELD)));
+    }
+
+    @SuppressWarnings("unchecked")
+    public EntityTableHelper(Class<? extends Entity> entityClass, DSLContext dsl, Table<R> table,
+                             Field<String> nameField) {
         this.entityClass = entityClass;
         this.dsl = dsl;
         this.table = table;
 
         this.externalIdField = (Field<UUID>) Objects.requireNonNull(table.field(EXTERNAL_ID_FIELD));
-        this.nameField = (Field<String>) Objects.requireNonNull(table.field(NAME_FIELD));
+        this.nameField = nameField;
     }
 
     public R insert(Consumer<R> setRecordValues) {
@@ -80,6 +86,13 @@ public class EntityTableHelper<R extends UpdatableRecord<R>> {
         return existsByCondition(condition);
     }
 
+    public boolean existsByCondition(Condition condition) {
+        return dsl.selectOne()
+                .from(table)
+                .where(condition)
+                .fetchOne() != null;
+    }
+
     private R store(R record, Consumer<R> updateRecord) {
         updateRecord.accept(record);
         if (record.get(externalIdField) == null) {
@@ -91,12 +104,5 @@ public class EntityTableHelper<R extends UpdatableRecord<R>> {
             throw new EntityChangedException(entityClass, (UUID) record.get(EXTERNAL_ID_FIELD));
         }
         return record;
-    }
-
-    private boolean existsByCondition(Condition condition) {
-        return dsl.selectOne()
-                .from(table)
-                .where(condition)
-                .fetchOne() != null;
     }
 }

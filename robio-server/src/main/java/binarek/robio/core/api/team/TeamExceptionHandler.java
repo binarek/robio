@@ -1,5 +1,6 @@
 package binarek.robio.core.api.team;
 
+import binarek.robio.core.domain.team.CompetitorBelongsToOtherTeamException;
 import binarek.robio.core.domain.team.TeamHasRobotsException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -17,6 +18,11 @@ public class TeamExceptionHandler implements ProblemHandling {
 
     @ExceptionHandler(TeamHasRobotsException.class)
     public ResponseEntity<Problem> handleTeamHasRobotsException(Exception exception, NativeWebRequest request) {
+        return create(Status.CONFLICT, exception, request);
+    }
+
+    @ExceptionHandler(CompetitorBelongsToOtherTeamException.class)
+    public ResponseEntity<Problem> handleCompetitorBelongsToOtherTeamException(Exception exception, NativeWebRequest request) {
         return create(Status.CONFLICT, exception, request);
     }
 }
