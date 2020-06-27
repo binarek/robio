@@ -1,6 +1,9 @@
 package binarek.robio.common.domain.value;
 
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
+
+import static binarek.robio.common.util.MapperUtil.mapNullSafe;
 
 /**
  * Mapper that is responsible for mapping value objects to primitives and vice versa
@@ -8,11 +11,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class StandardValueMapper {
 
-    public Notes toNotes(String notes) {
-        return Notes.of(notes);
+    @Nullable
+    public Notes toNotes(@Nullable String notes) {
+        return mapNullSafe(notes, Notes::of);
     }
 
-    public String toValue(Notes notes) {
-        return notes.getValue();
+    @Nullable
+    public String toValue(@Nullable Notes notes) {
+        return mapNullSafe(notes, Notes::getValue);
     }
 }

@@ -7,8 +7,11 @@ import binarek.robio.db.tables.records.RobotRecord;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.springframework.lang.Nullable;
 
 import java.math.BigDecimal;
+
+import static binarek.robio.common.util.MapperUtil.mapNullSafe;
 
 @Mapper(config = BaseMapperConfig.class, uses = StandardValueMapper.class)
 public interface RobotRecordMapper {
@@ -23,27 +26,33 @@ public interface RobotRecordMapper {
     @Mapping(target = "id", source = "externalId")
     Robot toRobot(RobotRecord robotRecord);
 
-    default RobotName toRobotName(String name) {
-        return RobotName.of(name);
+    @Nullable
+    default RobotName toRobotName(@Nullable String name) {
+        return mapNullSafe(name, RobotName::of);
     }
 
-    default String toValue(RobotName name) {
-        return name.getValue();
+    @Nullable
+    default String toValue(@Nullable RobotName name) {
+        return mapNullSafe(name, RobotName::getValue);
     }
 
-    default Length toLength(BigDecimal length) {
-        return Length.of(length, DEFAULT_LENGTH_UNIT);
+    @Nullable
+    default Length toLength(@Nullable BigDecimal length) {
+        return mapNullSafe(length, value -> Length.of(value, DEFAULT_LENGTH_UNIT));
     }
 
-    default BigDecimal toValue(Length length) {
-        return length.convertUnit(DEFAULT_LENGTH_UNIT).getValue();
+    @Nullable
+    default BigDecimal toValue(@Nullable Length length) {
+        return mapNullSafe(length, value -> value.convertUnit(DEFAULT_LENGTH_UNIT).getValue());
     }
 
-    default Weight toWeight(BigDecimal weight) {
-        return Weight.of(weight, DEFAULT_WEIGHT_UNIT);
+    @Nullable
+    default Weight toWeight(@Nullable BigDecimal weight) {
+        return mapNullSafe(weight, value -> Weight.of(value, DEFAULT_WEIGHT_UNIT));
     }
 
-    default BigDecimal toValue(Weight weight) {
-        return weight.convertUnit(DEFAULT_WEIGHT_UNIT).getValue();
+    @Nullable
+    default BigDecimal toValue(@Nullable Weight weight) {
+        return mapNullSafe(weight, value -> value.convertUnit(DEFAULT_WEIGHT_UNIT).getValue());
     }
 }
