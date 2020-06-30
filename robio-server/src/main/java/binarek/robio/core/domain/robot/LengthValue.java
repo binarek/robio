@@ -10,15 +10,15 @@ import java.math.BigDecimal;
 @Value.Immutable
 @ValueTypeStyle
 @JsonDeserialize(as = Length.class)
-interface LengthType {
+abstract class LengthValue {
 
     @Value.Parameter
-    BigDecimal getValue();
+    public abstract BigDecimal getValue();
 
     @Value.Parameter
-    LengthUnit getUnit();
+    public abstract LengthUnit getUnit();
 
-    default Length convertUnit(LengthUnit targetUnit) {
+    public Length convertUnit(LengthUnit targetUnit) {
         if (getUnit() == targetUnit && this instanceof Length) {
             return (Length) this;
         }
@@ -26,7 +26,7 @@ interface LengthType {
     }
 
     @Value.Check
-    default void validate() {
+    protected void validate() {
         Assert.state(getValue().signum() >= 0, "Length value cannot be negative");
     }
 }

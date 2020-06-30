@@ -9,13 +9,16 @@ import java.util.UUID;
 @Value.Immutable
 @BaseStyle
 @JsonDeserialize(as = ImmutableTeamMember.class)
-public interface TeamMember {
+public abstract class TeamMember {
 
-    UUID getCompetitorId();
+    TeamMember() {
+    }
 
-    Role getRole();
+    public abstract UUID getCompetitorId();
 
-    enum Role {
+    public abstract Role getRole();
+
+    public enum Role {
         CONSTRUCTOR,
         OTHER,
     }

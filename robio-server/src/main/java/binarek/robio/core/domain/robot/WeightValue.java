@@ -10,15 +10,15 @@ import java.math.BigDecimal;
 @Value.Immutable
 @ValueTypeStyle
 @JsonDeserialize(as = Weight.class)
-interface WeightType {
+abstract class WeightValue {
 
     @Value.Parameter
-    BigDecimal getValue();
+    public abstract BigDecimal getValue();
 
     @Value.Parameter
-    WeightUnit getUnit();
+    public abstract WeightUnit getUnit();
 
-    default Weight convertUnit(WeightUnit targetUnit) {
+    public Weight convertUnit(WeightUnit targetUnit) {
         if (getUnit() == targetUnit && this instanceof Weight) {
             return (Weight) this;
         }
@@ -26,7 +26,7 @@ interface WeightType {
     }
 
     @Value.Check
-    default void validate() {
+    protected void validate() {
         Assert.state(getValue().signum() >= 0, "Weight value cannot be negative");
     }
 }

@@ -14,7 +14,7 @@ import org.zalando.problem.spring.web.advice.ProblemHandling;
 
 @RestControllerAdvice(assignableTypes = TeamController.class)
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class TeamExceptionHandler implements ProblemHandling {
+public class TeamExceptionHandler implements ProblemHandling {  // TODO not work
 
     @ExceptionHandler(TeamHasRobotsException.class)
     public ResponseEntity<Problem> handleTeamHasRobotsException(Exception exception, NativeWebRequest request) {

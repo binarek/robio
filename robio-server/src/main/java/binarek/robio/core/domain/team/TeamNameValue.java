@@ -9,14 +9,14 @@ import org.springframework.util.Assert;
 @Value.Immutable
 @ValueTypeStyle
 @JsonDeserialize(as = TeamName.class)
-interface TeamNameType {
+abstract class TeamNameValue {
 
     @JsonValue
     @Value.Parameter
-    String getValue();
+    public abstract String getValue();
 
     @Value.Check
-    default void validate() {
+    protected void validate() {
         var name = getValue();
         Assert.state(name.trim().length() == name.length(), "Name must not have leading or trailing whitespaces");
         Assert.state(name.length() >= 3, "Name must have at least 3 characters length");

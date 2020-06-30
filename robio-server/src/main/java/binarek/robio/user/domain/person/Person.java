@@ -8,25 +8,28 @@ import org.immutables.value.Value;
 @Value.Immutable
 @BaseStyle
 @JsonDeserialize(as = ImmutablePerson.class)
-public interface Person extends Entity {
+public abstract class Person implements Entity {
+
+    Person() {
+    }
 
     @Override
-    default String getNameValue() {
+    public final String getNameValue() {
         return getEmail().getValue();
     }
 
     @Value.Redacted
-    Email getEmail();
+    public abstract Email getEmail();
 
     @Value.Redacted
-    FirstName getFirstName();
+    public abstract FirstName getFirstName();
 
     @Value.Redacted
-    LastName getLastName();
+    public abstract LastName getLastName();
 
-    Role getRole();
+    public abstract Role getRole();
 
-    enum Role {
+    public enum Role {
         COMPETITOR,
         ORGANIZER,
     }

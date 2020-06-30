@@ -81,7 +81,7 @@ public class EntityTableHelper<R extends UpdatableRecord<R>> {
     public boolean existsByExternalIdOrName(@Nullable UUID externalId, String name) {
         var condition = nameField.eq(name);
         if (externalId != null) {
-            condition = condition.and(externalIdField.eq(externalId));
+            condition = condition.or(externalIdField.eq(externalId));
         }
         return existsByCondition(condition);
     }

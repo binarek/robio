@@ -1,23 +1,22 @@
-package binarek.robio.user.domain.person;
+package binarek.robio.common.domain.value;
 
 import binarek.robio.codegen.ValueTypeStyle;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.apache.commons.validator.routines.EmailValidator;
 import org.immutables.value.Value;
 import org.springframework.util.Assert;
 
 @Value.Immutable
 @ValueTypeStyle
-@JsonDeserialize(as = Email.class)
-interface EmailType {
+@JsonDeserialize(as = Notes.class)
+abstract class NotesValue {
 
     @JsonValue
     @Value.Parameter
-    String getValue();
+    public abstract String getValue();
 
     @Value.Check
-    default void validate() {
-        Assert.state(EmailValidator.getInstance().isValid(getValue()), "Invalid e-mail format");
+    protected void validate() {
+        Assert.state(getValue().length() <= 1000, "Max allowed note length is 1000 characters");
     }
 }

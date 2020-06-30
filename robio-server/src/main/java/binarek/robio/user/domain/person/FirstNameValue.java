@@ -11,16 +11,17 @@ import java.util.regex.Pattern;
 @Value.Immutable
 @ValueTypeStyle
 @JsonDeserialize(as = FirstName.class)
-interface FirstNameType {
+abstract class FirstNameValue {
 
-    Pattern VALUE_PATTERN = Pattern.compile("^[^\\s\\d]+$");
+    private static final Pattern VALUE_PATTERN = Pattern.compile("^[^\\s\\d]+$");
 
     @JsonValue
     @Value.Parameter
-    String getValue();
+    @Value.Redacted
+    public abstract String getValue();
 
     @Value.Check
-    default void validate() {
+    protected void validate() {
         Assert.state(VALUE_PATTERN.matcher(getValue()).find(), "Invalid character exists");
         Assert.state(Character.isUpperCase(getValue().charAt(0)), "Name has to start with uppercase character");
     }

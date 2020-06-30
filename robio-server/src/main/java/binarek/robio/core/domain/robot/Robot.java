@@ -11,26 +11,29 @@ import java.util.UUID;
 @Value.Immutable
 @BaseStyle
 @JsonDeserialize(as = ImmutableRobot.class)
-public interface Robot extends Entity {
+public abstract class Robot implements Entity {
+
+    Robot() {
+    }
 
     @Override
-    default String getNameValue() {
+    public final String getNameValue() {
         return getName().getValue();
     }
 
-    RobotName getName();
+    public abstract RobotName getName();
 
-    UUID getTeamId();
-
-    @Nullable
-    Weight getWeight();
+    public abstract UUID getTeamId();
 
     @Nullable
-    Length getWidth();
+    public abstract Weight getWeight();
 
     @Nullable
-    Length getLength();
+    public abstract Length getWidth();
 
     @Nullable
-    Length getHeight();
+    public abstract Length getLength();
+
+    @Nullable
+    public abstract Length getHeight();
 }

@@ -11,16 +11,17 @@ import java.util.regex.Pattern;
 @Value.Immutable
 @ValueTypeStyle
 @JsonDeserialize(as = LastName.class)
-interface LastNameType {
+abstract class LastNameValue {
 
-    Pattern VALUE_PATTERN = Pattern.compile("^[A-Z][A-Za-z -']+$");  // todo
+    private static final Pattern VALUE_PATTERN = Pattern.compile("^[A-Z][A-Za-z -']+$");  // todo
 
     @JsonValue
     @Value.Parameter
-    String getValue();
+    @Value.Redacted
+    public abstract String getValue();
 
     @Value.Check
-    default void validate() {
+    protected void validate() {
         Assert.state(VALUE_PATTERN.matcher(getValue()).find(), "Invalid first name format");
     }
 }
