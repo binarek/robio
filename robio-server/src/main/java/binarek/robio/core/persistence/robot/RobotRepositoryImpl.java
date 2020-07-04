@@ -53,7 +53,7 @@ public class RobotRepositoryImpl implements RobotRepository {
     @Override
     public Robot insertOrUpdate(Robot robot) {
         var robotRecord = robotTableHelper.insertOrUpdate(
-                robot.getId(), record -> robotRecordMapper.updateRecord(record, robot));
+                robot.getIdValue(), record -> robotRecordMapper.updateRecord(record, robot));
         return robotRecordMapper.toRobot(robotRecord);
     }
 

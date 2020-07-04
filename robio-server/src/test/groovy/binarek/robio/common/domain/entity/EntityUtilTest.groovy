@@ -27,7 +27,7 @@ class EntityUtilTest extends Specification {
     class StubEntity implements Entity {
 
         @Override
-        UUID getId() {
+        UUID getIdValue() {
             return Stub()
         }
 

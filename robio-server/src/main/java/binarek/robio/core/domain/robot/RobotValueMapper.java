@@ -4,6 +4,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import static binarek.robio.common.util.MapperUtil.mapNullSafe;
 
@@ -12,6 +13,16 @@ public class RobotValueMapper {
 
     private final LengthUnit DEFAULT_LENGTH_UNIT = LengthUnit.M;
     private final WeightUnit DEFAULT_WEIGHT_UNIT = WeightUnit.G;
+
+    @Nullable
+    public RobotId toRobotId(@Nullable UUID id) {
+        return mapNullSafe(id, RobotId::of);
+    }
+
+    @Nullable
+    public UUID toValue(@Nullable RobotId id) {
+        return mapNullSafe(id, RobotId::getValue);
+    }
 
     @Nullable
     public RobotName toRobotName(@Nullable String name) {

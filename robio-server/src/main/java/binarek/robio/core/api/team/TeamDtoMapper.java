@@ -3,6 +3,7 @@ package binarek.robio.core.api.team;
 import binarek.robio.codegen.BaseMapperConfig;
 import binarek.robio.core.domain.team.Team;
 import binarek.robio.core.domain.team.TeamBasicInfo;
+import binarek.robio.core.domain.team.TeamValueMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.lang.Nullable;
@@ -10,7 +11,7 @@ import org.springframework.lang.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-@Mapper(config = BaseMapperConfig.class)
+@Mapper(config = BaseMapperConfig.class, uses = TeamValueMapper.class)
 public interface TeamDtoMapper {
 
     Team toTeam(TeamDto dto);

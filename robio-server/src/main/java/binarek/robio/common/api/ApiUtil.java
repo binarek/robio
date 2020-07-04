@@ -10,7 +10,7 @@ public final class ApiUtil {
     public static final String DEFAULT_DETAILS_LEVEL = "STANDARD";
 
     public static void validateEntityPutRequest(UUID id, Entity entity) {
-        if (entity.getId() != null && !entity.getId().equals(id)) {
+        if (entity.getIdValue() != null && !entity.getIdValue().equals(id)) {
             throw new EntityInvalidIdentityException(id);
         }
     }

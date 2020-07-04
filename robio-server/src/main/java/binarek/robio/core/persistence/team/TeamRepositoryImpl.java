@@ -73,7 +73,7 @@ public class TeamRepositoryImpl implements TeamRepository {
     @Override
     @Transactional
     public Team insertOrUpdate(Team team) {
-        var teamRecord = teamTableHelper.insertOrUpdate(team.getId(), record -> teamRecordMapper.updateRecord(record, team));
+        var teamRecord = teamTableHelper.insertOrUpdate(team.getIdValue(), record -> teamRecordMapper.updateRecord(record, team));
         var teamMembers = insertOrUpdateMembers(team.getMembers(), teamRecord.getId());
         return teamRecordMapper.toTeam(teamRecord, teamMembers);
     }

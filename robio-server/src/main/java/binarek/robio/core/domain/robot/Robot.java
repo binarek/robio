@@ -17,9 +17,17 @@ public abstract class Robot implements Entity {
     }
 
     @Override
+    public final UUID getIdValue() {
+        return getId() != null ? getId().getValue() : null;
+    }
+
+    @Override
     public final String getNameValue() {
         return getName().getValue();
     }
+
+    @Nullable
+    public abstract RobotId getId();
 
     public abstract RobotName getName();
 

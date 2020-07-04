@@ -56,7 +56,7 @@ public class PersonRepositoryImpl implements PersonRepository {
     @Override
     public Person insertOrUpdate(Person person) {
         var personRecord = personTableHelper.insertOrUpdate(
-                person.getId(), record -> personRecordMapper.updateRecord(record, person));
+                person.getIdValue(), record -> personRecordMapper.updateRecord(record, person));
         return personRecordMapper.toPerson(personRecord);
     }
 

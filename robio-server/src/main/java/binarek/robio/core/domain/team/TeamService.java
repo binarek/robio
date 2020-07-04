@@ -32,7 +32,7 @@ public class TeamService {
     @Transactional
     public Team createTeam(Team team) {
         validateTeamMembers(team.getMembers(), member -> {
-            var competitorId = member.getCompetitorId();
+            var competitorId = member.getCompetitorId().getValue();
             if (teamRepository.doesCompetitorBelongToAnyTeam(competitorId)) {
                 throw new CompetitorBelongsToOtherTeamException(competitorId);
             }
@@ -43,8 +43,8 @@ public class TeamService {
     @Transactional
     public Team saveTeam(Team team) {
         validateTeamMembers(team.getMembers(), member -> {
-            var competitorId = member.getCompetitorId();
-            if (team.getId() != null && teamRepository.doesCompetitorBelongToOtherTeam(competitorId, team.getId())) {
+            var competitorId = member.getCompetitorId().getValue();
+            if (team.getIdValue() != null && teamRepository.doesCompetitorBelongToOtherTeam(competitorId, team.getIdValue())) {
                 throw new CompetitorBelongsToOtherTeamException(competitorId);
             }
         });
@@ -78,7 +78,7 @@ public class TeamService {
     }
 
     private void validateReferences(TeamMember teamMember) {
-        var competitorId = teamMember.getCompetitorId();
+        var competitorId = teamMember.getCompetitorId().getValue();
         if (!personRepository.existsByIdAndRole(competitorId, COMPETITOR)) {
             throw new EntityNotExistsException(Person.class, competitorId, "role " + COMPETITOR);
         }

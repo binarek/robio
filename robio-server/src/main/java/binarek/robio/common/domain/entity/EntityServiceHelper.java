@@ -19,15 +19,15 @@ public class EntityServiceHelper<E extends Entity, FP extends EntityFetchPropert
     }
 
     public E createEntity(E entity) {
-        if (entityRepository.existsByIdOrName(entity.getId(), entity.getNameValue())) {
-            throw new EntityAlreadyExistsException(entityClass, entity.getId(), entity.getNameValue());
+        if (entityRepository.existsByIdOrName(entity.getIdValue(), entity.getNameValue())) {
+            throw new EntityAlreadyExistsException(entityClass, entity.getIdValue(), entity.getNameValue());
         }
         return entityRepository.insert(entity);
     }
 
     public E saveEntity(E entity) {
-        if (entity.getId() == null && entityRepository.existsByName(entity.getNameValue())) {
-            throw new EntityAlreadyExistsException(entityClass, entity.getId(), entity.getNameValue());
+        if (entity.getIdValue() == null && entityRepository.existsByName(entity.getNameValue())) {
+            throw new EntityAlreadyExistsException(entityClass, entity.getIdValue(), entity.getNameValue());
         }
         return entityRepository.insertOrUpdate(entity);
     }

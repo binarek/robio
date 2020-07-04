@@ -2,13 +2,11 @@ package binarek.robio.core.domain.team;
 
 import binarek.robio.codegen.ValueTypeStyle;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 import org.springframework.util.Assert;
 
 @Value.Immutable
 @ValueTypeStyle
-@JsonDeserialize(as = TeamName.class)
 abstract class TeamNameValue {
 
     @JsonValue

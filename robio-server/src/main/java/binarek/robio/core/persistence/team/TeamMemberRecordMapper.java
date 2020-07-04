@@ -4,11 +4,12 @@ import binarek.robio.common.domain.value.StandardValueMapper;
 import binarek.robio.core.domain.team.TeamMember;
 import binarek.robio.db.tables.records.TeamMemberRecord;
 import binarek.robio.codegen.BaseMapperConfig;
+import binarek.robio.user.domain.person.PersonValueMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(config = BaseMapperConfig.class, uses = StandardValueMapper.class)
+@Mapper(config = BaseMapperConfig.class, uses = {StandardValueMapper.class, PersonValueMapper.class})
 public interface TeamMemberRecordMapper {
 
     @Mapping(target = "id", ignore = true)

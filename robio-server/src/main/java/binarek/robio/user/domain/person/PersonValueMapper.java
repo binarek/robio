@@ -3,10 +3,22 @@ package binarek.robio.user.domain.person;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 import static binarek.robio.common.util.MapperUtil.mapNullSafe;
 
 @Component
 public class PersonValueMapper {
+
+    @Nullable
+    public PersonId toPeronId(@Nullable UUID id) {
+        return mapNullSafe(id, PersonId::of);
+    }
+
+    @Nullable
+    public UUID toValue(@Nullable PersonId id) {
+        return mapNullSafe(id, PersonId::getValue);
+    }
 
     @Nullable
     public Email toEmail(@Nullable String email) {

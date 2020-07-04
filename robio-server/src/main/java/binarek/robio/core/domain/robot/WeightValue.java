@@ -1,7 +1,6 @@
 package binarek.robio.core.domain.robot;
 
 import binarek.robio.codegen.ValueTypeStyle;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 import org.springframework.util.Assert;
 
@@ -9,7 +8,6 @@ import java.math.BigDecimal;
 
 @Value.Immutable
 @ValueTypeStyle
-@JsonDeserialize(as = Weight.class)
 abstract class WeightValue {
 
     @Value.Parameter

@@ -9,7 +9,8 @@ import java.util.UUID;
 public interface Entity {
 
     @Nullable
-    UUID getId();
+    @JsonIgnore
+    UUID getIdValue();
 
     @Nullable
     Long getVersion();

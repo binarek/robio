@@ -2,7 +2,6 @@ package binarek.robio.user.domain.person;
 
 import binarek.robio.codegen.ValueTypeStyle;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 import org.springframework.util.Assert;
 
@@ -10,7 +9,6 @@ import java.util.regex.Pattern;
 
 @Value.Immutable
 @ValueTypeStyle
-@JsonDeserialize(as = FirstName.class)
 abstract class FirstNameValue {
 
     private static final Pattern VALUE_PATTERN = Pattern.compile("^[^\\s\\d]+$");
