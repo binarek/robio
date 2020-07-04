@@ -5,6 +5,7 @@ import binarek.robio.common.persistence.EntityTableHelper;
 import binarek.robio.db.tables.records.PersonRecord;
 import binarek.robio.user.domain.person.Person;
 import binarek.robio.user.domain.person.PersonRepository;
+import binarek.robio.user.domain.person.PersonValueMapper;
 import org.jooq.DSLContext;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
@@ -19,11 +20,14 @@ public class PersonRepositoryImpl implements PersonRepository {
 
     private final DSLContext dsl;
     private final PersonRecordMapper personRecordMapper;
+    private final PersonValueMapper personValueMapper;
     private final EntityTableHelper<PersonRecord> personTableHelper;
 
-    public PersonRepositoryImpl(DSLContext dsl, PersonRecordMapper personRecordMapper) {
+    public PersonRepositoryImpl(DSLContext dsl, PersonRecordMapper personRecordMapper,
+                                PersonValueMapper personValueMapper) {
         this.dsl = dsl;
         this.personRecordMapper = personRecordMapper;
+        this.personValueMapper = personValueMapper;
         this.personTableHelper = new EntityTableHelper<>(Person.class, dsl, PERSON, PERSON.EMAIL);
     }
 
@@ -64,6 +68,6 @@ public class PersonRepositoryImpl implements PersonRepository {
     @Override
     public boolean existsByIdAndRole(UUID id, Person.Role role) {
         return personTableHelper.existsByCondition(PERSON.EXTERNAL_ID.eq(id)
-                .and(PERSON.ROLE.eq(personRecordMapper.toValue(role))));
+                .and(PERSON.ROLE.eq(personValueMapper.toValue(role))));
     }
 }
