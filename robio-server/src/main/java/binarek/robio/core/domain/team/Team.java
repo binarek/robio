@@ -32,6 +32,8 @@ public abstract class Team implements Entity, TeamBasicInfo {
     @Nullable
     public abstract TeamId getId();
 
+    public abstract TeamName getName();
+
     public abstract List<TeamMember> getMembers();
 
     @Value.Check

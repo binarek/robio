@@ -12,12 +12,14 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+import static binarek.robio.core.domain.team.TeamFetchProperties.DetailsLevel.TEAM;
+import static binarek.robio.core.domain.team.TeamFetchProperties.DetailsLevel.TEAM_BASIC_INFO;
 import static binarek.robio.user.domain.person.Person.Role.COMPETITOR;
 
 @Service
 public class TeamService {
 
-    private final EntityServiceHelper<Team, TeamFetchLevel> serviceHelper;
+    private final EntityServiceHelper<Team, TeamFetchProperties> serviceHelper;
     private final TeamRepository teamRepository;
     private final PersonRepository personRepository;
     private final RobotRepository robotRepository;
@@ -59,11 +61,11 @@ public class TeamService {
     }
 
     public Team getTeam(UUID id) {
-        return serviceHelper.getEntity(id, TeamFetchLevel.TEAM);
+        return serviceHelper.getEntity(id, TeamFetchProperties.of(TEAM));
     }
 
     public TeamBasicInfo getTeamBasicInfo(UUID id) {
-        return serviceHelper.getEntity(id, TeamFetchLevel.TEAM_BASIC_INFO);
+        return serviceHelper.getEntity(id, TeamFetchProperties.of(TEAM_BASIC_INFO));
     }
 
     public List<UUID> getTeamRobotsIds(UUID id) {

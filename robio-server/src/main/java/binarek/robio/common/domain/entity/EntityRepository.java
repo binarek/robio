@@ -1,14 +1,16 @@
 package binarek.robio.common.domain.entity;
 
-import binarek.robio.common.persistence.EntityFetchProperties;
 import org.springframework.lang.Nullable;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface EntityRepository<E extends Entity, FP extends EntityFetchProperties> {
+public interface EntityRepository<E extends Entity, FP extends EntityFetchProperties<?>> {
 
     Optional<? extends E> getById(UUID id, @Nullable FP fetchProperties);
+
+    List<? extends E> getAll(@Nullable FP fetchProperties);
 
     boolean existsByName(String name);
 

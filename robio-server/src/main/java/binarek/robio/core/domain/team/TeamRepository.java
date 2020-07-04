@@ -4,7 +4,7 @@ import binarek.robio.common.domain.entity.EntityRepository;
 
 import java.util.UUID;
 
-public interface TeamRepository extends EntityRepository<Team, TeamFetchLevel> {
+public interface TeamRepository extends EntityRepository<Team, TeamFetchProperties> {
 
     boolean existsById(UUID id);
 

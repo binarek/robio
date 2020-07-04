@@ -1,12 +1,16 @@
 package binarek.robio.core.api.robot;
 
 import binarek.robio.core.domain.robot.Robot;
+import binarek.robio.core.domain.robot.RobotFetchProperties;
 import binarek.robio.core.domain.robot.RobotService;
+import binarek.robio.core.domain.robot.RobotSortableField;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
-import static binarek.robio.common.api.ApiUtil.validateEntityPutRequest;
+import static binarek.robio.common.api.ApiUtil.*;
 
 @RestController
 @RequestMapping("/robots")
@@ -16,6 +20,17 @@ public class RobotController {
 
     public RobotController(RobotService robotService) {
         this.robotService = robotService;
+    }
+
+    @GetMapping
+    public List<? extends Robot> getRobots(@RequestParam(defaultValue = DEFAULT_LIMIT) int limit,
+                                           @RequestParam(defaultValue = DEFAULT_OFFSET) int offset,
+                                           @RequestParam(defaultValue = "name") List<String> sort) {
+        return robotService.getRobots(RobotFetchProperties.builder()
+                .limit(limit)
+                .offset(offset)
+                .sort(sort.stream().map(RobotSortableField::fromFieldName).collect(Collectors.toUnmodifiableList()))
+                .build());
     }
 
     @GetMapping("/{id}")

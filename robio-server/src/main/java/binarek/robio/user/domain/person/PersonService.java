@@ -1,15 +1,15 @@
 package binarek.robio.user.domain.person;
 
 import binarek.robio.common.domain.entity.EntityServiceHelper;
-import binarek.robio.common.persistence.EntityFetchProperties;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
 public class PersonService {
 
-    private final EntityServiceHelper<Person, EntityFetchProperties.NotSupported> serviceHelper;
+    private final EntityServiceHelper<Person, PersonFetchProperties> serviceHelper;
 
     public PersonService(PersonRepository personRepository) {
         this.serviceHelper = new EntityServiceHelper<>(Person.class, personRepository);
@@ -29,5 +29,9 @@ public class PersonService {
 
     public Person getPerson(UUID id) {
         return serviceHelper.getEntity(id);
+    }
+
+    public List<? extends Person> getPeople(PersonFetchProperties fetchProperties) {
+        return serviceHelper.getEntities(fetchProperties);
     }
 }

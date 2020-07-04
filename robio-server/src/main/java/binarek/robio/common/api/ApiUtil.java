@@ -7,6 +7,8 @@ import java.util.UUID;
 
 public final class ApiUtil {
 
+    public static final String DEFAULT_LIMIT = "20";
+    public static final String DEFAULT_OFFSET = "0";
     public static final String DEFAULT_DETAILS_LEVEL = "STANDARD";
 
     public static void validateEntityPutRequest(UUID id, Entity entity) {

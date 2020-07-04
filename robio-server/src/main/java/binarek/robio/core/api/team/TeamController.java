@@ -21,6 +21,8 @@ public class TeamController {
         this.teamDtoMapper = teamDtoMapper;
     }
 
+    // TODO @GetMapping for list of trams
+
     @GetMapping("/{id}")
     public TeamDto getTeam(@PathVariable UUID id,
                            @RequestParam(defaultValue = DEFAULT_DETAILS_LEVEL) DetailsLevel detailsLevel) {
