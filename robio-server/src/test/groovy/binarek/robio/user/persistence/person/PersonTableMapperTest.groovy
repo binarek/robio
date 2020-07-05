@@ -1,21 +1,23 @@
 package binarek.robio.user.persistence.person
 
+import binarek.robio.common.domain.value.StandardValueMapper
 import binarek.robio.user.domain.person.PersonSortableField
+import binarek.robio.user.domain.person.PersonValueMapper
 import spock.lang.Specification
 import spock.lang.Subject
 import spock.lang.Unroll
 
 import static binarek.robio.db.tables.Person.PERSON
 
-class PersonTableFieldMapperTest extends Specification {
+class PersonTableMapperTest extends Specification {
 
     @Subject
-    def personTableFieldMapper = new PersonTableFieldMapper()
+    def personTableMapper = new PersonTableMapperImpl(Stub(StandardValueMapper), Stub(PersonValueMapper))
 
     @Unroll
-    def 'maps sortable field #sortableField to person record field'() {
+    def 'maps sortable field #sortableField to person table field'() {
         when:
-        def tableField = personTableFieldMapper.toField(sortableField)
+        def tableField = personTableMapper.toField(sortableField)
         then:
         tableField == PERSON.field(sortableField.name())
         where:

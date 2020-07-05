@@ -2,6 +2,7 @@ package binarek.robio.core.domain.robot;
 
 import binarek.robio.codegen.BaseStyle;
 import binarek.robio.common.domain.entity.Entity;
+import binarek.robio.core.domain.team.TeamId;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 import org.springframework.lang.Nullable;
@@ -31,7 +32,7 @@ public abstract class Robot implements Entity {
 
     public abstract RobotName getName();
 
-    public abstract UUID getTeamId();
+    public abstract TeamId getTeamId();
 
     @Nullable
     public abstract Weight getWeight();

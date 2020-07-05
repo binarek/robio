@@ -1,5 +1,7 @@
 package binarek.robio.core.domain.robot;
 
+import static binarek.robio.common.util.TextUtil.camelToSnakeUpperCase;
+
 public enum RobotSortableField {
     HEIGHT,
     LENGTH,
@@ -9,6 +11,6 @@ public enum RobotSortableField {
     ;
 
     public static RobotSortableField fromFieldName(String fieldName) {
-        return RobotSortableField.valueOf(fieldName.toUpperCase());
+        return RobotSortableField.valueOf(camelToSnakeUpperCase(fieldName));
     }
 }

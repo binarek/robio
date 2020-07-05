@@ -21,8 +21,8 @@ public class RobotService {
     }
 
     public Robot createRobot(Robot robot) {
-        if (!teamRepository.existsById(robot.getTeamId())) {
-            throw new EntityNotExistsException(Team.class, robot.getTeamId());
+        if (!teamRepository.existsById(robot.getTeamId().getValue())) {
+            throw new EntityNotExistsException(Team.class, robot.getTeamId().getValue());
         }
         return serviceHelper.createEntity(robot);
     }

@@ -2,6 +2,7 @@ package binarek.robio.core.domain.team;
 
 import binarek.robio.common.domain.entity.EntityNotExistsException;
 import binarek.robio.common.domain.entity.EntityServiceHelper;
+import binarek.robio.core.domain.robot.RobotId;
 import binarek.robio.core.domain.robot.RobotRepository;
 import binarek.robio.user.domain.person.Person;
 import binarek.robio.user.domain.person.PersonRepository;
@@ -9,8 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static binarek.robio.core.domain.team.TeamFetchProperties.DetailsLevel.TEAM;
 import static binarek.robio.core.domain.team.TeamFetchProperties.DetailsLevel.TEAM_BASIC_INFO;
@@ -68,8 +71,18 @@ public class TeamService {
         return serviceHelper.getEntity(id, TeamFetchProperties.of(TEAM_BASIC_INFO));
     }
 
-    public List<UUID> getTeamRobotsIds(UUID id) {
-        return robotRepository.getIdsByTeamId(id);
+    public List<? extends Team> getTeams(TeamFetchProperties fetchProperties) { // TODO should be Team or something else?
+        return serviceHelper.getEntities(fetchProperties);
+    }
+
+    public List<RobotId> getTeamRobotsIds(UUID id) {
+        return robotRepository.getIdsByTeamId(id).stream()
+                .map(RobotId::of)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    public Map<TeamId, List<RobotId>> getTeamRobotsIds(List<TeamId> ids) {
+        return robotRepository.getIdsByTeamIds(ids);
     }
 
     private void validateTeamMembers(List<TeamMember> teamMembers, Consumer<TeamMember> extraValidation) {

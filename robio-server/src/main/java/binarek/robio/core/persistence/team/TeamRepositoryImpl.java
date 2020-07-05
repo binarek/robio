@@ -1,21 +1,25 @@
 package binarek.robio.core.persistence.team;
 
-import binarek.robio.common.domain.entity.EntityFetchProperties;
 import binarek.robio.common.persistence.EntityTableHelper;
-import binarek.robio.core.domain.team.*;
+import binarek.robio.core.domain.team.Team;
+import binarek.robio.core.domain.team.TeamFetchProperties;
+import binarek.robio.core.domain.team.TeamMember;
+import binarek.robio.core.domain.team.TeamRepository;
 import binarek.robio.db.tables.records.TeamMemberRecord;
 import binarek.robio.db.tables.records.TeamRecord;
 import org.jooq.DSLContext;
 import org.jooq.Record1;
-import org.jooq.TableField;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static binarek.robio.common.util.MapperUtil.mapNullSafe;
+import static binarek.robio.common.persistence.EntityPersistenceUtil.*;
 import static binarek.robio.db.tables.Robot.ROBOT;
 import static binarek.robio.db.tables.Team.TEAM;
 import static binarek.robio.db.tables.TeamMember.TEAM_MEMBER;
@@ -24,19 +28,16 @@ import static binarek.robio.db.tables.TeamMember.TEAM_MEMBER;
 public class TeamRepositoryImpl implements TeamRepository {
 
     private final DSLContext dsl;
-    private final TeamRecordMapper teamRecordMapper;
-    private final TeamMemberRecordMapper teamMemberRecordMapper;
-    private final TeamTableFieldMapper teamTableFieldMapper;
+    private final TeamTableMapper teamTableMapper;
+    private final TeamMemberTableMapper teamMemberTableMapper;
     private final EntityTableHelper<TeamRecord> teamTableHelper;
 
     public TeamRepositoryImpl(DSLContext dsl,
-                              TeamRecordMapper teamRecordMapper,
-                              TeamMemberRecordMapper teamMemberRecordMapper,
-                              TeamTableFieldMapper teamTableFieldMapper) {
+                              TeamTableMapper teamTableMapper,
+                              TeamMemberTableMapper teamMemberTableMapper) {
         this.dsl = dsl;
-        this.teamRecordMapper = teamRecordMapper;
-        this.teamMemberRecordMapper = teamMemberRecordMapper;
-        this.teamTableFieldMapper = teamTableFieldMapper;
+        this.teamTableMapper = teamTableMapper;
+        this.teamMemberTableMapper = teamMemberTableMapper;
         this.teamTableHelper = new EntityTableHelper<>(Team.class, dsl, TEAM);
     }
 
@@ -44,7 +45,7 @@ public class TeamRepositoryImpl implements TeamRepository {
     @Transactional
     public Optional<Team> getById(UUID id, @Nullable TeamFetchProperties fetchProperties) {
         return teamTableHelper.getByExternalId(id)
-                .map(teamRecord -> teamRecordMapper.toTeam(
+                .map(teamRecord -> teamTableMapper.toTeam(
                         teamRecord,
                         fetchMembers(fetchProperties) ? fetchMembersRecords(teamRecord.getId()) : List.of()));
     }
@@ -58,7 +59,7 @@ public class TeamRepositoryImpl implements TeamRepository {
                 Map.of();
 
         return teamRecords.stream()
-                .map(record -> teamRecordMapper.toTeam(record, membersByTeamId.get(record.getId())))
+                .map(record -> teamTableMapper.toTeam(record, membersByTeamId.get(record.getId())))
                 .collect(Collectors.toUnmodifiableList());
     }
 
@@ -80,17 +81,17 @@ public class TeamRepositoryImpl implements TeamRepository {
     @Override
     @Transactional
     public Team insert(Team team) {
-        var teamRecord = teamTableHelper.insert(record -> teamRecordMapper.updateRecord(record, team));
+        var teamRecord = teamTableHelper.insert(record -> teamTableMapper.updateRecord(record, team));
         var teamMembers = insertMembers(team.getMembers(), teamRecord.getId());
-        return teamRecordMapper.toTeam(teamRecord, teamMembers);
+        return teamTableMapper.toTeam(teamRecord, teamMembers);
     }
 
     @Override
     @Transactional
     public Team insertOrUpdate(Team team) {
-        var teamRecord = teamTableHelper.insertOrUpdate(team.getIdValue(), record -> teamRecordMapper.updateRecord(record, team));
+        var teamRecord = teamTableHelper.insertOrUpdate(team.getIdValue(), record -> teamTableMapper.updateRecord(record, team));
         var teamMembers = insertOrUpdateMembers(team.getMembers(), teamRecord.getId());
-        return teamRecordMapper.toTeam(teamRecord, teamMembers);
+        return teamTableMapper.toTeam(teamRecord, teamMembers);
     }
 
     @Override
@@ -125,10 +126,7 @@ public class TeamRepositoryImpl implements TeamRepository {
 
     private Map<Long, List<TeamMemberRecord>> fetchMembersRecords(List<Long> teamIds) {
         return dsl.fetch(TEAM_MEMBER, TEAM_MEMBER.TEAM_ID.in(teamIds)).stream()
-                .collect(Collectors.groupingBy(
-                        TeamMemberRecord::getTeamId,
-                        HashMap::new,
-                        Collectors.toList()));
+                .collect(Collectors.groupingBy(TeamMemberRecord::getTeamId, Collectors.toList()));
     }
 
     private List<UUID> fetchRobotsIds(UUID teamExternalId) {
@@ -172,22 +170,15 @@ public class TeamRepositoryImpl implements TeamRepository {
 
     private TeamMemberRecord createRecord(TeamMember teamMember, Long teamId) {
         var record = dsl.newRecord(TEAM_MEMBER);
-        teamMemberRecordMapper.updateRecord(record, teamMember, teamId);
+        teamMemberTableMapper.updateRecord(record, teamMember, teamId);
         return record;
     }
 
-    @SuppressWarnings("unchecked")
-    private List<TeamRecord> getTeamRecords(@Nullable EntityFetchProperties<TeamSortableField> fetchProperties) {
-        Integer limit = null;
-        Integer offset = null;
-        List<TableField<TeamRecord, ?>> orderFields = List.of();
-
-        if (fetchProperties != null) {
-            limit = fetchProperties.getLimit();
-            offset = fetchProperties.getOffset();
-            orderFields = (List<TableField<TeamRecord, ?>>) mapNullSafe(fetchProperties.getSort(), teamTableFieldMapper::toField);
-        }
-        return teamTableHelper.getAll(limit, offset, orderFields);
+    private List<TeamRecord> getTeamRecords(@Nullable TeamFetchProperties fetchProperties) {
+        return teamTableHelper.getAll(
+                getLimit(fetchProperties),
+                getOffset(fetchProperties),
+                getSort(fetchProperties, teamTableMapper::toField));
     }
 
     private static boolean fetchMembers(@Nullable TeamFetchProperties fetchProperties) {

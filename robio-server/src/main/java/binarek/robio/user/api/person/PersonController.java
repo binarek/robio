@@ -26,11 +26,7 @@ public class PersonController {
     public List<? extends Person> getPeople(@RequestParam(defaultValue = DEFAULT_LIMIT) int limit,
                                             @RequestParam(defaultValue = DEFAULT_OFFSET) int offset,
                                             @RequestParam(defaultValue = "role,lastName") List<String> sort) {
-        return personService.getPeople(PersonFetchProperties.builder()
-                .limit(limit)
-                .offset(offset)
-                .sort(sort.stream().map(PersonSortableField::fromFieldName).collect(Collectors.toUnmodifiableList()))
-                .build());
+        return personService.getPeople(buildPersonFetchProperties(limit, offset, sort));
     }
 
     @GetMapping("/{id}")
@@ -52,5 +48,13 @@ public class PersonController {
     @DeleteMapping("/{id}")
     public void deletePerson(@PathVariable UUID id) {
         personService.deletePerson(id);
+    }
+
+    private static PersonFetchProperties buildPersonFetchProperties(int limit, int offset, List<String> sort) {
+        return PersonFetchProperties.builder()
+                .limit(limit)
+                .offset(offset)
+                .sort(sort.stream().map(PersonSortableField::fromFieldName).collect(Collectors.toUnmodifiableList()))
+                .build();
     }
 }

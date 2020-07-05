@@ -26,11 +26,7 @@ public class RobotController {
     public List<? extends Robot> getRobots(@RequestParam(defaultValue = DEFAULT_LIMIT) int limit,
                                            @RequestParam(defaultValue = DEFAULT_OFFSET) int offset,
                                            @RequestParam(defaultValue = "name") List<String> sort) {
-        return robotService.getRobots(RobotFetchProperties.builder()
-                .limit(limit)
-                .offset(offset)
-                .sort(sort.stream().map(RobotSortableField::fromFieldName).collect(Collectors.toUnmodifiableList()))
-                .build());
+        return robotService.getRobots(buildRobotFetchProperties(limit, offset, sort));
     }
 
     @GetMapping("/{id}")
@@ -52,5 +48,13 @@ public class RobotController {
     @DeleteMapping("/{id}")
     public void deleteRobot(@PathVariable UUID id) {
         robotService.deleteRobot(id);
+    }
+
+    private static RobotFetchProperties buildRobotFetchProperties(int limit, int offset, List<String> sort) {
+        return RobotFetchProperties.builder()
+                .limit(limit)
+                .offset(offset)
+                .sort(sort.stream().map(RobotSortableField::fromFieldName).collect(Collectors.toUnmodifiableList()))
+                .build();
     }
 }

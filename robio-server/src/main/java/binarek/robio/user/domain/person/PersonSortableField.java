@@ -1,5 +1,7 @@
 package binarek.robio.user.domain.person;
 
+import static binarek.robio.common.util.TextUtil.camelToSnakeUpperCase;
+
 public enum PersonSortableField {
     FIRST_NAME,
     LAST_NAME,
@@ -7,7 +9,6 @@ public enum PersonSortableField {
     ;
 
     public static PersonSortableField fromFieldName(String fieldName) {
-        var enumName = fieldName.replaceAll("([a-z])([A-Z])", "$1_$2").toUpperCase();
-        return PersonSortableField.valueOf(enumName);
+        return PersonSortableField.valueOf(camelToSnakeUpperCase(fieldName));
     }
 }
