@@ -1,6 +1,7 @@
 package binarek.robio.core.domain.robot;
 
 import binarek.robio.codegen.ValueTypeStyle;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 import org.springframework.util.Assert;
 
@@ -8,7 +9,15 @@ import java.math.BigDecimal;
 
 @Value.Immutable
 @ValueTypeStyle
-abstract class LengthValue {
+@JsonDeserialize(as = ImmutableLength.class)
+public abstract class Length {
+
+    Length() {
+    }
+
+    public static Length of(BigDecimal value, LengthUnit unit) {
+        return ImmutableLength.ofValue(value, unit);
+    }
 
     @Value.Parameter
     public abstract BigDecimal getValue();
@@ -17,8 +26,8 @@ abstract class LengthValue {
     public abstract LengthUnit getUnit();
 
     public Length convertUnit(LengthUnit targetUnit) {
-        if (getUnit() == targetUnit && this instanceof Length) {
-            return (Length) this;
+        if (getUnit() == targetUnit) {
+            return this;
         }
         return Length.of(LengthUnit.convertUnit(getValue(), getUnit(), targetUnit), targetUnit);
     }

@@ -2,12 +2,21 @@ package binarek.robio.core.domain.robot;
 
 import binarek.robio.codegen.ValueTypeStyle;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 import org.springframework.util.Assert;
 
 @Value.Immutable
 @ValueTypeStyle
-abstract class RobotNameValue {
+@JsonDeserialize(as = ImmutableRobotName.class)
+public abstract class RobotName {
+
+    RobotName() {
+    }
+
+    public static RobotName of(String value) {
+        return ImmutableRobotName.ofValue(value);
+    }
 
     @JsonValue
     @Value.Parameter

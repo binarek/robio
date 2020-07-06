@@ -2,13 +2,22 @@ package binarek.robio.user.domain.person;
 
 import binarek.robio.codegen.ValueTypeStyle;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 
 import java.util.UUID;
 
 @Value.Immutable
 @ValueTypeStyle
-abstract class PersonIdValue {
+@JsonDeserialize(as = ImmutablePersonId.class)
+public abstract class PersonId {
+
+    PersonId() {
+    }
+
+    public static PersonId of(UUID value) {
+        return ImmutablePersonId.ofValue(value);
+    }
 
     @JsonValue
     @Value.Parameter
