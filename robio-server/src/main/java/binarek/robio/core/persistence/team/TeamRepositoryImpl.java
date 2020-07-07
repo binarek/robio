@@ -1,14 +1,11 @@
 package binarek.robio.core.persistence.team;
 
 import binarek.robio.common.persistence.EntityTableHelper;
-import binarek.robio.core.domain.team.Team;
-import binarek.robio.core.domain.team.TeamFetchLevel;
-import binarek.robio.core.domain.team.TeamMember;
-import binarek.robio.core.domain.team.TeamRepository;
+import binarek.robio.core.domain.team.*;
 import binarek.robio.db.tables.records.TeamMemberRecord;
 import binarek.robio.db.tables.records.TeamRecord;
+import binarek.robio.user.domain.person.PersonId;
 import org.jooq.DSLContext;
-import org.jooq.Record1;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +15,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static binarek.robio.db.tables.Robot.ROBOT;
 import static binarek.robio.db.tables.Team.TEAM;
 import static binarek.robio.db.tables.TeamMember.TEAM_MEMBER;
 
@@ -40,26 +36,26 @@ public class TeamRepositoryImpl implements TeamRepository {
     }
 
     @Override
-    public Optional<Team> getById(UUID id, @Nullable TeamFetchLevel fetchLevel) {
-        return teamTableHelper.getByExternalId(id)
+    public Optional<Team> getById(TeamId id, @Nullable TeamFetchLevel fetchLevel) {
+        return teamTableHelper.getByExternalId(id.getValue())
                 .map(teamRecord -> teamRecordMapper.toTeam(
                         teamRecord,
                         fetchLevel == TeamFetchLevel.TEAM ? fetchMembersRecords(teamRecord.getId()) : List.of()));
     }
 
     @Override
-    public boolean existsById(UUID id) {
-        return teamTableHelper.existsByExternalId(id);
+    public boolean existsById(TeamId id) {
+        return teamTableHelper.existsByExternalId(id.getValue());
     }
 
     @Override
-    public boolean existsByName(String name) {
-        return teamTableHelper.existsByName(name);
+    public boolean existsByName(TeamName name) {
+        return teamTableHelper.existsByName(name.getValue());
     }
 
     @Override
-    public boolean existsByIdOrName(@Nullable UUID id, String name) {
-        return teamTableHelper.existsByExternalIdOrName(id, name);
+    public boolean existsByIdOrName(@Nullable TeamId id, TeamName name) {
+        return teamTableHelper.existsByExternalIdOrName(getValueNullSafe(id), name.getValue());
     }
 
     @Override
@@ -73,47 +69,40 @@ public class TeamRepositoryImpl implements TeamRepository {
     @Override
     @Transactional
     public Team insertOrUpdate(Team team) {
-        var teamRecord = teamTableHelper.insertOrUpdate(team.getIdValue(), record -> teamRecordMapper.updateRecord(record, team));
+        var teamRecord = teamTableHelper.insertOrUpdate(getValueNullSafe(team.getId()),
+                record -> teamRecordMapper.updateRecord(record, team));
         var teamMembers = insertOrUpdateMembers(team.getMembers(), teamRecord.getId());
         return teamRecordMapper.toTeam(teamRecord, teamMembers);
     }
 
     @Override
     @Transactional
-    public boolean deleteById(UUID id) {
-        deleteMembersByTeamExternalId(id);
-        return teamTableHelper.deleteByExternalId(id);
+    public boolean deleteById(TeamId id) {
+        deleteMembersByTeamExternalId(id.getValue());
+        return teamTableHelper.deleteByExternalId(id.getValue());
     }
 
     @Override
-    public boolean doesCompetitorBelongToAnyTeam(UUID competitorId) {
+    public boolean doesCompetitorBelongToAnyTeam(PersonId competitorId) {
         return dsl.selectOne()
                 .from(TEAM_MEMBER)
-                .where(TEAM_MEMBER.COMPETITOR_ID.eq(competitorId))
+                .where(TEAM_MEMBER.COMPETITOR_ID.eq(competitorId.getValue()))
                 .fetchOne() != null;
     }
 
     @Override
-    public boolean doesCompetitorBelongToOtherTeam(UUID competitorId, UUID teamId) {
+    public boolean doesCompetitorBelongToOtherTeam(PersonId competitorId, TeamId teamId) {
         return dsl.selectOne()
                 .from(TEAM_MEMBER)
-                .where(TEAM_MEMBER.COMPETITOR_ID.eq(competitorId))
+                .where(TEAM_MEMBER.COMPETITOR_ID.eq(competitorId.getValue()))
                 .andNot(TEAM_MEMBER.TEAM_ID.eq(
-                        dsl.select(TEAM.ID).from(TEAM).where(TEAM.EXTERNAL_ID.eq(teamId))
+                        dsl.select(TEAM.ID).from(TEAM).where(TEAM.EXTERNAL_ID.eq(teamId.getValue()))
                 ))
                 .fetchOne() != null;
     }
 
     private List<TeamMemberRecord> fetchMembersRecords(Long teamId) {
         return dsl.fetch(TEAM_MEMBER, TEAM_MEMBER.TEAM_ID.eq(teamId));
-    }
-
-    private List<UUID> fetchRobotsIds(UUID teamExternalId) {
-        return dsl.select(ROBOT.EXTERNAL_ID)
-                .from(ROBOT)
-                .where(ROBOT.TEAM_ID.eq(teamExternalId))
-                .fetch()
-                .map(Record1::value1);
     }
 
     private List<TeamMemberRecord> insertMembers(List<TeamMember> teamMembers, Long teamId) {
@@ -151,5 +140,10 @@ public class TeamRepositoryImpl implements TeamRepository {
         var record = dsl.newRecord(TEAM_MEMBER);
         teamMemberRecordMapper.updateRecord(record, teamMember, teamId);
         return record;
+    }
+
+    @Nullable
+    private static UUID getValueNullSafe(@Nullable TeamId teamId) {
+        return teamId != null ? teamId.getValue() : null;
     }
 }

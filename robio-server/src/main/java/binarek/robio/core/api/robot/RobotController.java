@@ -1,10 +1,9 @@
 package binarek.robio.core.api.robot;
 
 import binarek.robio.core.domain.robot.Robot;
+import binarek.robio.core.domain.robot.RobotId;
 import binarek.robio.core.domain.robot.RobotService;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
 
 import static binarek.robio.common.api.ApiUtil.validateEntityPutRequest;
 
@@ -19,7 +18,7 @@ public class RobotController {
     }
 
     @GetMapping("/{id}")
-    public Robot getRobot(@PathVariable UUID id) {
+    public Robot getRobot(@PathVariable RobotId id) {
         return robotService.getRobot(id);
     }
 
@@ -29,13 +28,13 @@ public class RobotController {
     }
 
     @PutMapping("/{id}")
-    public Robot putRobot(@PathVariable UUID id, @RequestBody Robot robot) {
-        validateEntityPutRequest(id, robot);
+    public Robot putRobot(@PathVariable RobotId id, @RequestBody Robot robot) {
+        validateEntityPutRequest(id, robot.getId());
         return robotService.saveRobot(robot);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteRobot(@PathVariable UUID id) {
+    public void deleteRobot(@PathVariable RobotId id) {
         robotService.deleteRobot(id);
     }
 }

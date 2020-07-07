@@ -2,11 +2,10 @@ package binarek.robio.user.domain.person;
 
 import binarek.robio.codegen.BaseStyle;
 import binarek.robio.common.domain.entity.Entity;
+import binarek.robio.common.domain.value.Notes;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 import org.springframework.lang.Nullable;
-
-import java.util.UUID;
 
 @Value.Immutable
 @BaseStyle
@@ -16,18 +15,11 @@ public abstract class Person implements Entity {
     Person() {
     }
 
-    @Override
-    public final UUID getIdValue() {
-        return getId() != null ? getId().getValue() : null;
-    }
-
-    @Override
-    public final String getNameValue() {
-        return getEmail().getValue();
-    }
-
     @Nullable
     public abstract PersonId getId();
+
+    @Nullable
+    public abstract Long getVersion();
 
     @Value.Redacted
     public abstract Email getEmail();
@@ -39,6 +31,9 @@ public abstract class Person implements Entity {
     public abstract LastName getLastName();
 
     public abstract Role getRole();
+
+    @Nullable
+    public abstract Notes getNotes();
 
     public enum Role {
         COMPETITOR,

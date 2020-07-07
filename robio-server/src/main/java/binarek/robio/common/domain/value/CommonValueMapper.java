@@ -9,7 +9,7 @@ import static binarek.robio.common.util.MapperUtil.mapNullSafe;
  * Mapper that is responsible for mapping value objects to primitives and vice versa
  */
 @Component
-public class StandardValueMapper {
+public class CommonValueMapper {
 
     @Nullable
     public Notes toNotes(@Nullable String notes) {

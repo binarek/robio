@@ -3,9 +3,7 @@ package binarek.robio.user.persistence.person;
 import binarek.robio.common.persistence.EntityFetchProperties;
 import binarek.robio.common.persistence.EntityTableHelper;
 import binarek.robio.db.tables.records.PersonRecord;
-import binarek.robio.user.domain.person.Person;
-import binarek.robio.user.domain.person.PersonRepository;
-import binarek.robio.user.domain.person.PersonValueMapper;
+import binarek.robio.user.domain.person.*;
 import org.jooq.DSLContext;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
@@ -32,19 +30,19 @@ public class PersonRepositoryImpl implements PersonRepository {
     }
 
     @Override
-    public Optional<? extends Person> getById(UUID id, @Nullable EntityFetchProperties.NotSupported fetchProperties) {
-        return dsl.selectFrom(PERSON).where(PERSON.EXTERNAL_ID.eq(id)).fetchOptional()
+    public Optional<? extends Person> getById(PersonId id, @Nullable EntityFetchProperties.NotSupported fetchProperties) {
+        return dsl.selectFrom(PERSON).where(PERSON.EXTERNAL_ID.eq(id.getValue())).fetchOptional()
                 .map(personRecordMapper::toPerson);
     }
 
     @Override
-    public boolean existsByName(String name) {
-        return personTableHelper.existsByName(name);
+    public boolean existsByName(Email name) {
+        return personTableHelper.existsByName(name.getValue());
     }
 
     @Override
-    public boolean existsByIdOrName(@Nullable UUID id, String name) {
-        return personTableHelper.existsByExternalIdOrName(id, name);
+    public boolean existsByIdOrName(@Nullable PersonId id, Email name) {
+        return personTableHelper.existsByExternalIdOrName(getValueNullSafe(id), name.getValue());
     }
 
     @Override
@@ -56,18 +54,23 @@ public class PersonRepositoryImpl implements PersonRepository {
     @Override
     public Person insertOrUpdate(Person person) {
         var personRecord = personTableHelper.insertOrUpdate(
-                person.getIdValue(), record -> personRecordMapper.updateRecord(record, person));
+                getValueNullSafe(person.getId()), record -> personRecordMapper.updateRecord(record, person));
         return personRecordMapper.toPerson(personRecord);
     }
 
     @Override
-    public boolean deleteById(UUID id) {
-        return personTableHelper.deleteByExternalId(id);
+    public boolean deleteById(PersonId id) {
+        return personTableHelper.deleteByExternalId(id.getValue());
     }
 
     @Override
-    public boolean existsByIdAndRole(UUID id, Person.Role role) {
-        return personTableHelper.existsByCondition(PERSON.EXTERNAL_ID.eq(id)
+    public boolean existsByIdAndRole(PersonId id, Person.Role role) {
+        return personTableHelper.existsByCondition(PERSON.EXTERNAL_ID.eq(id.getValue())
                 .and(PERSON.ROLE.eq(personValueMapper.toValue(role))));
+    }
+
+    @Nullable
+    private static UUID getValueNullSafe(@Nullable PersonId personId) {
+        return personId != null ? personId.getValue() : null;
     }
 }

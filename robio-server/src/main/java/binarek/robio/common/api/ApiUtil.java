@@ -1,17 +1,15 @@
 package binarek.robio.common.api;
 
-import binarek.robio.common.domain.entity.Entity;
 import binarek.robio.common.domain.entity.EntityInvalidIdentityException;
-
-import java.util.UUID;
+import org.springframework.lang.Nullable;
 
 public final class ApiUtil {
 
     public static final String DEFAULT_DETAILS_LEVEL = "STANDARD";
 
-    public static void validateEntityPutRequest(UUID id, Entity entity) {
-        if (entity.getIdValue() != null && !entity.getIdValue().equals(id)) {
-            throw new EntityInvalidIdentityException(id);
+    public static <ID> void validateEntityPutRequest(ID requestId, @Nullable ID entityId) {
+        if (entityId != null && !entityId.equals(requestId)) {
+            throw new EntityInvalidIdentityException(entityId);
         }
     }
 

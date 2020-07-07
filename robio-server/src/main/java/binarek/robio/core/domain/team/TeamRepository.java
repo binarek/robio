@@ -1,14 +1,13 @@
 package binarek.robio.core.domain.team;
 
 import binarek.robio.common.domain.entity.EntityRepository;
+import binarek.robio.user.domain.person.PersonId;
 
-import java.util.UUID;
+public interface TeamRepository extends EntityRepository<Team, TeamFetchLevel, TeamId, TeamName> {
 
-public interface TeamRepository extends EntityRepository<Team, TeamFetchLevel> {
+    boolean existsById(TeamId id);
 
-    boolean existsById(UUID id);
+    boolean doesCompetitorBelongToAnyTeam(PersonId competitorId);
 
-    boolean doesCompetitorBelongToAnyTeam(UUID competitorId);
-
-    boolean doesCompetitorBelongToOtherTeam(UUID competitorId, UUID teamId);
+    boolean doesCompetitorBelongToOtherTeam(PersonId competitorId, TeamId teamId);
 }

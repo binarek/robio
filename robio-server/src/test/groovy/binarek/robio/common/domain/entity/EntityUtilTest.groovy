@@ -1,6 +1,5 @@
 package binarek.robio.common.domain.entity
 
-import binarek.robio.common.domain.value.Notes
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -18,32 +17,9 @@ class EntityUtilTest extends Specification {
         FTLRobot         || 'FTLRobot'
     }
 
-    class Competition extends StubEntity {}
+    class Competition implements Entity {}
 
-    class CompetitionRobot extends StubEntity {}
+    class CompetitionRobot implements Entity {}
 
-    class FTLRobot extends StubEntity {}
-
-    class StubEntity implements Entity {
-
-        @Override
-        UUID getIdValue() {
-            return Stub()
-        }
-
-        @Override
-        Long getVersion() {
-            return Stub()
-        }
-
-        @Override
-        String getNameValue() {
-            return Stub()
-        }
-
-        @Override
-        Notes getNotes() {
-            return Stub()
-        }
-    }
+    class FTLRobot implements Entity {}
 }

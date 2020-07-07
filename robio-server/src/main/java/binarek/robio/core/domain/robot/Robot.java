@@ -2,11 +2,11 @@ package binarek.robio.core.domain.robot;
 
 import binarek.robio.codegen.BaseStyle;
 import binarek.robio.common.domain.entity.Entity;
+import binarek.robio.common.domain.value.Notes;
+import binarek.robio.core.domain.team.TeamId;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 import org.springframework.lang.Nullable;
-
-import java.util.UUID;
 
 @Value.Immutable
 @BaseStyle
@@ -16,22 +16,15 @@ public abstract class Robot implements Entity {
     Robot() {
     }
 
-    @Override
-    public final UUID getIdValue() {
-        return getId() != null ? getId().getValue() : null;
-    }
-
-    @Override
-    public final String getNameValue() {
-        return getName().getValue();
-    }
-
     @Nullable
     public abstract RobotId getId();
 
+    @Nullable
+    public abstract Long getVersion();
+
     public abstract RobotName getName();
 
-    public abstract UUID getTeamId();
+    public abstract TeamId getTeamId();
 
     @Nullable
     public abstract Weight getWeight();
@@ -44,4 +37,7 @@ public abstract class Robot implements Entity {
 
     @Nullable
     public abstract Length getHeight();
+
+    @Nullable
+    public abstract Notes getNotes();
 }

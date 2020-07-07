@@ -9,26 +9,33 @@ class EntityServiceHelperTest extends Specification {
 
     def entityRepository = Mock(EntityRepository)
 
+    def entityValueExtractor = Stub(EntityValueExtractor) {
+        getId(entityWithId) >> entityId
+        getId(entityWithoutId) >> null
+        getName(entityWithId) >> entityName
+        getName(entityWithoutId) >> entityName
+    }
+
     @Subject
-    def entityServiceHelper = new EntityServiceHelper(Entity, entityRepository)
+    def entityServiceHelper = new EntityServiceHelper(Entity, entityRepository, entityValueExtractor)
 
     @Shared
-    def entityWithId = Stub(Entity) {
-        getIdValue() >> UUID.fromString('5ec8cacf-b69c-4dbf-afc7-0a3ab87f94b6')
-        getNameValue() >> 'Sumo eXtreme'
-    }
+    def entityWithId = Stub(Entity)
 
     @Shared
-    def entityWithoutId = Stub(Entity) {
-        getIdValue() >> null
-        getNameValue() >> 'Follow The Line'
-    }
+    def entityWithoutId = Stub(Entity)
+
+    @Shared
+    def entityId = UUID.fromString('5ec8cacf-b69c-4dbf-afc7-0a3ab87f94b6')
+
+    @Shared
+    def entityName = 'Sumo eXtreme'
 
     def 'throws exception while creating entity with already used id or name'() {
         when:
         entityServiceHelper.createEntity(entityWithId)
         then:
-        1 * entityRepository.existsByIdOrName(entityWithId.idValue, entityWithId.nameValue) >> true
+        1 * entityRepository.existsByIdOrName(entityId, entityName) >> true
         0 * entityRepository./insert.*/
         and:
         thrown(EntityAlreadyExistsException)
@@ -40,7 +47,7 @@ class EntityServiceHelperTest extends Specification {
         when:
         def result = entityServiceHelper.createEntity(entityWithId)
         then:
-        1 * entityRepository.existsByIdOrName(entityWithId.idValue, entityWithId.nameValue) >> false
+        1 * entityRepository.existsByIdOrName(entityId, entityName) >> false
         1 * entityRepository.insert(entityWithId) >> insertedEntity
         and:
         result == insertedEntity
@@ -51,7 +58,7 @@ class EntityServiceHelperTest extends Specification {
         when:
         entityServiceHelper.saveEntity(entityWithoutId)
         then:
-        1 * entityRepository.existsByName(entityWithoutId.nameValue) >> true
+        1 * entityRepository.existsByName(entityName) >> true
         0 * entityRepository./insert.*/
         and:
         thrown(EntityAlreadyExistsException)
@@ -63,7 +70,7 @@ class EntityServiceHelperTest extends Specification {
         when:
         def result = entityServiceHelper.saveEntity(entityWithoutId)
         then:
-        1 * entityRepository.existsByName(entityWithoutId.nameValue) >> false
+        1 * entityRepository.existsByName(entityName) >> false
         1 * entityRepository.insertOrUpdate(entityWithoutId) >> insertedEntity
         and:
         result == insertedEntity
@@ -83,18 +90,18 @@ class EntityServiceHelperTest extends Specification {
 
     def 'throws exception while deleting non-existent entity'() {
         when:
-        entityServiceHelper.deleteEntity(entityWithId.idValue)
+        entityServiceHelper.deleteEntity(entityId)
         then:
-        entityRepository.deleteById(entityWithId.idValue) >> false
+        1 * entityRepository.deleteById(entityId) >> false
         and:
         thrown(EntityNotExistsException)
     }
 
     def 'deletes existing entity'() {
         when:
-        entityServiceHelper.deleteEntity(entityWithId.idValue)
+        entityServiceHelper.deleteEntity(entityId)
         then:
-        entityRepository.deleteById(entityWithId.idValue) >> true
+        1 * entityRepository.deleteById(entityId) >> true
         and:
         noExceptionThrown()
     }
@@ -104,18 +111,18 @@ class EntityServiceHelperTest extends Specification {
         given:
         def fetchProperties = Stub(EntityFetchProperties)
         when:
-        entityServiceHelper.getEntity(entityWithId.idValue, fetchProperties)
+        entityServiceHelper.getEntity(entityId, fetchProperties)
         then:
-        entityRepository.getById(entityWithId.idValue, fetchProperties) >> Optional.empty()
+        1 * entityRepository.getById(entityId, fetchProperties) >> Optional.empty()
         and:
         thrown(EntityNotExistsException)
     }
 
     def "gets existing entity by id"() {
         when:
-        def result = entityServiceHelper.getEntity(entityWithId.idValue)
+        def result = entityServiceHelper.getEntity(entityId)
         then:
-        entityRepository.getById(entityWithId.idValue, null) >> Optional.of(entityWithId)
+        1 * entityRepository.getById(entityId, null) >> Optional.of(entityWithId)
         and:
         result == entityWithId
     }
@@ -124,9 +131,9 @@ class EntityServiceHelperTest extends Specification {
         given:
         def fetchProperties = Stub(EntityFetchProperties)
         when:
-        def result = entityServiceHelper.getEntity(entityWithId.idValue, fetchProperties)
+        def result = entityServiceHelper.getEntity(entityId, fetchProperties)
         then:
-        entityRepository.getById(entityWithId.idValue, fetchProperties) >> Optional.of(entityWithId)
+        1 * entityRepository.getById(entityId, fetchProperties) >> Optional.of(entityWithId)
         and:
         result == entityWithId
     }

@@ -4,19 +4,18 @@ import binarek.robio.common.persistence.EntityFetchProperties;
 import org.springframework.lang.Nullable;
 
 import java.util.Optional;
-import java.util.UUID;
 
-public interface EntityRepository<E extends Entity, FP extends EntityFetchProperties> {
+public interface EntityRepository<E extends Entity, FP extends EntityFetchProperties, ID, NAME> {
 
-    Optional<? extends E> getById(UUID id, @Nullable FP fetchProperties);
+    Optional<? extends E> getById(ID id, @Nullable FP fetchProperties);
 
-    boolean existsByName(String name);
+    boolean existsByName(NAME name);
 
-    boolean existsByIdOrName(@Nullable UUID id, String name);
+    boolean existsByIdOrName(@Nullable ID id, NAME name);
 
     E insert(E entity);
 
     E insertOrUpdate(E entity);
 
-    boolean deleteById(UUID id);
+    boolean deleteById(ID id);
 }

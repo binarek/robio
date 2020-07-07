@@ -2,13 +2,13 @@ package binarek.robio.core.domain.robot;
 
 import binarek.robio.common.domain.entity.EntityRepository;
 import binarek.robio.common.persistence.EntityFetchProperties;
+import binarek.robio.core.domain.team.TeamId;
 
 import java.util.List;
-import java.util.UUID;
 
-public interface RobotRepository extends EntityRepository<Robot, EntityFetchProperties.NotSupported> {
+public interface RobotRepository extends EntityRepository<Robot, EntityFetchProperties.NotSupported, RobotId, RobotName> {
 
-    boolean existsByTeamId(UUID teamId);
+    boolean existsByTeamId(TeamId teamId);
 
-    List<UUID> getIdsByTeamId(UUID teamId);
+    List<RobotId> getIdsByTeamId(TeamId teamId);
 }

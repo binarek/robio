@@ -1,6 +1,7 @@
 package binarek.robio.user.api.person;
 
 import binarek.robio.user.domain.person.Person;
+import binarek.robio.user.domain.person.PersonId;
 import binarek.robio.user.domain.person.PersonService;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,7 @@ public class PersonController {
     }
 
     @GetMapping("/{id}")
-    public Person getPerson(@PathVariable UUID id) {
+    public Person getPerson(@PathVariable PersonId id) {
         return personService.getPerson(id);
     }
 
@@ -30,12 +31,12 @@ public class PersonController {
 
     @PutMapping("/{id}")
     public Person putPerson(@PathVariable UUID id, @RequestBody Person person) {
-        validateEntityPutRequest(id, person);
+        validateEntityPutRequest(id, person.getId());
         return personService.savePerson(person);
     }
 
     @DeleteMapping("/{id}")
-    public void deletePerson(@PathVariable UUID id) {
+    public void deletePerson(@PathVariable PersonId id) {
         personService.deletePerson(id);
     }
 }

@@ -1,7 +1,7 @@
 package binarek.robio.core.persistence.team;
 
 import binarek.robio.codegen.BaseMapperConfig;
-import binarek.robio.common.domain.value.StandardValueMapper;
+import binarek.robio.common.domain.value.CommonValueMapper;
 import binarek.robio.core.domain.team.Team;
 import binarek.robio.core.domain.team.TeamValueMapper;
 import binarek.robio.db.tables.records.TeamMemberRecord;
@@ -13,7 +13,7 @@ import org.mapstruct.MappingTarget;
 import java.util.List;
 
 @Mapper(config = BaseMapperConfig.class,
-        uses = {StandardValueMapper.class, TeamValueMapper.class, TeamMemberRecordMapper.class})
+        uses = {CommonValueMapper.class, TeamValueMapper.class, TeamMemberRecordMapper.class})
 public interface TeamRecordMapper {
 
     @Mapping(target = "id", ignore = true)
