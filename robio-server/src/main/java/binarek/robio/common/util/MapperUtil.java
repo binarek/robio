@@ -14,8 +14,8 @@ public final class MapperUtil {
         return input == null ? null : mapping.apply(input);
     }
 
-    public static <I, O> List<? extends O> mapNullSafe(@Nullable List<? extends I> input,
-                                                       Function<I, O> mapping) {
+    public static <I, O> List<? extends O> mapListNullSafe(@Nullable List<? extends I> input,
+                                                           Function<I, O> mapping) {
         if (CollectionUtils.isEmpty(input)) {
             return List.of();
         }

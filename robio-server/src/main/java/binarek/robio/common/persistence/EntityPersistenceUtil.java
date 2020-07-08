@@ -1,14 +1,15 @@
 package binarek.robio.common.persistence;
 
 import binarek.robio.common.domain.entity.EntityFetchProperties;
-import org.jooq.Record;
+import binarek.robio.common.domain.value.SortOrder;
+import org.jooq.SortField;
 import org.jooq.TableField;
 import org.springframework.lang.Nullable;
 
 import java.util.List;
 import java.util.function.Function;
 
-import static binarek.robio.common.util.MapperUtil.mapNullSafe;
+import static binarek.robio.common.util.MapperUtil.mapListNullSafe;
 
 public final class EntityPersistenceUtil {
 
@@ -23,13 +24,19 @@ public final class EntityPersistenceUtil {
     }
 
     @SuppressWarnings("unchecked")
-    public static <R extends Record, SF> List<TableField<R, ?>> getSort(@Nullable EntityFetchProperties<SF> fetchProperties,
-                                                                        Function<SF, TableField<R, ?>> toField) {
+    public static <SF> List<SortField<?>> getSort(@Nullable EntityFetchProperties<SF> fetchProperties,
+                                                  Function<SF, TableField<?, ?>> toField) {
         if (fetchProperties != null) {
-            return (List<TableField<R, ?>>) mapNullSafe(fetchProperties.getSort(), toField);
+            return (List<SortField<?>>) mapListNullSafe(fetchProperties.getSort(), order -> toSortField(order, toField));
         } else {
             return List.of();
         }
+    }
+
+    private static <SF> SortField<?> toSortField(SortOrder<SF> order,
+                                                 Function<SF, TableField<?, ?>> toField) {
+        var tableField = toField.apply(order.getProperty());
+        return order.getDirection() == SortOrder.Direction.ASC ? tableField.asc() : tableField.desc();
     }
 
     private EntityPersistenceUtil() {

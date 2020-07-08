@@ -1,6 +1,7 @@
 package binarek.robio.core.domain.team;
 
 import binarek.robio.common.domain.entity.EntityFetchProperties;
+import binarek.robio.common.domain.value.SortOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 import org.springframework.lang.Nullable;
@@ -34,7 +35,7 @@ public abstract class TeamFetchProperties extends EntityFetchProperties<TeamSort
 
         Builder offset(@Nullable Integer offset);
 
-        Builder sort(@Nullable Iterable<? extends TeamSortableField> sort);
+        Builder sort(@Nullable Iterable<? extends SortOrder<TeamSortableField>> sort);
 
         Builder detailsLevel(@Nullable DetailsLevel detailsLevel);
 

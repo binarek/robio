@@ -1,6 +1,7 @@
 package binarek.robio.core.domain.robot;
 
 import binarek.robio.common.domain.entity.EntityFetchProperties;
+import binarek.robio.common.domain.value.SortOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 import org.springframework.lang.Nullable;
@@ -22,7 +23,7 @@ public abstract class RobotFetchProperties extends EntityFetchProperties<RobotSo
 
         Builder offset(@Nullable Integer offset);
 
-        Builder sort(@Nullable Iterable<? extends RobotSortableField> sort);
+        Builder sort(@Nullable Iterable<? extends SortOrder<RobotSortableField>> sort);
 
         RobotFetchProperties build();
     }

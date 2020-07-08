@@ -1,5 +1,6 @@
 package binarek.robio.common.domain.entity;
 
+import binarek.robio.common.domain.value.SortOrder;
 import org.immutables.value.Value;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
@@ -20,7 +21,7 @@ public abstract class EntityFetchProperties<SF> {
     public abstract Integer getOffset();
 
     @Nullable
-    public abstract List<SF> getSort();
+    public abstract List<SortOrder<SF>> getSort();
 
     @Value.Check
     protected void validate() {

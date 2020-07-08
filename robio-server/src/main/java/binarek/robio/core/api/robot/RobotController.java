@@ -5,7 +5,6 @@ import binarek.robio.core.domain.robot.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static binarek.robio.common.api.ApiUtil.*;
 
@@ -52,7 +51,7 @@ public class RobotController {
             return RobotFetchProperties.builder()
                     .limit(limit)
                     .offset(offset)
-                    .sort(sort.stream().map(RobotSortableField::fromFieldName).collect(Collectors.toUnmodifiableList()))
+                    .sort(toSort(sort, RobotSortableField::fromFieldName))
                     .build();
         } catch (IllegalStateException | IllegalArgumentException e) {
             throw new BadRequestException(e.getLocalizedMessage());

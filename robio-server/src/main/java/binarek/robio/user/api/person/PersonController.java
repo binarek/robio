@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static binarek.robio.common.api.ApiUtil.*;
 
@@ -53,7 +52,7 @@ public class PersonController {
             return PersonFetchProperties.builder()
                     .limit(limit)
                     .offset(offset)
-                    .sort(sort.stream().map(PersonSortableField::fromFieldName).collect(Collectors.toUnmodifiableList()))
+                    .sort(toSort(sort, PersonSortableField::fromFieldName))
                     .build();
         } catch (IllegalStateException | IllegalArgumentException e) {
             throw new BadRequestException(e.getLocalizedMessage());

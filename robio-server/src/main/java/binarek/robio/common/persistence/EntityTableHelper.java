@@ -71,7 +71,7 @@ public class EntityTableHelper<R extends UpdatableRecord<R>> {
         return dsl.fetchOptional(table, externalIdField.eq(externalId));
     }
 
-    public List<R> getAll(@Nullable Integer limit, @Nullable Integer offset, List<TableField<R, ?>> orderFields) {
+    public List<R> getAll(@Nullable Integer limit, @Nullable Integer offset, List<? extends OrderField<?>> orderFields) {
         return dsl.selectFrom(table)
                 .orderBy(orderFields)
                 .limit(limit)
