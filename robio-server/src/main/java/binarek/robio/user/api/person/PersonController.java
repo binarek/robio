@@ -1,11 +1,9 @@
 package binarek.robio.user.api.person;
 
-import binarek.robio.common.api.BadRequestException;
 import binarek.robio.user.domain.person.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 import static binarek.robio.common.api.ApiUtil.*;
 
@@ -37,7 +35,7 @@ public class PersonController {
     }
 
     @PutMapping("/{id}")
-    public Person putPerson(@PathVariable UUID id, @RequestBody Person person) {
+    public Person putPerson(@PathVariable PersonId id, @RequestBody Person person) {
         validateEntityPutRequest(id, person.getId());
         return personService.savePerson(person);
     }
@@ -48,14 +46,10 @@ public class PersonController {
     }
 
     private static PersonFetchProperties buildPersonFetchProperties(int limit, int offset, List<String> sort) {
-        try {
-            return PersonFetchProperties.builder()
-                    .limit(limit)
-                    .offset(offset)
-                    .sort(toSort(sort, PersonSortableField::fromFieldName))
-                    .build();
-        } catch (IllegalStateException | IllegalArgumentException e) {
-            throw new BadRequestException(e.getLocalizedMessage());
-        }
+        return buildAndValidateFetchProperties(() -> PersonFetchProperties.builder()
+                .limit(limit)
+                .offset(offset)
+                .sort(toSort(sort, PersonSortableField::fromFieldName))
+                .build());
     }
 }

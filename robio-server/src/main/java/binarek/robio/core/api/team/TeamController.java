@@ -1,13 +1,9 @@
 package binarek.robio.core.api.team;
 
 import binarek.robio.common.api.DetailsLevel;
-import binarek.robio.core.domain.robot.RobotId;
 import binarek.robio.core.domain.team.TeamId;
 import binarek.robio.core.domain.team.TeamService;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static binarek.robio.common.api.ApiUtil.DEFAULT_DETAILS_LEVEL;
 import static binarek.robio.common.api.ApiUtil.validateEntityPutRequest;
@@ -30,10 +26,7 @@ public class TeamController {
         if (detailsLevel == DetailsLevel.BASIC) {
             return teamDtoMapper.toTeamDto(teamService.getTeamBasicInfo(id));
         } else if (detailsLevel == DetailsLevel.FULL) {
-            var robotIds = teamService.getTeamRobotsIds(id).stream()
-                    .map(RobotId::getValue)
-                    .collect(Collectors.toUnmodifiableList());
-            return teamDtoMapper.toTeamDto(teamService.getTeam(id), robotIds);
+            return teamDtoMapper.toTeamDto(teamService.getTeam(id), teamService.getTeamRobotsIds(id));
         } else {
             return teamDtoMapper.toTeamDto(teamService.getTeam(id), null);
         }
@@ -45,7 +38,7 @@ public class TeamController {
     }
 
     @PutMapping("/{id}")
-    public TeamDto putTeam(@PathVariable UUID id, @RequestBody TeamDto teamDto) {
+    public TeamDto putTeam(@PathVariable TeamId id, @RequestBody TeamDto teamDto) {
         var team = teamDtoMapper.toTeam(teamDto, id);
         validateEntityPutRequest(id, team.getId());
         return teamDtoMapper.toTeamDto(teamService.saveTeam(team));

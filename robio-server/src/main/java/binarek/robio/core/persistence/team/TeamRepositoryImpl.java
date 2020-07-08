@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static binarek.robio.common.persistence.EntityPersistenceUtil.*;
+import static binarek.robio.common.persistence.EntityRepositoryUtil.*;
 import static binarek.robio.db.tables.Team.TEAM;
 import static binarek.robio.db.tables.TeamMember.TEAM_MEMBER;
 

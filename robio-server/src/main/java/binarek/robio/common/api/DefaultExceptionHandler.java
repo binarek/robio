@@ -1,9 +1,8 @@
 package binarek.robio.common.api;
 
-import binarek.robio.common.domain.*;
+import binarek.robio.common.domain.DomainException;
 import binarek.robio.common.domain.entity.EntityAlreadyExistsException;
 import binarek.robio.common.domain.entity.EntityChangedException;
-import binarek.robio.common.domain.entity.EntityInvalidIdentityException;
 import binarek.robio.common.domain.entity.EntityNotExistsException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -34,10 +33,5 @@ public class DefaultExceptionHandler implements ProblemHandling {
     @ExceptionHandler(EntityChangedException.class)
     public ResponseEntity<Problem> handleEntityChangedException(Exception exception, NativeWebRequest request) {
         return create(Status.CONFLICT, exception, request);
-    }
-
-    @ExceptionHandler(EntityInvalidIdentityException.class)
-    public ResponseEntity<Problem> handleEntityInvalidIdentityException(Exception exception, NativeWebRequest request) {
-        return create(Status.UNPROCESSABLE_ENTITY, exception, request);
     }
 }

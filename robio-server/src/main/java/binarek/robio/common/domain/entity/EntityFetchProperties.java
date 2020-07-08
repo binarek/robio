@@ -12,8 +12,6 @@ import java.util.List;
  */
 public abstract class EntityFetchProperties<SF> {
 
-    private static final int MAX_LIMIT = 200;
-
     @Nullable
     public abstract Integer getLimit();
 
@@ -25,9 +23,7 @@ public abstract class EntityFetchProperties<SF> {
 
     @Value.Check
     protected void validate() {
-        Assert.state(getLimit() == null || getLimit() > 0 || getLimit() < MAX_LIMIT,
-                "Limit has to be positive and lower than " + MAX_LIMIT + " or null");
-        Assert.state(getOffset() == null || getOffset() >= 0,
-                "Offset has to be positive, zero or null");
+        Assert.state(getLimit() == null || getLimit() > 0, "Limit has to be positive or null");
+        Assert.state(getOffset() == null || getOffset() >= 0, "Offset has to be positive, zero or null");
     }
 }

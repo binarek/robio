@@ -11,7 +11,7 @@ import java.util.function.Function;
 
 import static binarek.robio.common.util.MapperUtil.mapListNullSafe;
 
-public final class EntityPersistenceUtil {
+public final class EntityRepositoryUtil {
 
     @Nullable
     public static Integer getLimit(@Nullable EntityFetchProperties<?> fetchProperties) {
@@ -39,6 +39,6 @@ public final class EntityPersistenceUtil {
         return order.getDirection() == SortOrder.Direction.ASC ? tableField.asc() : tableField.desc();
     }
 
-    private EntityPersistenceUtil() {
+    private EntityRepositoryUtil() {
     }
 }

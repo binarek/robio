@@ -1,6 +1,5 @@
 package binarek.robio.core.api.robot;
 
-import binarek.robio.common.api.BadRequestException;
 import binarek.robio.core.domain.robot.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,14 +46,10 @@ public class RobotController {
     }
 
     private static RobotFetchProperties buildRobotFetchProperties(int limit, int offset, List<String> sort) {
-        try {
-            return RobotFetchProperties.builder()
-                    .limit(limit)
-                    .offset(offset)
-                    .sort(toSort(sort, RobotSortableField::fromFieldName))
-                    .build();
-        } catch (IllegalStateException | IllegalArgumentException e) {
-            throw new BadRequestException(e.getLocalizedMessage());
-        }
+        return buildAndValidateFetchProperties(() -> RobotFetchProperties.builder()
+                .limit(limit)
+                .offset(offset)
+                .sort(toSort(sort, RobotSortableField::fromFieldName))
+                .build());
     }
 }
