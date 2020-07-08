@@ -11,10 +11,12 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static binarek.robio.common.persistence.EntityPersistenceUtil.*;
 import static binarek.robio.db.tables.Team.TEAM;
 import static binarek.robio.db.tables.TeamMember.TEAM_MEMBER;
 
@@ -22,25 +24,37 @@ import static binarek.robio.db.tables.TeamMember.TEAM_MEMBER;
 public class TeamRepositoryImpl implements TeamRepository {
 
     private final DSLContext dsl;
-    private final TeamRecordMapper teamRecordMapper;
-    private final TeamMemberRecordMapper teamMemberRecordMapper;
+    private final TeamTableMapper teamTableMapper;
+    private final TeamMemberTableMapper teamMemberTableMapper;
     private final EntityTableHelper<TeamRecord> teamTableHelper;
 
     public TeamRepositoryImpl(DSLContext dsl,
-                              TeamRecordMapper teamRecordMapper,
-                              TeamMemberRecordMapper teamMemberRecordMapper) {
+                              TeamTableMapper teamTableMapper,
+                              TeamMemberTableMapper teamMemberTableMapper) {
         this.dsl = dsl;
-        this.teamRecordMapper = teamRecordMapper;
-        this.teamMemberRecordMapper = teamMemberRecordMapper;
+        this.teamTableMapper = teamTableMapper;
+        this.teamMemberTableMapper = teamMemberTableMapper;
         this.teamTableHelper = new EntityTableHelper<>(Team.class, dsl, TEAM);
     }
 
     @Override
-    public Optional<Team> getById(TeamId id, @Nullable TeamFetchLevel fetchLevel) {
+    public Optional<Team> getById(TeamId id, @Nullable TeamFetchProperties fetchProperties) {
         return teamTableHelper.getByExternalId(id.getValue())
-                .map(teamRecord -> teamRecordMapper.toTeam(
+                .map(teamRecord -> teamTableMapper.toTeam(
                         teamRecord,
-                        fetchLevel == TeamFetchLevel.TEAM ? fetchMembersRecords(teamRecord.getId()) : List.of()));
+                        fetchMembers(fetchProperties) ? fetchMembersRecords(teamRecord.getId()) : List.of()));
+    }
+
+    @Override
+    public List<? extends Team> getAll(@Nullable TeamFetchProperties fetchProperties) {
+        var teamRecords = getTeamRecords(fetchProperties);
+        Map<Long, List<TeamMemberRecord>> membersByTeamId = fetchMembers(fetchProperties) ?
+                fetchMembersRecords(teamRecords.stream().map(TeamRecord::getId).collect(Collectors.toList())) :
+                Map.of();
+
+        return teamRecords.stream()
+                .map(record -> teamTableMapper.toTeam(record, membersByTeamId.get(record.getId())))
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Override
@@ -61,18 +75,18 @@ public class TeamRepositoryImpl implements TeamRepository {
     @Override
     @Transactional
     public Team insert(Team team) {
-        var teamRecord = teamTableHelper.insert(record -> teamRecordMapper.updateRecord(record, team));
+        var teamRecord = teamTableHelper.insert(record -> teamTableMapper.updateRecord(record, team));
         var teamMembers = insertMembers(team.getMembers(), teamRecord.getId());
-        return teamRecordMapper.toTeam(teamRecord, teamMembers);
+        return teamTableMapper.toTeam(teamRecord, teamMembers);
     }
 
     @Override
     @Transactional
     public Team insertOrUpdate(Team team) {
         var teamRecord = teamTableHelper.insertOrUpdate(getValueNullSafe(team.getId()),
-                record -> teamRecordMapper.updateRecord(record, team));
+                record -> teamTableMapper.updateRecord(record, team));
         var teamMembers = insertOrUpdateMembers(team.getMembers(), teamRecord.getId());
-        return teamRecordMapper.toTeam(teamRecord, teamMembers);
+        return teamTableMapper.toTeam(teamRecord, teamMembers);
     }
 
     @Override
@@ -103,6 +117,11 @@ public class TeamRepositoryImpl implements TeamRepository {
 
     private List<TeamMemberRecord> fetchMembersRecords(Long teamId) {
         return dsl.fetch(TEAM_MEMBER, TEAM_MEMBER.TEAM_ID.eq(teamId));
+    }
+
+    private Map<Long, List<TeamMemberRecord>> fetchMembersRecords(List<Long> teamIds) {
+        return dsl.fetch(TEAM_MEMBER, TEAM_MEMBER.TEAM_ID.in(teamIds)).stream()
+                .collect(Collectors.groupingBy(TeamMemberRecord::getTeamId, Collectors.toList()));
     }
 
     private List<TeamMemberRecord> insertMembers(List<TeamMember> teamMembers, Long teamId) {
@@ -138,8 +157,22 @@ public class TeamRepositoryImpl implements TeamRepository {
 
     private TeamMemberRecord createRecord(TeamMember teamMember, Long teamId) {
         var record = dsl.newRecord(TEAM_MEMBER);
-        teamMemberRecordMapper.updateRecord(record, teamMember, teamId);
+        teamMemberTableMapper.updateRecord(record, teamMember, teamId);
         return record;
+    }
+
+    private List<TeamRecord> getTeamRecords(@Nullable TeamFetchProperties fetchProperties) {
+        return teamTableHelper.getAll(
+                getLimit(fetchProperties),
+                getOffset(fetchProperties),
+                getSort(fetchProperties, teamTableMapper::toField));
+    }
+
+    private static boolean fetchMembers(@Nullable TeamFetchProperties fetchProperties) {
+        return Optional.ofNullable(fetchProperties)
+                .map(TeamFetchProperties::getDetailsLevel)
+                .map(TeamFetchProperties.DetailsLevel.TEAM::equals)
+                .orElse(false);
     }
 
     @Nullable

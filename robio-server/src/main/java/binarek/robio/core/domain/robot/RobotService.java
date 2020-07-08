@@ -3,16 +3,17 @@ package binarek.robio.core.domain.robot;
 import binarek.robio.common.domain.entity.EntityNotExistsException;
 import binarek.robio.common.domain.entity.EntityServiceHelper;
 import binarek.robio.common.domain.entity.EntityValueExtractor;
-import binarek.robio.common.persistence.EntityFetchProperties;
 import binarek.robio.core.domain.team.Team;
 import binarek.robio.core.domain.team.TeamRepository;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class RobotService {
 
-    private final EntityServiceHelper<Robot, EntityFetchProperties.NotSupported, RobotId, RobotName> serviceHelper;
+    private final EntityServiceHelper<Robot, RobotFetchProperties, RobotId, RobotName> serviceHelper;
     private final TeamRepository teamRepository;
 
     public RobotService(RobotRepository robotRepository, TeamRepository teamRepository) {
@@ -37,6 +38,10 @@ public class RobotService {
 
     public Robot getRobot(RobotId id) {
         return serviceHelper.getEntity(id);
+    }
+
+    public List<? extends Robot> getRobots(RobotFetchProperties fetchProperties) {
+        return serviceHelper.getEntities(fetchProperties);
     }
 
     private static final class RobotValueExtractor implements EntityValueExtractor<Robot, RobotId, RobotName> {

@@ -14,12 +14,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.function.Consumer;
 
+import static binarek.robio.core.domain.team.TeamFetchProperties.DetailsLevel.TEAM;
+import static binarek.robio.core.domain.team.TeamFetchProperties.DetailsLevel.TEAM_BASIC_INFO;
 import static binarek.robio.user.domain.person.Person.Role.COMPETITOR;
 
 @Service
 public class TeamService {
 
-    private final EntityServiceHelper<Team, TeamFetchLevel, TeamId, TeamName> serviceHelper;
+    private final EntityServiceHelper<Team, TeamFetchProperties, TeamId, TeamName> serviceHelper;
     private final TeamRepository teamRepository;
     private final PersonRepository personRepository;
     private final RobotRepository robotRepository;
@@ -63,11 +65,11 @@ public class TeamService {
     }
 
     public Team getTeam(TeamId id) {
-        return serviceHelper.getEntity(id, TeamFetchLevel.TEAM);
+        return serviceHelper.getEntity(id, TeamFetchProperties.of(TEAM));
     }
 
     public TeamBasicInfo getTeamBasicInfo(TeamId id) {
-        return serviceHelper.getEntity(id, TeamFetchLevel.TEAM_BASIC_INFO);
+        return serviceHelper.getEntity(id, TeamFetchProperties.of(TEAM_BASIC_INFO));
     }
 
     public List<RobotId> getTeamRobotsIds(TeamId id) {
@@ -84,7 +86,7 @@ public class TeamService {
     private void validateReferences(TeamMember teamMember) {
         var competitorId = teamMember.getCompetitorId();
         if (!personRepository.existsByIdAndRole(competitorId, COMPETITOR)) {
-            throw new EntityNotExistsException(Person.class, competitorId.getValue(), "role " + COMPETITOR);
+            throw new EntityNotExistsException(Person.class, competitorId, "role " + COMPETITOR);
         }
     }
 

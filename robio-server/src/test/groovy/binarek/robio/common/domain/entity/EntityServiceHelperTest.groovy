@@ -1,6 +1,5 @@
 package binarek.robio.common.domain.entity
 
-import binarek.robio.common.persistence.EntityFetchProperties
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Subject

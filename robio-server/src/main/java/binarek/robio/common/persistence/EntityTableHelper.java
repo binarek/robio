@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.Nullable;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -68,6 +69,14 @@ public class EntityTableHelper<R extends UpdatableRecord<R>> {
 
     public Optional<R> getByExternalId(UUID externalId) {
         return dsl.fetchOptional(table, externalIdField.eq(externalId));
+    }
+
+    public List<R> getAll(@Nullable Integer limit, @Nullable Integer offset, List<TableField<R, ?>> orderFields) {
+        return dsl.selectFrom(table)
+                .orderBy(orderFields)
+                .limit(limit)
+                .offset(offset)
+                .fetch();
     }
 
     public boolean existsByExternalId(UUID externalId) {

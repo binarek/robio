@@ -10,7 +10,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 @Mapper(config = BaseMapperConfig.class, uses = {CommonValueMapper.class, PersonValueMapper.class})
-public interface TeamMemberRecordMapper {
+public interface TeamMemberTableMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "teamId", source = "teamId")

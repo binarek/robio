@@ -2,14 +2,15 @@ package binarek.robio.user.domain.person;
 
 import binarek.robio.common.domain.entity.EntityServiceHelper;
 import binarek.robio.common.domain.entity.EntityValueExtractor;
-import binarek.robio.common.persistence.EntityFetchProperties;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class PersonService {
 
-    private final EntityServiceHelper<Person, EntityFetchProperties.NotSupported, PersonId, Email> serviceHelper;
+    private final EntityServiceHelper<Person, PersonFetchProperties, PersonId, Email> serviceHelper;
 
     public PersonService(PersonRepository personRepository) {
         this.serviceHelper = new EntityServiceHelper<>(Person.class, personRepository, new PersonValueExtractor());
@@ -29,6 +30,10 @@ public class PersonService {
 
     public Person getPerson(PersonId id) {
         return serviceHelper.getEntity(id);
+    }
+
+    public List<? extends Person> getPeople(PersonFetchProperties fetchProperties) {
+        return serviceHelper.getEntities(fetchProperties);
     }
 
     private static final class PersonValueExtractor implements EntityValueExtractor<Person, PersonId, Email> {

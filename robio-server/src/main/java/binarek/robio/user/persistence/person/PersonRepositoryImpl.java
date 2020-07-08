@@ -1,6 +1,5 @@
 package binarek.robio.user.persistence.person;
 
-import binarek.robio.common.persistence.EntityFetchProperties;
 import binarek.robio.common.persistence.EntityTableHelper;
 import binarek.robio.db.tables.records.PersonRecord;
 import binarek.robio.user.domain.person.*;
@@ -8,31 +7,41 @@ import org.jooq.DSLContext;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import static binarek.robio.common.persistence.EntityPersistenceUtil.*;
 import static binarek.robio.db.tables.Person.PERSON;
 
 @Repository
 public class PersonRepositoryImpl implements PersonRepository {
 
     private final DSLContext dsl;
-    private final PersonRecordMapper personRecordMapper;
+    private final PersonTableMapper personTableMapper;
     private final PersonValueMapper personValueMapper;
     private final EntityTableHelper<PersonRecord> personTableHelper;
 
-    public PersonRepositoryImpl(DSLContext dsl, PersonRecordMapper personRecordMapper,
+    public PersonRepositoryImpl(DSLContext dsl, PersonTableMapper personTableMapper,
                                 PersonValueMapper personValueMapper) {
         this.dsl = dsl;
-        this.personRecordMapper = personRecordMapper;
+        this.personTableMapper = personTableMapper;
         this.personValueMapper = personValueMapper;
         this.personTableHelper = new EntityTableHelper<>(Person.class, dsl, PERSON, PERSON.EMAIL);
     }
 
     @Override
-    public Optional<? extends Person> getById(PersonId id, @Nullable EntityFetchProperties.NotSupported fetchProperties) {
+    public Optional<? extends Person> getById(PersonId id, @Nullable PersonFetchProperties fetchProperties) {
         return dsl.selectFrom(PERSON).where(PERSON.EXTERNAL_ID.eq(id.getValue())).fetchOptional()
-                .map(personRecordMapper::toPerson);
+                .map(personTableMapper::toPerson);
+    }
+
+    @Override
+    public List<? extends Person> getAll(@Nullable PersonFetchProperties fetchProperties) {
+        return getPersonRecords(fetchProperties).stream()
+                .map(personTableMapper::toPerson)
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Override
@@ -47,15 +56,15 @@ public class PersonRepositoryImpl implements PersonRepository {
 
     @Override
     public Person insert(Person person) {
-        var personRecord = personTableHelper.insert(record -> personRecordMapper.updateRecord(record, person));
-        return personRecordMapper.toPerson(personRecord);
+        var personRecord = personTableHelper.insert(record -> personTableMapper.updateRecord(record, person));
+        return personTableMapper.toPerson(personRecord);
     }
 
     @Override
     public Person insertOrUpdate(Person person) {
         var personRecord = personTableHelper.insertOrUpdate(
-                getValueNullSafe(person.getId()), record -> personRecordMapper.updateRecord(record, person));
-        return personRecordMapper.toPerson(personRecord);
+                getValueNullSafe(person.getId()), record -> personTableMapper.updateRecord(record, person));
+        return personTableMapper.toPerson(personRecord);
     }
 
     @Override
@@ -67,6 +76,13 @@ public class PersonRepositoryImpl implements PersonRepository {
     public boolean existsByIdAndRole(PersonId id, Person.Role role) {
         return personTableHelper.existsByCondition(PERSON.EXTERNAL_ID.eq(id.getValue())
                 .and(PERSON.ROLE.eq(personValueMapper.toValue(role))));
+    }
+
+    private List<PersonRecord> getPersonRecords(@Nullable PersonFetchProperties fetchProperties) {
+        return personTableHelper.getAll(
+                getLimit(fetchProperties),
+                getOffset(fetchProperties),
+                getSort(fetchProperties, personTableMapper::toField));
     }
 
     @Nullable

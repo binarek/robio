@@ -1,11 +1,7 @@
 package binarek.robio.core.persistence.robot;
 
-import binarek.robio.common.persistence.EntityFetchProperties;
 import binarek.robio.common.persistence.EntityTableHelper;
-import binarek.robio.core.domain.robot.Robot;
-import binarek.robio.core.domain.robot.RobotId;
-import binarek.robio.core.domain.robot.RobotName;
-import binarek.robio.core.domain.robot.RobotRepository;
+import binarek.robio.core.domain.robot.*;
 import binarek.robio.core.domain.team.TeamId;
 import binarek.robio.db.tables.records.RobotRecord;
 import org.jooq.DSLContext;
@@ -17,25 +13,33 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static binarek.robio.common.persistence.EntityPersistenceUtil.*;
 import static binarek.robio.db.tables.Robot.ROBOT;
 
 @Repository
 public class RobotRepositoryImpl implements RobotRepository {
 
     private final DSLContext dsl;
-    private final RobotRecordMapper robotRecordMapper;
+    private final RobotTableMapper robotTableMapper;
     private final EntityTableHelper<RobotRecord> robotTableHelper;
 
-    public RobotRepositoryImpl(DSLContext dsl, RobotRecordMapper robotRecordMapper) {
+    public RobotRepositoryImpl(DSLContext dsl, RobotTableMapper robotTableMapper) {
         this.dsl = dsl;
-        this.robotRecordMapper = robotRecordMapper;
+        this.robotTableMapper = robotTableMapper;
         this.robotTableHelper = new EntityTableHelper<>(Robot.class, dsl, ROBOT);
     }
 
     @Override
-    public Optional<Robot> getById(RobotId id, @Nullable EntityFetchProperties.NotSupported fetchProperties) {
+    public Optional<Robot> getById(RobotId id, @Nullable RobotFetchProperties fetchProperties) {
         return robotTableHelper.getByExternalId(id.getValue())
-                .map(robotRecordMapper::toRobot);
+                .map(robotTableMapper::toRobot);
+    }
+
+    @Override
+    public List<? extends Robot> getAll(@Nullable RobotFetchProperties fetchProperties) {
+        return getRobotRecords(fetchProperties).stream()
+                .map(robotTableMapper::toRobot)
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Override
@@ -50,15 +54,15 @@ public class RobotRepositoryImpl implements RobotRepository {
 
     @Override
     public Robot insert(Robot robot) {
-        var robotRecord = robotTableHelper.insert(record -> robotRecordMapper.updateRecord(record, robot));
-        return robotRecordMapper.toRobot(robotRecord);
+        var robotRecord = robotTableHelper.insert(record -> robotTableMapper.updateRecord(record, robot));
+        return robotTableMapper.toRobot(robotRecord);
     }
 
     @Override
     public Robot insertOrUpdate(Robot robot) {
         var robotRecord = robotTableHelper.insertOrUpdate(
-                getValueNullSafe(robot.getId()), record -> robotRecordMapper.updateRecord(record, robot));
-        return robotRecordMapper.toRobot(robotRecord);
+                getValueNullSafe(robot.getId()), record -> robotTableMapper.updateRecord(record, robot));
+        return robotTableMapper.toRobot(robotRecord);
     }
 
     @Override
@@ -76,6 +80,13 @@ public class RobotRepositoryImpl implements RobotRepository {
         return dsl.select().from(ROBOT).where(ROBOT.TEAM_ID.eq(teamId.getValue())).fetch(ROBOT.EXTERNAL_ID).stream()
                 .map(RobotId::of)
                 .collect(Collectors.toUnmodifiableList());
+    }
+
+    private List<RobotRecord> getRobotRecords(@Nullable RobotFetchProperties fetchProperties) {
+        return robotTableHelper.getAll(
+                getLimit(fetchProperties),
+                getOffset(fetchProperties),
+                getSort(fetchProperties, robotTableMapper::toField));
     }
 
     @Nullable

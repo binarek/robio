@@ -1,12 +1,13 @@
 package binarek.robio.common.domain.entity;
 
-import binarek.robio.common.persistence.EntityFetchProperties;
 import org.springframework.lang.Nullable;
+
+import java.util.List;
 
 /**
  * @param <E> entity class
  */
-public class EntityServiceHelper<E extends Entity, FP extends EntityFetchProperties, ID, NAME> {
+public class EntityServiceHelper<E extends Entity, FP extends EntityFetchProperties<?>, ID, NAME> {
 
     private final Class<E> entityClass;
     private final EntityRepository<E, FP, ID, NAME> entityRepository;
@@ -51,5 +52,9 @@ public class EntityServiceHelper<E extends Entity, FP extends EntityFetchPropert
     public E getEntity(ID id, @Nullable FP fetchProperties) {
         return entityRepository.getById(id, fetchProperties)
                 .orElseThrow(() -> new EntityNotExistsException(entityClass, id));
+    }
+
+    public List<? extends E> getEntities(FP fetchProperties) {
+        return entityRepository.getAll(fetchProperties);
     }
 }
