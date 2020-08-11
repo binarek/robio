@@ -4,11 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
     <modules>
-        <module>robio-app</module>
+        <module>robio-application</module>
         <module>robio-domain</module>
         <module>robio-mapstruct-processor</module>
         <module>robio-persistence</module>
         <module>robio-rest-api</module>
+        <module>robio-starter</module>
         <module>robio-util</module>
     </modules>
     <parent>
