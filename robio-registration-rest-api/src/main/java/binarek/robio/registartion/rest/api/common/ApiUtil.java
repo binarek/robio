@@ -1,7 +1,7 @@
 package binarek.robio.registartion.rest.api.common;
 
-import binarek.robio.registration.domain.common.entity.EntityFetchProperties;
-import binarek.robio.registration.domain.common.value.SortOrder;
+import binarek.robio.common.domain.entity.EntityFetchProperties;
+import binarek.robio.common.domain.value.SortOrder;
 import org.springframework.lang.Nullable;
 
 import java.util.List;

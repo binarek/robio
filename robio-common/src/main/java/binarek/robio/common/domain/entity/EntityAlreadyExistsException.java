@@ -1,9 +1,9 @@
-package binarek.robio.registration.domain.common.entity;
+package binarek.robio.common.domain.entity;
 
-import binarek.robio.registration.domain.common.DomainException;
+import binarek.robio.common.domain.DomainException;
 import org.springframework.lang.Nullable;
 
-import static binarek.robio.registration.domain.common.entity.EntityUtil.name;
+import static binarek.robio.common.domain.entity.EntityUtil.name;
 
 public class EntityAlreadyExistsException extends DomainException {
 

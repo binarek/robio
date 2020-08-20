@@ -1,6 +1,6 @@
 package binarek.robio.registration.domain.person;
 
-import binarek.robio.registration.domain.common.entity.EntityRepository;
+import binarek.robio.common.domain.entity.EntityRepository;
 
 public interface PersonRepository extends EntityRepository<Person, PersonFetchProperties, PersonId, Email> {
 

@@ -1,9 +1,9 @@
 package binarek.robio.registartion.rest.api.common;
 
-import binarek.robio.registration.domain.common.DomainException;
-import binarek.robio.registration.domain.common.entity.EntityAlreadyExistsException;
-import binarek.robio.registration.domain.common.entity.EntityChangedException;
-import binarek.robio.registration.domain.common.entity.EntityNotExistsException;
+import binarek.robio.common.domain.DomainException;
+import binarek.robio.common.domain.entity.EntityAlreadyExistsException;
+import binarek.robio.common.domain.entity.EntityChangedException;
+import binarek.robio.common.domain.entity.EntityNotExistsException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

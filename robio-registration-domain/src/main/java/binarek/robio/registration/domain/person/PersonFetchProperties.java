@@ -1,7 +1,7 @@
 package binarek.robio.registration.domain.person;
 
-import binarek.robio.registration.domain.common.entity.EntityFetchProperties;
-import binarek.robio.registration.domain.common.value.SortOrder;
+import binarek.robio.common.domain.entity.EntityFetchProperties;
+import binarek.robio.common.domain.value.SortOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 import org.springframework.lang.Nullable;

@@ -2,8 +2,8 @@ package binarek.robio.registration.domain.robot;
 
 import binarek.robio.common.codegen.BaseStyle;
 import binarek.robio.registration.domain.team.TeamId;
-import binarek.robio.registration.domain.common.entity.Entity;
-import binarek.robio.registration.domain.common.value.Notes;
+import binarek.robio.common.domain.entity.Entity;
+import binarek.robio.common.domain.value.Notes;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 import org.springframework.lang.Nullable;

@@ -1,8 +1,8 @@
 package binarek.robio.registration.domain.robot;
 
-import binarek.robio.registration.domain.common.entity.EntityNotExistsException;
-import binarek.robio.registration.domain.common.entity.EntityServiceHelper;
-import binarek.robio.registration.domain.common.entity.EntityValueExtractor;
+import binarek.robio.common.domain.entity.EntityNotExistsException;
+import binarek.robio.common.domain.entity.EntityServiceHelper;
+import binarek.robio.common.domain.entity.EntityValueExtractor;
 import binarek.robio.registration.domain.team.Team;
 import binarek.robio.registration.domain.team.TeamRepository;
 import org.springframework.lang.Nullable;

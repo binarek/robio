@@ -1,7 +1,7 @@
 package binarek.robio.registration.domain.person;
 
-import binarek.robio.registration.domain.common.entity.EntityServiceHelper;
-import binarek.robio.registration.domain.common.entity.EntityValueExtractor;
+import binarek.robio.common.domain.entity.EntityServiceHelper;
+import binarek.robio.common.domain.entity.EntityValueExtractor;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 

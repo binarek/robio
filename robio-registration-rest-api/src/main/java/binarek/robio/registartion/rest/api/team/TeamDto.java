@@ -1,6 +1,6 @@
 package binarek.robio.registartion.rest.api.team;
 
-import binarek.robio.registration.domain.common.value.Notes;
+import binarek.robio.common.domain.value.Notes;
 import binarek.robio.registration.domain.team.TeamMember;
 import binarek.robio.registration.domain.team.TeamName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

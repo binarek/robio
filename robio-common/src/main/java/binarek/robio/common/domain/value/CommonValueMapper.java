@@ -1,4 +1,4 @@
-package binarek.robio.registration.domain.common.value;
+package binarek.robio.common.domain.value;
 
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;

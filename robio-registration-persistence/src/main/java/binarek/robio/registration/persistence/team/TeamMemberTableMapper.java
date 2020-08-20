@@ -3,7 +3,7 @@ package binarek.robio.registration.persistence.team;
 import binarek.robio.common.codegen.BaseMapperConfig;
 import binarek.robio.registration.domain.person.PersonValueMapper;
 import binarek.robio.registration.domain.team.TeamMember;
-import binarek.robio.registration.domain.common.value.CommonValueMapper;
+import binarek.robio.common.domain.value.CommonValueMapper;
 import binarek.robio.db.tables.records.TeamMemberRecord;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

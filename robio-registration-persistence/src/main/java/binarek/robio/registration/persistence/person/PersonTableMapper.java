@@ -2,7 +2,7 @@ package binarek.robio.registration.persistence.person;
 
 import binarek.robio.common.codegen.BaseMapperConfig;
 import binarek.robio.db.tables.records.PersonRecord;
-import binarek.robio.registration.domain.common.value.CommonValueMapper;
+import binarek.robio.common.domain.value.CommonValueMapper;
 import binarek.robio.registration.domain.person.Person;
 import binarek.robio.registration.domain.person.PersonSortableField;
 import binarek.robio.registration.domain.person.PersonValueMapper;

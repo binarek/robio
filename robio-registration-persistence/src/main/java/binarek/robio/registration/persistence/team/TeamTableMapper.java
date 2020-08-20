@@ -4,7 +4,7 @@ import binarek.robio.common.codegen.BaseMapperConfig;
 import binarek.robio.registration.domain.team.Team;
 import binarek.robio.registration.domain.team.TeamSortableField;
 import binarek.robio.registration.domain.team.TeamValueMapper;
-import binarek.robio.registration.domain.common.value.CommonValueMapper;
+import binarek.robio.common.domain.value.CommonValueMapper;
 import binarek.robio.db.tables.records.TeamMemberRecord;
 import binarek.robio.db.tables.records.TeamRecord;
 import org.jooq.TableField;

@@ -1,7 +1,7 @@
 package binarek.robio.registration.persistence.common;
 
-import binarek.robio.registration.domain.common.entity.Entity;
-import binarek.robio.registration.domain.common.entity.EntityChangedException;
+import binarek.robio.common.domain.entity.Entity;
+import binarek.robio.common.domain.entity.EntityChangedException;
 import org.jooq.*;
 import org.jooq.exception.DataChangedException;
 import org.slf4j.Logger;

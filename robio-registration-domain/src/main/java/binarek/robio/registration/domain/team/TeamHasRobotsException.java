@@ -1,6 +1,6 @@
 package binarek.robio.registration.domain.team;
 
-import binarek.robio.registration.domain.common.DomainException;
+import binarek.robio.common.domain.DomainException;
 
 public class TeamHasRobotsException extends DomainException {
 

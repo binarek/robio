@@ -1,6 +1,6 @@
-package binarek.robio.registration.domain.common.entity;
+package binarek.robio.common.domain.entity;
 
-import binarek.robio.registration.domain.common.value.SortOrder;
+import binarek.robio.common.domain.value.SortOrder;
 import org.immutables.value.Value;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;

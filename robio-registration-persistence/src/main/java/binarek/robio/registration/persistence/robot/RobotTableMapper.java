@@ -2,7 +2,7 @@ package binarek.robio.registration.persistence.robot;
 
 import binarek.robio.common.codegen.BaseMapperConfig;
 import binarek.robio.db.tables.records.RobotRecord;
-import binarek.robio.registration.domain.common.value.CommonValueMapper;
+import binarek.robio.common.domain.value.CommonValueMapper;
 import binarek.robio.registration.domain.robot.Robot;
 import binarek.robio.registration.domain.robot.RobotSortableField;
 import binarek.robio.registration.domain.robot.RobotValueMapper;

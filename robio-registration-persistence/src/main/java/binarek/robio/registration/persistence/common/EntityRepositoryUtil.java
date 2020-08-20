@@ -1,7 +1,7 @@
 package binarek.robio.registration.persistence.common;
 
-import binarek.robio.registration.domain.common.entity.EntityFetchProperties;
-import binarek.robio.registration.domain.common.value.SortOrder;
+import binarek.robio.common.domain.entity.EntityFetchProperties;
+import binarek.robio.common.domain.value.SortOrder;
 import org.jooq.SortField;
 import org.jooq.TableField;
 import org.springframework.lang.Nullable;

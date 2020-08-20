@@ -1,4 +1,4 @@
-package binarek.robio.registration.domain.common;
+package binarek.robio.common.domain;
 
 public abstract class DomainException extends RuntimeException {
 
