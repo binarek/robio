@@ -14,10 +14,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>binarek</groupId>
-    <artifactId>robio-parent</artifactId>
+    <artifactId>robio</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>robio</name>
-    <description>Backend for robotic competition management system</description>
+    <description>Robotic competition management system</description>
 
     <properties>
         <java.version>11</java.version>
