@@ -8,6 +8,7 @@
         <module>robio-common</module>
         <module>robio-mapstruct-processor</module>
         <module>robio-registration-core</module>
+        <module>robio-registration-persistence</module>
         <module>robio-registration-rest</module>
         <module>robio-server</module>
     </modules>

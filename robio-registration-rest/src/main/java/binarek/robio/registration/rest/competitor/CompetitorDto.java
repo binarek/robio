@@ -1,8 +1,8 @@
 package binarek.robio.registration.rest.competitor;
 
-import binarek.robio.registration.domain.CompetitorId;
-import binarek.robio.registration.domain.FirstName;
-import binarek.robio.registration.domain.LastName;
+import binarek.robio.registration.domain.competitor.CompetitorId;
+import binarek.robio.registration.domain.competitor.FirstName;
+import binarek.robio.registration.domain.competitor.LastName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.immutables.value.Value;

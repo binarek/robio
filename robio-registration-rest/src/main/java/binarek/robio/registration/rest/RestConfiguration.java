@@ -1,8 +1,8 @@
 package binarek.robio.registration.rest;
 
-import binarek.robio.registration.domain.CompetitorId;
-import binarek.robio.registration.domain.FirstName;
-import binarek.robio.registration.domain.LastName;
+import binarek.robio.registration.domain.competitor.CompetitorId;
+import binarek.robio.registration.domain.competitor.FirstName;
+import binarek.robio.registration.domain.competitor.LastName;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistry;

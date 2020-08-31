@@ -1,27 +1,27 @@
 package binarek.robio.registration.app;
 
-import binarek.robio.common.domain.exception.AggregateRootNotExistsException;
-import binarek.robio.registration.domain.*;
+import binarek.robio.registration.domain.competitor.*;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CompetitorAppService {
 
     private final CompetitorRepository competitorRepository;
-    private final IdentityFactory identityFactory;
+    private final CompetitorIdFactory competitorIdentityFactory;
 
-    public CompetitorAppService(CompetitorRepository competitorRepository, IdentityFactory identityFactory) {
+    public CompetitorAppService(CompetitorRepository competitorRepository,
+                                CompetitorIdFactory competitorIdentityFactory) {
         this.competitorRepository = competitorRepository;
-        this.identityFactory = identityFactory;
+        this.competitorIdentityFactory = competitorIdentityFactory;
     }
 
     public Competitor getCompetitor(CompetitorId competitorId) {
         return competitorRepository.getById(competitorId)
-                .orElseThrow(() -> new AggregateRootNotExistsException(Competitor.class, competitorId));
+                .orElseThrow(() -> new CompetitorWithIdNotExistsException(competitorId));
     }
 
     public CompetitorId createCompetitor(FirstName firstName, LastName lastName, boolean isUnderage) {
-        var competitorId = identityFactory.generateCompetitorId();
+        var competitorId = competitorIdentityFactory.generateCompetitorId();
         var competitor = Competitor.newCompetitor(competitorId, firstName, lastName, isUnderage);
         competitorRepository.save(competitor);
         return competitorId;

@@ -1,7 +1,7 @@
 package binarek.robio.registration.rest.competitor;
 
 import binarek.robio.registration.app.CompetitorAppService;
-import binarek.robio.registration.domain.CompetitorId;
+import binarek.robio.registration.domain.competitor.CompetitorId;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.web.bind.annotation.*;
 

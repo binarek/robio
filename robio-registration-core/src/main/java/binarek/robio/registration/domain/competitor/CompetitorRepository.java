@@ -1,4 +1,4 @@
-package binarek.robio.registration.domain;
+package binarek.robio.registration.domain.competitor;
 
 import java.util.Optional;
 
