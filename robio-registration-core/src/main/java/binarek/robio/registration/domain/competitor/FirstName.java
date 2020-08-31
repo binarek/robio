@@ -1,4 +1,4 @@
-package binarek.robio.registration.domain;
+package binarek.robio.registration.domain.competitor;
 
 import binarek.robio.common.codegen.ValueTypeStyle;
 import com.fasterxml.jackson.annotation.JsonValue;

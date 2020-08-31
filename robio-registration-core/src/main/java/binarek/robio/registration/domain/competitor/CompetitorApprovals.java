@@ -1,4 +1,4 @@
-package binarek.robio.registration.domain;
+package binarek.robio.registration.domain.competitor;
 
 import binarek.robio.common.codegen.BaseStyle;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

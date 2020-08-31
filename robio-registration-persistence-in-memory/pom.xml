@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>robio-app</artifactId>
+    <artifactId>robio-registration-persistence-in-memory</artifactId>
 
     <dependencies>
         <dependency>
@@ -17,15 +17,10 @@
             <artifactId>robio-registration-core</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+
         <dependency>
-            <groupId>binarek</groupId>
-            <artifactId>robio-registration-persistence-in-memory</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>binarek</groupId>
-            <artifactId>robio-registration-rest</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
         </dependency>
     </dependencies>
 </project>

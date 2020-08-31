@@ -1,8 +1,8 @@
 package binarek.robio.registration.rest.competitor;
 
 import binarek.robio.common.codegen.BaseMapperConfig;
-import binarek.robio.registration.domain.Competitor;
-import binarek.robio.registration.domain.CompetitorApprovals;
+import binarek.robio.registration.domain.competitor.Competitor;
+import binarek.robio.registration.domain.competitor.CompetitorApprovals;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
