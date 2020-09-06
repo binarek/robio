@@ -14,6 +14,11 @@
     <dependencies>
         <dependency>
             <groupId>binarek</groupId>
+            <artifactId>robio-common-persistence-in-memory</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>binarek</groupId>
             <artifactId>robio-registration-core</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
