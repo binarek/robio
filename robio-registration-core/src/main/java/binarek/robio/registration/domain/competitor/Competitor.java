@@ -19,12 +19,13 @@ public abstract class Competitor {
     @Nullable
     public abstract Long getVersion();
 
-    @Value.Redacted
+    public abstract Email getEmail();
+
     public abstract FirstName getFirstName();
 
-    @Value.Redacted
     public abstract LastName getLastName();
 
+    @JsonProperty("isUnderage")
     public abstract boolean isUnderage();
 
     public abstract CompetitorApprovals getApprovals();
@@ -35,9 +36,16 @@ public abstract class Competitor {
                 && (getApprovals().isApprovedByParent() || !isUnderage());
     }
 
-    public static Competitor newCompetitor(CompetitorId id, FirstName firstName, LastName lastName, boolean isUnderage) {
+    public final boolean canBeAssignedToTeam() {
+        return getApprovals().isApprovedByOwner();
+    }
+
+    public static Competitor newCompetitor(CompetitorId id, Email email,
+                                           FirstName firstName, LastName lastName,
+                                           boolean isUnderage) {
         return ImmutableCompetitor.builder()
                 .id(id)
+                .email(email)
                 .firstName(firstName)
                 .lastName(lastName)
                 .isUnderage(isUnderage)

@@ -1,6 +1,7 @@
 package binarek.robio.registration.domain.competitor;
 
 import binarek.robio.common.codegen.BaseStyle;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 
@@ -12,8 +13,10 @@ public abstract class CompetitorApprovals {
     CompetitorApprovals() {
     }
 
+    @JsonProperty("isApprovedByOwner")
     public abstract boolean isApprovedByOwner();
 
+    @JsonProperty("isApprovedByParent")
     public abstract boolean isApprovedByParent();
 
     static CompetitorApprovals newApprovals() {

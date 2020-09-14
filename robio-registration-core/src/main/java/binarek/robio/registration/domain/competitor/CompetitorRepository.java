@@ -8,5 +8,9 @@ public interface CompetitorRepository {
 
     boolean existsById(CompetitorId competitorId);
 
+    boolean existsByEmail(Email email);
+
     Optional<Competitor> getById(CompetitorId competitorId);
+
+    Optional<Competitor> getByEmail(Email email);
 }

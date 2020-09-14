@@ -1,8 +1,9 @@
 package binarek.robio.registration.rest.competitor;
 
 import binarek.robio.registration.app.CompetitorAppService;
+import binarek.robio.registration.app.CreateCompetitorCommand;
+import binarek.robio.registration.domain.competitor.Competitor;
 import binarek.robio.registration.domain.competitor.CompetitorId;
-import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -10,20 +11,15 @@ import org.springframework.web.bind.annotation.*;
 public class CompetitorController {
 
     private final CompetitorAppService competitorAppService;
-    private final CompetitorDtoMapper competitorDtoMapper;
 
-    public CompetitorController(CompetitorAppService competitorAppService, CompetitorDtoMapper competitorDtoMapper) {
+    public CompetitorController(CompetitorAppService competitorAppService) {
         this.competitorAppService = competitorAppService;
-        this.competitorDtoMapper = competitorDtoMapper;
     }
 
     @PostMapping
-    public CompetitorDto createCompetitor(@RequestBody CompetitorDto competitor) {
-        var competitorId = competitorAppService.createCompetitor(
-                competitor.getFirstName(),
-                competitor.getLastName(),
-                BooleanUtils.isTrue(competitor.getIsUnderage()));
-        return competitorDtoMapper.toCompetitorDto(competitorAppService.getCompetitor(competitorId));
+    public Competitor createCompetitor(@RequestBody CreateCompetitorCommand competitor) {
+        competitorAppService.createCompetitor(competitor);
+        return competitorAppService.getCompetitorByEmail(competitor.getEmail());
     }
 
     @PostMapping("/{id}/approvals/owner")
@@ -37,7 +33,7 @@ public class CompetitorController {
     }
 
     @GetMapping("/{id}")
-    public CompetitorDto getCompetitor(@PathVariable CompetitorId id) {
-        return competitorDtoMapper.toCompetitorDto(competitorAppService.getCompetitor(id));
+    public Competitor getCompetitor(@PathVariable CompetitorId id) {
+        return competitorAppService.getCompetitorById(id);
     }
 }

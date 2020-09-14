@@ -1,6 +1,7 @@
 package binarek.robio.registration.rest;
 
 import binarek.robio.registration.domain.competitor.CompetitorId;
+import binarek.robio.registration.domain.competitor.Email;
 import binarek.robio.registration.domain.competitor.FirstName;
 import binarek.robio.registration.domain.competitor.LastName;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,7 @@ public class RestConfiguration implements WebMvcConfigurer {
         registry.addConverter(new FirstNameConverter());
         registry.addConverter(new CompetitorIdConverter());
         registry.addConverter(new LastNameConverter());
+        registry.addConverter(new EmailConverter());
     }
 
     private static class CompetitorIdConverter implements Converter<String, CompetitorId> {
@@ -38,6 +40,13 @@ public class RestConfiguration implements WebMvcConfigurer {
         @Override
         public LastName convert(String source) {
             return LastName.of(source);
+        }
+    }
+
+    private static class EmailConverter implements Converter<String, Email> {
+        @Override
+        public Email convert(String source) {
+            return Email.of(source);
         }
     }
 }

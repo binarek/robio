@@ -3,6 +3,7 @@ package binarek.robio.registration.persistence;
 import binarek.robio.registration.domain.competitor.Competitor;
 import binarek.robio.registration.domain.competitor.CompetitorId;
 import binarek.robio.registration.domain.competitor.CompetitorRepository;
+import binarek.robio.registration.domain.competitor.Email;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -25,7 +26,20 @@ public class CompetitorRepositoryImpl implements CompetitorRepository {
     }
 
     @Override
+    public boolean existsByEmail(Email email) {
+        return competitors.values().stream()
+                .anyMatch(competitor -> competitor.getEmail().equals(email));
+    }
+
+    @Override
     public Optional<Competitor> getById(CompetitorId competitorId) {
         return Optional.ofNullable(competitors.get(competitorId));
+    }
+
+    @Override
+    public Optional<Competitor> getByEmail(Email email) {
+        return competitors.values().stream()
+                .filter(competitor -> competitor.getEmail().equals(email))
+                .findAny();
     }
 }
