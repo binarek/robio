@@ -6,6 +6,8 @@
     <modules>
         <module>robio-app</module>
         <module>robio-common</module>
+        <module>robio-ftl-core</module>
+        <module>robio-ftl-core-api</module>
         <module>robio-mapstruct-processor</module>
         <module>robio-registration-core</module>
         <module>robio-registration-persistence</module>
@@ -27,7 +29,7 @@
         <java.version>11</java.version>
         <commons-validator.version>1.6</commons-validator.version>
         <org.immutables.version>2.8.3</org.immutables.version>
-        <org.mapstruct.version>1.3.1.Final</org.mapstruct.version>
+        <org.mapstruct.version>1.4.1.Final</org.mapstruct.version>
         <org.spockframework.version>2.0-M1-groovy-2.5</org.spockframework.version>
         <org.springdoc.version>1.3.4</org.springdoc.version>
         <org.zalando.version>0.25.2</org.zalando.version>
@@ -45,11 +47,13 @@
                 <groupId>org.immutables</groupId>
                 <artifactId>value</artifactId>
                 <version>${org.immutables.version}</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct</artifactId>
                 <version>${org.mapstruct.version}</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.mapstruct</groupId>
@@ -97,6 +101,26 @@
                             </goals>
                         </execution>
                     </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin.version}</version>
+                    <configuration>
+                        <useIncrementalCompilation>false</useIncrementalCompilation>
+                        <annotationProcessorPaths>
+                            <path>
+                                <groupId>org.immutables</groupId>
+                                <artifactId>value</artifactId>
+                                <version>${org.immutables.version}</version>
+                            </path>
+                            <path>
+                                <groupId>binarek</groupId>
+                                <artifactId>robio-mapstruct-processor</artifactId>
+                                <version>0.0.1-SNAPSHOT</version>
+                            </path>
+                        </annotationProcessorPaths>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>

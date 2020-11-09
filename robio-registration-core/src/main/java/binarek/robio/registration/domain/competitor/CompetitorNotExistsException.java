@@ -1,6 +1,6 @@
 package binarek.robio.registration.domain.competitor;
 
-import binarek.robio.common.domain.AggregateRootNotExistsException;
+import binarek.robio.common.core.shared.AggregateRootNotExistsException;
 
 public class CompetitorNotExistsException extends AggregateRootNotExistsException {
 

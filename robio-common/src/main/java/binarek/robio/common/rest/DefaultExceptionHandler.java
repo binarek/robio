@@ -1,7 +1,7 @@
 package binarek.robio.common.rest;
 
-import binarek.robio.common.domain.AggregateRootAlreadyExistsException;
-import binarek.robio.common.domain.AggregateRootNotExistsException;
+import binarek.robio.common.core.shared.AggregateRootAlreadyExistsException;
+import binarek.robio.common.core.shared.AggregateRootNotExistsException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
