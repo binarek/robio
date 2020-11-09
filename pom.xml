@@ -4,6 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
     <modules>
+        <module>robio-app</module>
+        <module>robio-common</module>
+        <module>robio-ftl-core</module>
+        <module>robio-ftl-core-api</module>
+        <module>robio-ftl-rest-api</module>
         <module>robio-mapstruct-processor</module>
         <module>robio-server</module>
     </modules>
@@ -40,11 +45,13 @@
                 <groupId>org.immutables</groupId>
                 <artifactId>value</artifactId>
                 <version>${org.immutables.version}</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct</artifactId>
                 <version>${org.mapstruct.version}</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.mapstruct</groupId>
