@@ -8,7 +8,7 @@ import org.immutables.value.Value;
         typeAbstract = "*Def",
         typeImmutable = "*",
         visibility = Value.Style.ImplementationVisibility.PUBLIC,
-        defaults = @Value.Immutable(/*builder = false, */copy = false), // builder = true makes MapStruct not work (in version 1.3.1.Final)
+        defaults = @Value.Immutable(copy = false),
         redactedMask = "***")
 public @interface ValueDefStyle {
 }
