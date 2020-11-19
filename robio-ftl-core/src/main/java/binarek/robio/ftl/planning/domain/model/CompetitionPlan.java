@@ -10,6 +10,7 @@ import java.util.UUID;
 
 @Value.Immutable
 @BaseStyle
+@SuppressWarnings("immutables:from")    // NOTE: do not use .from(CompetitionPlanView) - this should never happen
 public abstract class CompetitionPlan implements CompetitionPlanView {
 
     CompetitionPlan() {
@@ -37,13 +38,15 @@ public abstract class CompetitionPlan implements CompetitionPlanView {
     }
 
     public final CompetitionPlan addRobots(RobotPlaceholder... robots) {
-        return ImmutableCompetitionPlan.builder().from(this)
+        return ImmutableCompetitionPlan.builder()
+                .from(this)
                 .addRobots(robots)
                 .build();
     }
 
     public CompetitionPlan changeRunsLimitPerRobot(@Nullable Integer runsLimitPerRobot) {
-        return ImmutableCompetitionPlan.builder().from(this)
+        return ImmutableCompetitionPlan.builder()
+                .from(this)
                 .runsLimitPerRobot(runsLimitPerRobot)
                 .build();
     }

@@ -8,6 +8,7 @@
         <module>robio-common</module>
         <module>robio-ftl-core</module>
         <module>robio-ftl-core-api</module>
+        <module>robio-ftl-persistence</module>
         <module>robio-ftl-rest-api</module>
         <module>robio-mapstruct-processor</module>
         <module>robio-server</module>

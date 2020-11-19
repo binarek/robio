@@ -1,5 +1,6 @@
 package binarek.robio.ftl.planning.app
 
+import binarek.robio.ftl.planning.api.command.InitializeCompetitionPlanCommand
 import binarek.robio.ftl.planning.domain.model.CompetitionPlan
 import binarek.robio.ftl.planning.domain.model.RobotPlaceholder
 
@@ -7,6 +8,13 @@ trait CompetitionPlanningFixture {
 
     static UUID COMPETITION_ID = UUID.fromString('135be8e7-ef75-40a8-8893-6ab9f682b0df')
     static int RUNS_LIMIT_PER_ROBOT = 5
+
+    InitializeCompetitionPlanCommand initializeCompetitionPlanCommand() {
+        return InitializeCompetitionPlanCommand.builder()
+                .competitionId(COMPETITION_ID)
+                .runsLimitPerRobot(RUNS_LIMIT_PER_ROBOT)
+                .build()
+    }
 
     CompetitionPlan competitionPlan() {
         return CompetitionPlan.newPlan(COMPETITION_ID, RUNS_LIMIT_PER_ROBOT)

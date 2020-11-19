@@ -1,8 +1,9 @@
 package binarek.robio.ftl.planning.app
 
-import binarek.robio.ftl.planning.api.command.InitializeCompetitionPlanCommand
+import binarek.robio.ftl.planning.api.exception.CompetitionPlanAlreadyExistsException
 import binarek.robio.ftl.planning.api.exception.CompetitionPlanNotFoundException
 import binarek.robio.ftl.planning.domain.CompetitionPlanRepository
+import binarek.robio.ftl.planning.domain.CompetitionPlanService
 import binarek.robio.ftl.planning.domain.model.CompetitionPlan
 import spock.lang.Specification
 import spock.lang.Subject
@@ -10,19 +11,18 @@ import spock.lang.Subject
 class CompetitionPlanAppServiceImplTest extends Specification implements CompetitionPlanningFixture {
 
     def competitionPlanRepository = Mock(CompetitionPlanRepository)
+    def competitionPlanService = Mock(CompetitionPlanService)
 
     @Subject
-    def competitionPlanAppService = new CompetitionPlanAppServiceImpl(competitionPlanRepository)
+    def competitionPlanAppService = new CompetitionPlanAppServiceImpl(competitionPlanRepository, competitionPlanService)
 
     def 'initializes new plan from command'() {
-        given:
-        def command = InitializeCompetitionPlanCommand.builder()
-                .competitionId(COMPETITION_ID)
-                .runsLimitPerRobot(RUNS_LIMIT_PER_ROBOT)
-                .build()
-        when:
-        competitionPlanAppService.initializePlan(command)
-        then:
+        when: 'invokes plan initialization'
+        competitionPlanAppService.initializePlan(initializeCompetitionPlanCommand())
+
+        then: 'checks if plan can be initialized'
+        1 * competitionPlanService.validateIfCanInitializeCompetitionPlan(COMPETITION_ID)
+        and: 'initialized plan is persisted'
         1 * competitionPlanRepository.save({ CompetitionPlan plan ->
             with(plan) {
                 assert competitionId == COMPETITION_ID
@@ -31,23 +31,42 @@ class CompetitionPlanAppServiceImplTest extends Specification implements Competi
         })
     }
 
+    def 'throws exception if cannot initialize new plan'() {
+        when: 'invoking plan initialization'
+        competitionPlanAppService.initializePlan(initializeCompetitionPlanCommand())
+
+        then: 'checks that plan cannot be initialized'
+        1 * competitionPlanService.validateIfCanInitializeCompetitionPlan(COMPETITION_ID) >> {
+            throw CompetitionPlanAlreadyExistsException.ofCompetitionId(COMPETITION_ID)
+        }
+        and: 'no plan is persisted'
+        0 * competitionPlanRepository.save(_)
+
+        then: 'validation exception is thrown'
+        thrown(CompetitionPlanAlreadyExistsException)
+    }
+
     def 'gets plan for existing competition id'() {
-        given:
+        given: 'existing competition plan'
         competitionPlanRepository.getByCompetitionId(COMPETITION_ID) >> Optional.of(competitionPlan())
-        when:
+
+        when: 'invoking getting plan'
         def result = competitionPlanAppService.getPlan(COMPETITION_ID)
+
         then:
         noExceptionThrown()
-        and:
+        and: 'returned plan is valid'
         result == competitionPlan()
     }
 
     def 'throws exception while getting plan for non-existing competition id'() {
-        given:
+        given: 'nonexistent competition plan id'
         competitionPlanRepository.getByCompetitionId(COMPETITION_ID) >> Optional.empty()
-        when:
+
+        when: 'invoking getting plan'
         competitionPlanAppService.getPlan(COMPETITION_ID)
-        then:
+
+        then: 'not found exception is thrown'
         thrown(CompetitionPlanNotFoundException)
     }
 }

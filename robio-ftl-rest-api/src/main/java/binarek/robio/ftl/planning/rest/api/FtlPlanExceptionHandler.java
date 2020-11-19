@@ -1,5 +1,6 @@
 package binarek.robio.ftl.planning.rest.api;
 
+import binarek.robio.ftl.planning.api.exception.CompetitionPlanAlreadyExistsException;
 import binarek.robio.ftl.planning.api.exception.CompetitionPlanNotFoundException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -18,5 +19,10 @@ public class FtlPlanExceptionHandler implements ProblemHandling {
     @ExceptionHandler(CompetitionPlanNotFoundException.class)
     public ResponseEntity<Problem> handleCompetitionPlanNotFoundException(Exception exception, NativeWebRequest request) {
         return create(Status.NOT_FOUND, exception, request);
+    }
+
+    @ExceptionHandler(CompetitionPlanAlreadyExistsException.class)
+    public ResponseEntity<Problem> handleCompetitionPlanAlreadyExistsException(Exception exception, NativeWebRequest request) {
+        return create(Status.CONFLICT, exception, request);
     }
 }
