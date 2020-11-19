@@ -1,7 +1,5 @@
 package binarek.robio.ftl.planning.app
 
-import binarek.robio.ftl.planning.api.query.CompetitionPlanView
-import binarek.robio.ftl.planning.api.query.RobotPlaceholderView
 import binarek.robio.ftl.planning.domain.model.CompetitionPlan
 import binarek.robio.ftl.planning.domain.model.RobotPlaceholder
 
@@ -25,26 +23,5 @@ trait CompetitionPlanningFixture {
         return RobotPlaceholder.of(
                 null,
                 UUID.fromString('ece90805-66b1-4df0-9872-6dfb1e1c6e84'))
-    }
-
-    CompetitionPlanView ftlCompetitionPlan() {
-        return CompetitionPlanView.builder()
-                .competitionId(COMPETITION_ID)
-                .runsLimitPerRobot(RUNS_LIMIT_PER_ROBOT)
-                .addRobots(readyRobotPlaceholderView(), unreadyRobotPlaceholderView())
-                .build()
-    }
-
-    RobotPlaceholderView readyRobotPlaceholderView() {
-        return RobotPlaceholderView.builder()
-                .robotId(UUID.fromString('37cd59cf-592b-4f47-adb1-631795b25420'))
-                .teamId(UUID.fromString('cff8b0d0-494d-49ae-856d-e0452c57cca4'))
-                .build()
-    }
-
-    RobotPlaceholderView unreadyRobotPlaceholderView() {
-        return RobotPlaceholderView.builder()
-                .teamId(UUID.fromString('ece90805-66b1-4df0-9872-6dfb1e1c6e84'))
-                .build()
     }
 }

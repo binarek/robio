@@ -1,7 +1,7 @@
 package binarek.robio.ftl.planning.domain.model;
 
 import binarek.robio.common.codegen.ValueTypeStyle;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import binarek.robio.ftl.planning.api.query.RobotPlaceholderView;
 import org.immutables.value.Value;
 import org.springframework.lang.Nullable;
 
@@ -9,8 +9,7 @@ import java.util.UUID;
 
 @Value.Immutable
 @ValueTypeStyle
-@JsonDeserialize(as = ImmutableRobotPlaceholder.class)
-public abstract class RobotPlaceholder {
+public abstract class RobotPlaceholder implements RobotPlaceholderView {
 
     RobotPlaceholder() {
     }

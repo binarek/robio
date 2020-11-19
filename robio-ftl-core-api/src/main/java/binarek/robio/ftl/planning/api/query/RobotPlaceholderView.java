@@ -8,10 +8,10 @@ import java.util.UUID;
 
 @Value.Immutable
 @ValueDefStyle
-interface RobotPlaceholderViewDef {
+public interface RobotPlaceholderView {
 
-    UUID teamId();
+    UUID getTeamId();
 
     @Nullable
-    UUID robotId();
+    UUID getRobotId();
 }

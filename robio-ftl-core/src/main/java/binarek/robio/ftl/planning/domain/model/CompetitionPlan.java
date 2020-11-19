@@ -1,7 +1,7 @@
 package binarek.robio.ftl.planning.domain.model;
 
 import binarek.robio.common.codegen.BaseStyle;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import binarek.robio.ftl.planning.api.query.CompetitionPlanView;
 import org.immutables.value.Value;
 import org.springframework.lang.Nullable;
 
@@ -10,8 +10,7 @@ import java.util.UUID;
 
 @Value.Immutable
 @BaseStyle
-@JsonDeserialize(as = ImmutableCompetitionPlan.class)
-public abstract class CompetitionPlan {
+public abstract class CompetitionPlan implements CompetitionPlanView {
 
     CompetitionPlan() {
     }

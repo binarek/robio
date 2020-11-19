@@ -11,14 +11,14 @@ import java.util.UUID;
 @ValueDefStyle
 interface InitializeCompetitionPlanCommandDef {
 
-    UUID competitionId();
+    UUID getCompetitionId();
 
     @Nullable
-    Integer runsLimitPerRobot();
+    Integer getRunsLimitPerRobot();
 
     @Value.Check
     default void validate() {
-        var runsLimitPerRobot = runsLimitPerRobot();
+        var runsLimitPerRobot = getRunsLimitPerRobot();
         Assert.state(runsLimitPerRobot == null || runsLimitPerRobot > 0, "Runs limit per robot must be empty or grater than 0");
     }
 }

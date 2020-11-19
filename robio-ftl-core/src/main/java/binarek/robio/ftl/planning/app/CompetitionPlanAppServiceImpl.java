@@ -15,24 +15,21 @@ import java.util.UUID;
 class CompetitionPlanAppServiceImpl implements CompetitionPlanAppService {
 
     private final CompetitionPlanRepository competitionPlanRepository;
-    private final FtlPlanningModelMapper modelMapper;
 
-    CompetitionPlanAppServiceImpl(CompetitionPlanRepository competitionPlanRepository, FtlPlanningModelMapper modelMapper) {
+    CompetitionPlanAppServiceImpl(CompetitionPlanRepository competitionPlanRepository) {
         this.competitionPlanRepository = competitionPlanRepository;
-        this.modelMapper = modelMapper;
     }
 
     @Override
     @Transactional
     public void initializePlan(InitializeCompetitionPlanCommand command) {
-        var newPlan = CompetitionPlan.newPlan(command.competitionId(), command.runsLimitPerRobot());
+        var newPlan = CompetitionPlan.newPlan(command.getCompetitionId(), command.getRunsLimitPerRobot());
         competitionPlanRepository.save(newPlan);
     }
 
     @Override
     public CompetitionPlanView getPlan(UUID competitionId) {
         return competitionPlanRepository.getByCompetitionId(competitionId)
-                .map(modelMapper::toCompetitionPlanView)
                 .orElseThrow(() -> CompetitionPlanNotFoundException.ofCompetitionId(competitionId));
     }
 }

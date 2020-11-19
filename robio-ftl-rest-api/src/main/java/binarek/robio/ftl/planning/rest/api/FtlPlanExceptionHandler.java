@@ -11,9 +11,9 @@ import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
 import org.zalando.problem.spring.web.advice.ProblemHandling;
 
-@RestControllerAdvice(assignableTypes = FtlPlansController.class)
+@RestControllerAdvice(assignableTypes = FtlPlanController.class)
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class FtlPlansExceptionHandler implements ProblemHandling {
+public class FtlPlanExceptionHandler implements ProblemHandling {
 
     @ExceptionHandler(CompetitionPlanNotFoundException.class)
     public ResponseEntity<Problem> handleCompetitionPlanNotFoundException(Exception exception, NativeWebRequest request) {

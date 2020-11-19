@@ -1,6 +1,7 @@
 package binarek.robio.ftl.planning.domain;
 
 import binarek.robio.ftl.planning.domain.model.CompetitionPlan;
+import binarek.robio.ftl.planning.domain.model.ImmutableCompetitionPlan;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -28,7 +29,11 @@ public interface CompetitionPlanRepository {
 
         @Override
         public Optional<CompetitionPlan> getByCompetitionId(UUID competitionId) {
-            return Optional.ofNullable(map.get(competitionId));
+            return Optional.ofNullable(map.get(competitionId))
+                    .map(competitionPlan -> ImmutableCompetitionPlan.builder()
+                            .from(competitionPlan)
+                            .version(10L)
+                            .build());
         }
     }
 }
