@@ -1,6 +1,6 @@
 package binarek.robio.ftl.planning.view;
 
-import org.springframework.lang.Nullable;
+import binarek.robio.ftl.planning.model.CompetitionRules;
 
 import java.util.List;
 import java.util.UUID;
@@ -11,6 +11,5 @@ public interface CompetitionPlanView {
 
     List<? extends RobotPlaceholderView> getRobots();
 
-    @Nullable
-    Integer getRunsLimitPerRobot();
+    CompetitionRules getRules();
 }

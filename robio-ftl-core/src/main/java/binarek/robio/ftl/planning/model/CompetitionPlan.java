@@ -23,17 +23,16 @@ public abstract class CompetitionPlan implements CompetitionPlanView {
 
     public abstract List<RobotPlaceholder> getRobots();
 
-    @Nullable
-    public abstract Integer getRunsLimitPerRobot();
+    public abstract CompetitionRules getRules();
 
     public final boolean canBeApplied() {
         return getRobots().stream().allMatch(RobotPlaceholder::isReady);
     }
 
-    public static CompetitionPlan newPlan(UUID competitionId, @Nullable Integer runsLimitPerRobot) {
+    public static CompetitionPlan newPlan(UUID competitionId, @Nullable CompetitionRules rules) {
         return ImmutableCompetitionPlan.builder()
                 .competitionId(competitionId)
-                .runsLimitPerRobot(runsLimitPerRobot)
+                .rules(rules != null ? rules : CompetitionRules.builder().build())
                 .build();
     }
 
@@ -44,10 +43,10 @@ public abstract class CompetitionPlan implements CompetitionPlanView {
                 .build();
     }
 
-    public CompetitionPlan changeRunsLimitPerRobot(@Nullable Integer runsLimitPerRobot) {
+    public CompetitionPlan changeRules(CompetitionRules rules) {
         return ImmutableCompetitionPlan.builder()
                 .from(this)
-                .runsLimitPerRobot(runsLimitPerRobot)
+                .rules(rules)
                 .build();
     }
 }

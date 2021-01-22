@@ -5,10 +5,11 @@ import org.mapstruct.ap.spi.util.IntrospectorUtils;
 
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
+import java.util.regex.Pattern;
 
 public class RobioAccessorNamingStrategy extends ImmutablesAccessorNamingStrategy {
 
-    private static final String JOOQ_RECORDS_PACKAGE = "binarek.robio.db.tables.records";
+    private static final Pattern JOOQ_RECORDS_PACKAGE = Pattern.compile("binarek\\.robio(\\..+)?\\.db\\.tables\\.records\\..+");
 
     @Override
     public boolean isSetterMethod(ExecutableElement method) {
@@ -30,6 +31,6 @@ public class RobioAccessorNamingStrategy extends ImmutablesAccessorNamingStrateg
 
     private static boolean belongsToJooqRecord(ExecutableElement method) {
         var className = ((TypeElement) method.getEnclosingElement()).getQualifiedName().toString();
-        return className.startsWith(JOOQ_RECORDS_PACKAGE + '.');
+        return JOOQ_RECORDS_PACKAGE.matcher(className).matches();
     }
 }

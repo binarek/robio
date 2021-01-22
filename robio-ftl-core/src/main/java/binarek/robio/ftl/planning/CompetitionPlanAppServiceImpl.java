@@ -25,7 +25,7 @@ class CompetitionPlanAppServiceImpl implements CompetitionPlanAppService {
     @Transactional
     public void initializePlan(InitializeCompetitionPlanCommand command) {
         competitionPlanService.validateIfCanInitializeCompetitionPlan(command.getCompetitionId());
-        var newPlan = CompetitionPlan.newPlan(command.getCompetitionId(), command.getRunsLimitPerRobot());
+        var newPlan = CompetitionPlan.newPlan(command.getCompetitionId(), command.getRules());
         competitionPlanRepository.save(newPlan);
     }
 

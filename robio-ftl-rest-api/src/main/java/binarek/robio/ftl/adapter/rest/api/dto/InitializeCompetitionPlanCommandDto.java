@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import org.immutables.value.Value;
 import org.springframework.lang.Nullable;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
@@ -22,6 +21,5 @@ public interface InitializeCompetitionPlanCommandDto {
     UUID getCompetitionId();
 
     @Nullable
-    @Min(1)
-    Integer getRunsLimitPerRobot();
+    CompetitionRulesDto getRules();
 }

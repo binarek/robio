@@ -2,6 +2,7 @@ package binarek.robio.ftl.planning
 
 import binarek.robio.ftl.planning.command.InitializeCompetitionPlanCommand
 import binarek.robio.ftl.planning.model.CompetitionPlan
+import binarek.robio.ftl.planning.model.CompetitionRules
 import binarek.robio.ftl.planning.model.RobotPlaceholder
 
 trait CompetitionPlanningFixture {
@@ -12,12 +13,12 @@ trait CompetitionPlanningFixture {
     InitializeCompetitionPlanCommand initializeCompetitionPlanCommand() {
         return InitializeCompetitionPlanCommand.builder()
                 .competitionId(COMPETITION_ID)
-                .runsLimitPerRobot(RUNS_LIMIT_PER_ROBOT)
+                .rules(competitionRules())
                 .build()
     }
 
     CompetitionPlan competitionPlan() {
-        return CompetitionPlan.newPlan(COMPETITION_ID, RUNS_LIMIT_PER_ROBOT)
+        return CompetitionPlan.newPlan(COMPETITION_ID, competitionRules())
                 .addRobots(readyRobotPlaceholder(), unreadyRobotPlaceholder())
     }
 
@@ -31,5 +32,11 @@ trait CompetitionPlanningFixture {
         return RobotPlaceholder.of(
                 null,
                 UUID.fromString('ece90805-66b1-4df0-9872-6dfb1e1c6e84'))
+    }
+
+    CompetitionRules competitionRules() {
+        return CompetitionRules.builder()
+                .runsLimitPerRobot(RUNS_LIMIT_PER_ROBOT)
+                .build()
     }
 }

@@ -24,7 +24,7 @@ class CompetitionPlanAppServiceImplTest extends Specification implements Competi
         1 * competitionPlanRepository.save({ CompetitionPlan plan ->
             with(plan) {
                 assert competitionId == COMPETITION_ID
-                assert runsLimitPerRobot == RUNS_LIMIT_PER_ROBOT
+                assert rules == competitionRules()
             }
         })
     }
