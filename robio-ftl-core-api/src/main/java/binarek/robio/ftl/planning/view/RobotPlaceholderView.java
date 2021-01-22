@@ -1,13 +1,13 @@
 package binarek.robio.ftl.planning.view;
 
+import binarek.robio.shared.model.RobotId;
+import binarek.robio.shared.model.TeamId;
 import org.springframework.lang.Nullable;
-
-import java.util.UUID;
 
 public interface RobotPlaceholderView {
 
-    UUID getTeamId();
+    TeamId getTeamId();
 
     @Nullable
-    UUID getRobotId();
+    RobotId getRobotId();
 }

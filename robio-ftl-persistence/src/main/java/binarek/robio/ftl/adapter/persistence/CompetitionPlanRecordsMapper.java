@@ -1,12 +1,13 @@
 package binarek.robio.ftl.adapter.persistence;
 
-import binarek.robio.common.codegen.BaseMapperConfig;
 import binarek.robio.ftl.adapter.persistence.db.tables.records.CompetitionPlanRecord;
 import binarek.robio.ftl.adapter.persistence.db.tables.records.CompetitionPlanRobotRecord;
+import binarek.robio.ftl.model.CompetitionRules;
 import binarek.robio.ftl.planning.model.CompetitionPlan;
-import binarek.robio.ftl.planning.model.CompetitionRules;
 import binarek.robio.ftl.planning.model.ImmutableCompetitionPlan;
 import binarek.robio.ftl.planning.model.RobotPlaceholder;
+import binarek.robio.shared.SharedMapper;
+import binarek.robio.util.codegen.BaseMapperConfig;
 import org.jooq.JSON;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -15,7 +16,7 @@ import org.springframework.lang.Nullable;
 
 import java.util.List;
 
-@Mapper(config = BaseMapperConfig.class, imports = {FtlJsonTypeMapper.class, CompetitionRules.class})
+@Mapper(config = BaseMapperConfig.class, uses = SharedMapper.class)
 abstract class CompetitionPlanRecordsMapper {
 
     private final FtlJsonTypeMapper<CompetitionRules> CompetitionRulesTypeMapper = FtlJsonTypeMapper.ofType(CompetitionRules.class);

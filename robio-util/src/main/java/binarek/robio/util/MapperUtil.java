@@ -1,4 +1,4 @@
-package binarek.robio.common.util;
+package binarek.robio.util;
 
 import org.springframework.lang.Nullable;
 

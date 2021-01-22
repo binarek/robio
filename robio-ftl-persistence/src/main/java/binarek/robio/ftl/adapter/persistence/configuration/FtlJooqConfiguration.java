@@ -32,20 +32,17 @@ class FtlJooqConfiguration {
     }
 
     @Bean(name = FtlBeanNames.DSL_CONTEXT)
-    public DSLContext ftlDSLContext(ConnectionProvider connectionProvider) {
-        return configuration(connectionProvider).dsl();
-    }
-
-    private DefaultConfiguration configuration(ConnectionProvider connectionProvider) {
-        DefaultConfiguration config = new DefaultConfiguration();
+    public DSLContext ftlDSLContext(ConnectionProvider connectionProvider, FtlPersistenceProperties properties) {
+        var config = new DefaultConfiguration();
         config.set(connectionProvider);
         config.set(SQLDialect.POSTGRES);
         config.set(new Settings()
-                .withRenderMapping(new RenderMapping().withSchemata(new MappedSchema().withInput("").withOutput("ftl")))
+                .withRenderMapping(new RenderMapping()
+                        .withSchemata(new MappedSchema().withInput("").withOutput(properties.getSchema())))
                 .withRenderSchema(true)
                 .withRenderQuotedNames(RenderQuotedNames.NEVER)
                 .withExecuteWithOptimisticLocking(true));
         config.set(new DefaultExecuteListenerProvider(new JooqExceptionTranslator()));
-        return config;
+        return config.dsl();
     }
 }

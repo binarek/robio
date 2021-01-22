@@ -1,6 +1,7 @@
 package binarek.robio.ftl.planning.exception;
 
-import binarek.robio.common.exception.BusinessException;
+import binarek.robio.shared.exception.BusinessException;
+import binarek.robio.shared.model.CompetitionId;
 
 import java.util.UUID;
 
@@ -10,7 +11,7 @@ public class CompetitionPlanNotFoundException extends BusinessException {
         super(message);
     }
 
-    public static CompetitionPlanNotFoundException ofCompetitionId(UUID competitionId) {
+    public static CompetitionPlanNotFoundException ofCompetitionId(CompetitionId competitionId) {
         return new CompetitionPlanNotFoundException("Cannot find plan for competition id: " + competitionId);
     }
 }

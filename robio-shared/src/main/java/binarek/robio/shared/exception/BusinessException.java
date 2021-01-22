@@ -1,4 +1,4 @@
-package binarek.robio.common.exception;
+package binarek.robio.shared.exception;
 
 public abstract class BusinessException extends RuntimeException {
 

@@ -1,18 +1,24 @@
 package binarek.robio.ftl.adapter.rest.api;
 
-import binarek.robio.common.codegen.BaseMapperConfig;
 import binarek.robio.ftl.adapter.rest.api.dto.CompetitionPlanDto;
 import binarek.robio.ftl.adapter.rest.api.dto.CompetitionRulesDto;
 import binarek.robio.ftl.adapter.rest.api.dto.InitializeCompetitionPlanCommandDto;
+import binarek.robio.ftl.model.CompetitionRules;
 import binarek.robio.ftl.planning.command.InitializeCompetitionPlanCommand;
-import binarek.robio.ftl.planning.model.CompetitionRules;
+import binarek.robio.ftl.planning.command.SearchCompetitionPlanCommand;
 import binarek.robio.ftl.planning.view.CompetitionPlanView;
+import binarek.robio.shared.SharedMapper;
+import binarek.robio.util.codegen.BaseMapperConfig;
 import org.mapstruct.Mapper;
 
-@Mapper(config = BaseMapperConfig.class)
+import java.util.UUID;
+
+@Mapper(config = BaseMapperConfig.class, uses = SharedMapper.class)
 interface FtlPlanDtoMapper {
 
     InitializeCompetitionPlanCommand toInitializeCompetitionPlanCommand(InitializeCompetitionPlanCommandDto dto);
+
+    SearchCompetitionPlanCommand toSearchCompetitionPlanCommand(UUID competitionId);
 
     CompetitionRules toCompetitionRules(CompetitionRulesDto dto);
 

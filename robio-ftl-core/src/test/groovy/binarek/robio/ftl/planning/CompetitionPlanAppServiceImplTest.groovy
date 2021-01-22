@@ -49,7 +49,7 @@ class CompetitionPlanAppServiceImplTest extends Specification implements Competi
         competitionPlanRepository.getByCompetitionId(COMPETITION_ID) >> Optional.of(competitionPlan())
 
         when: 'invoking getting plan'
-        def result = competitionPlanAppService.getPlan(COMPETITION_ID)
+        def result = competitionPlanAppService.getPlan(searchCompetitionPlanCommand())
 
         then:
         noExceptionThrown()
@@ -62,7 +62,7 @@ class CompetitionPlanAppServiceImplTest extends Specification implements Competi
         competitionPlanRepository.getByCompetitionId(COMPETITION_ID) >> Optional.empty()
 
         when: 'invoking getting plan'
-        competitionPlanAppService.getPlan(COMPETITION_ID)
+        competitionPlanAppService.getPlan(searchCompetitionPlanCommand())
 
         then: 'not found exception is thrown'
         thrown(CompetitionPlanNotFoundException)

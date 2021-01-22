@@ -1,6 +1,6 @@
-package binarek.robio.ftl.planning.model;
+package binarek.robio.ftl.model;
 
-import binarek.robio.common.codegen.ValueDefStyle;
+import binarek.robio.util.codegen.ValueDefStyle;
 import org.immutables.value.Value;
 import org.springframework.lang.Nullable;
 

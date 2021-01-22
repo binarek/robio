@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jooq.JSON;
 import org.springframework.lang.Nullable;
 
-import static binarek.robio.common.util.MapperUtil.mapNullSafe;
+import static binarek.robio.util.MapperUtil.mapNullSafe;
 
 class FtlJsonTypeMapper<T> {
 

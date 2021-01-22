@@ -6,6 +6,7 @@ import binarek.robio.ftl.adapter.persistence.db.tables.records.CompetitionPlanRo
 import binarek.robio.ftl.planning.CompetitionPlanRepository;
 import binarek.robio.ftl.planning.model.CompetitionPlan;
 import binarek.robio.ftl.planning.model.RobotPlaceholder;
+import binarek.robio.shared.model.CompetitionId;
 import org.jooq.DSLContext;
 import org.jooq.impl.UpdatableRecordImpl;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static binarek.robio.ftl.adapter.persistence.db.tables.CompetitionPlan.COMPETITION_PLAN;
 import static binarek.robio.ftl.adapter.persistence.db.tables.CompetitionPlanRobot.COMPETITION_PLAN_ROBOT;
@@ -34,22 +34,22 @@ class CompetitionPlanRepositoryImpl implements CompetitionPlanRepository {
     @Override
     @Transactional
     public void save(CompetitionPlan plan) {
-        dsl.fetchOptional(COMPETITION_PLAN, COMPETITION_PLAN.COMPETITION_ID.eq(plan.getCompetitionId()))
+        dsl.fetchOptional(COMPETITION_PLAN, COMPETITION_PLAN.COMPETITION_ID.eq(plan.getCompetitionId().getValue()))
                 .ifPresentOrElse(
                         planRecord -> updatePlan(planRecord, plan),
                         () -> insertPlan(plan));
     }
 
     @Override
-    public boolean existsByCompetitionId(UUID competitionId) {
+    public boolean existsByCompetitionId(CompetitionId competitionId) {
         return dsl.fetchExists(dsl.selectFrom(COMPETITION_PLAN)
-                .where(COMPETITION_PLAN.COMPETITION_ID.eq(competitionId)));
+                .where(COMPETITION_PLAN.COMPETITION_ID.eq(competitionId.getValue())));
     }
 
     @Override
-    public Optional<CompetitionPlan> getByCompetitionId(UUID competitionId) {
+    public Optional<CompetitionPlan> getByCompetitionId(CompetitionId competitionId) {
         return dsl.selectFrom(COMPETITION_PLAN)
-                .where(COMPETITION_PLAN.COMPETITION_ID.eq(competitionId))
+                .where(COMPETITION_PLAN.COMPETITION_ID.eq(competitionId.getValue()))
                 .fetchOptional()
                 .map(planRecord -> {
                     var robotRecords = dsl.selectFrom(COMPETITION_PLAN_ROBOT)

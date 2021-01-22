@@ -1,13 +1,13 @@
 package binarek.robio.ftl.planning.view;
 
-import binarek.robio.ftl.planning.model.CompetitionRules;
+import binarek.robio.ftl.model.CompetitionRules;
+import binarek.robio.shared.model.CompetitionId;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface CompetitionPlanView {
 
-    UUID getCompetitionId();
+    CompetitionId getCompetitionId();
 
     List<? extends RobotPlaceholderView> getRobots();
 

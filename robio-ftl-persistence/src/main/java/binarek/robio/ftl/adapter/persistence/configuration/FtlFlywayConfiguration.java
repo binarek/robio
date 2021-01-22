@@ -14,12 +14,14 @@ import javax.sql.DataSource;
 @ConditionalOnProperty(prefix = "ftl.flyway", name = "enabled", matchIfMissing = true)
 class FtlFlywayConfiguration {
 
+    private static final String MIGRATION_FILE_PREFIX = "FTL_";
+
     @Bean
-    Flyway ftlFlyway(ResourceLoader resourceLoader, DataSource dataSource) {
+    Flyway ftlFlyway(ResourceLoader resourceLoader, DataSource dataSource, FtlPersistenceProperties properties) {
         return Flyway.configure(resourceLoader.getClassLoader())
                 .dataSource(dataSource)
-                .schemas("ftl")
-                .sqlMigrationPrefix("FTL_")
+                .schemas(properties.getSchema())
+                .sqlMigrationPrefix(MIGRATION_FILE_PREFIX)
                 .load();
     }
 

@@ -1,12 +1,13 @@
 package binarek.robio.ftl.planning.model;
 
-import binarek.robio.common.codegen.BaseStyle;
+import binarek.robio.ftl.model.CompetitionRules;
 import binarek.robio.ftl.planning.view.CompetitionPlanView;
+import binarek.robio.shared.model.CompetitionId;
+import binarek.robio.util.codegen.BaseStyle;
 import org.immutables.value.Value;
 import org.springframework.lang.Nullable;
 
 import java.util.List;
-import java.util.UUID;
 
 @Value.Immutable
 @BaseStyle
@@ -16,7 +17,7 @@ public abstract class CompetitionPlan implements CompetitionPlanView {
     CompetitionPlan() {
     }
 
-    public abstract UUID getCompetitionId();
+    public abstract CompetitionId getCompetitionId();
 
     @Nullable
     public abstract Long getVersion();
@@ -29,7 +30,7 @@ public abstract class CompetitionPlan implements CompetitionPlanView {
         return getRobots().stream().allMatch(RobotPlaceholder::isReady);
     }
 
-    public static CompetitionPlan newPlan(UUID competitionId, @Nullable CompetitionRules rules) {
+    public static CompetitionPlan newPlan(CompetitionId competitionId, @Nullable CompetitionRules rules) {
         return ImmutableCompetitionPlan.builder()
                 .competitionId(competitionId)
                 .rules(rules != null ? rules : CompetitionRules.builder().build())

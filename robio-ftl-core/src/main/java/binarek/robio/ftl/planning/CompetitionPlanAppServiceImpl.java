@@ -1,13 +1,12 @@
 package binarek.robio.ftl.planning;
 
 import binarek.robio.ftl.planning.command.InitializeCompetitionPlanCommand;
+import binarek.robio.ftl.planning.command.SearchCompetitionPlanCommand;
 import binarek.robio.ftl.planning.exception.CompetitionPlanNotFoundException;
 import binarek.robio.ftl.planning.model.CompetitionPlan;
 import binarek.robio.ftl.planning.view.CompetitionPlanView;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.UUID;
 
 @Service
 class CompetitionPlanAppServiceImpl implements CompetitionPlanAppService {
@@ -30,7 +29,8 @@ class CompetitionPlanAppServiceImpl implements CompetitionPlanAppService {
     }
 
     @Override
-    public CompetitionPlanView getPlan(UUID competitionId) {
+    public CompetitionPlanView getPlan(SearchCompetitionPlanCommand command) {
+        var competitionId = command.getCompetitionId();
         return competitionPlanRepository.getByCompetitionId(competitionId)
                 .orElseThrow(() -> CompetitionPlanNotFoundException.ofCompetitionId(competitionId));
     }

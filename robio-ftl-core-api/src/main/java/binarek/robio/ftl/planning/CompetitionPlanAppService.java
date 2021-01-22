@@ -1,11 +1,10 @@
 package binarek.robio.ftl.planning;
 
 import binarek.robio.ftl.planning.command.InitializeCompetitionPlanCommand;
+import binarek.robio.ftl.planning.command.SearchCompetitionPlanCommand;
 import binarek.robio.ftl.planning.exception.CompetitionPlanAlreadyExistsException;
 import binarek.robio.ftl.planning.exception.CompetitionPlanNotFoundException;
 import binarek.robio.ftl.planning.view.CompetitionPlanView;
-
-import java.util.UUID;
 
 public interface CompetitionPlanAppService {
 
@@ -20,9 +19,9 @@ public interface CompetitionPlanAppService {
     /**
      * Returns FTL plan for competition given id
      *
-     * @param competitionId competition id
+     * @param command search command
      * @return competition plan
      * @throws CompetitionPlanNotFoundException if no plan found
      */
-    CompetitionPlanView getPlan(UUID competitionId);
+    CompetitionPlanView getPlan(SearchCompetitionPlanCommand command);
 }

@@ -3,6 +3,7 @@ package binarek.robio.ftl.adapter.rest.api;
 import binarek.robio.ftl.adapter.rest.api.dto.CompetitionPlanDto;
 import binarek.robio.ftl.adapter.rest.api.dto.InitializeCompetitionPlanCommandDto;
 import binarek.robio.ftl.planning.CompetitionPlanAppService;
+import binarek.robio.ftl.planning.command.SearchCompetitionPlanCommand;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,11 +27,11 @@ public class FtlPlanController {
     public @Valid CompetitionPlanDto postPlan(@RequestBody @Valid InitializeCompetitionPlanCommandDto commandDto) {
         var command = dtoMapper.toInitializeCompetitionPlanCommand(commandDto);
         competitionPlanAppService.initializePlan(command);
-        return dtoMapper.toCompetitionPlanDto(competitionPlanAppService.getPlan(command.getCompetitionId()));
+        return dtoMapper.toCompetitionPlanDto(competitionPlanAppService.getPlan(SearchCompetitionPlanCommand.of(command.getCompetitionId())));
     }
 
     @GetMapping("/{competitionId}")
     public @Valid CompetitionPlanDto getPlan(@PathVariable UUID competitionId) {
-        return dtoMapper.toCompetitionPlanDto(competitionPlanAppService.getPlan(competitionId));
+        return dtoMapper.toCompetitionPlanDto(competitionPlanAppService.getPlan(dtoMapper.toSearchCompetitionPlanCommand(competitionId)));
     }
 }
