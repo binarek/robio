@@ -21,7 +21,7 @@ public class CompetitionPlanService {
      */
     public void validateIfCanInitializeCompetitionPlan(CompetitionId competitionId) {
         if (competitionPlanRepository.existsByCompetitionId(competitionId)) {
-            throw CompetitionPlanAlreadyExistsException.ofCompetitionId(competitionId);
+            throw CompetitionPlanAlreadyExistsException.of(competitionId);
         }
     }
 }

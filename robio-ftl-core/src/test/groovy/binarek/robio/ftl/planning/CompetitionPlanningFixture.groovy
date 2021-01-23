@@ -1,6 +1,7 @@
 package binarek.robio.ftl.planning
 
 import binarek.robio.ftl.model.CompetitionRules
+import binarek.robio.ftl.planning.command.ChangePlanRulesCommand
 import binarek.robio.ftl.planning.command.InitializeCompetitionPlanCommand
 import binarek.robio.ftl.planning.command.SearchCompetitionPlanCommand
 import binarek.robio.ftl.planning.model.CompetitionPlan
@@ -13,9 +14,14 @@ trait CompetitionPlanningFixture {
 
     static CompetitionId COMPETITION_ID = CompetitionId.of(UUID.fromString('135be8e7-ef75-40a8-8893-6ab9f682b0df'))
     static int RUNS_LIMIT_PER_ROBOT = 5
+    static int NEW_RUNS_LIMIT_PER_ROBOT = 13
 
     InitializeCompetitionPlanCommand initializeCompetitionPlanCommand() {
         return InitializeCompetitionPlanCommand.of(COMPETITION_ID, competitionRules())
+    }
+
+    ChangePlanRulesCommand changePlanRulesCommand() {
+        return ChangePlanRulesCommand.of(COMPETITION_ID, competitionRules(NEW_RUNS_LIMIT_PER_ROBOT))
     }
 
     SearchCompetitionPlanCommand searchCompetitionPlanCommand() {
@@ -39,7 +45,7 @@ trait CompetitionPlanningFixture {
                 TeamId.of(UUID.fromString('ece90805-66b1-4df0-9872-6dfb1e1c6e84')))
     }
 
-    CompetitionRules competitionRules() {
+    CompetitionRules competitionRules(runsLimitPerRobot = RUNS_LIMIT_PER_ROBOT) {
         return CompetitionRules.builder()
                 .runsLimitPerRobot(RUNS_LIMIT_PER_ROBOT)
                 .build()

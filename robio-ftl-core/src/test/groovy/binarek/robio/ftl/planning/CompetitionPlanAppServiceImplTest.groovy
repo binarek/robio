@@ -35,7 +35,7 @@ class CompetitionPlanAppServiceImplTest extends Specification implements Competi
 
         then: 'checks that plan cannot be initialized'
         1 * competitionPlanService.validateIfCanInitializeCompetitionPlan(COMPETITION_ID) >> {
-            throw CompetitionPlanAlreadyExistsException.ofCompetitionId(COMPETITION_ID)
+            throw CompetitionPlanAlreadyExistsException.of(COMPETITION_ID)
         }
         and: 'no plan is persisted'
         0 * competitionPlanRepository.save(_)
@@ -66,5 +66,36 @@ class CompetitionPlanAppServiceImplTest extends Specification implements Competi
 
         then: 'not found exception is thrown'
         thrown(CompetitionPlanNotFoundException)
+    }
+
+    def 'changes rules in existing plan'() {
+        given: 'existing competition plan'
+        competitionPlanRepository.getByCompetitionId(COMPETITION_ID) >> Optional.of(competitionPlan())
+
+        when: 'changing plan rules'
+        competitionPlanAppService.changePlanRules(changePlanRulesCommand())
+
+        then:
+        noExceptionThrown()
+        and: 'new rules saved in repository'
+        1 * competitionPlanRepository.save({ CompetitionPlan plan ->
+            with(plan) {
+                assert competitionId == COMPETITION_ID
+                assert rules == changePlanRulesCommand().rules
+            }
+        })
+    }
+
+    def 'throws exception while changing rules in non-existing plan'() {
+        given: 'nonexistent plan'
+        competitionPlanRepository.getByCompetitionId(COMPETITION_ID) >> Optional.empty()
+
+        when: 'changing plan rules'
+        competitionPlanAppService.changePlanRules(changePlanRulesCommand())
+
+        then: 'not found exception is thrown'
+        thrown(CompetitionPlanNotFoundException)
+        and: 'no plan is persisted'
+        0 * competitionPlanRepository.save(_)
     }
 }

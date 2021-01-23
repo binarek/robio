@@ -33,7 +33,7 @@ public abstract class CompetitionPlan implements CompetitionPlanView {
     public static CompetitionPlan newPlan(CompetitionId competitionId, @Nullable CompetitionRules rules) {
         return ImmutableCompetitionPlan.builder()
                 .competitionId(competitionId)
-                .rules(rules != null ? rules : CompetitionRules.builder().build())
+                .rules(rulesOrDefault(rules))
                 .build();
     }
 
@@ -44,10 +44,14 @@ public abstract class CompetitionPlan implements CompetitionPlanView {
                 .build();
     }
 
-    public CompetitionPlan changeRules(CompetitionRules rules) {
+    public final CompetitionPlan changeRules(@Nullable CompetitionRules rules) {
         return ImmutableCompetitionPlan.builder()
                 .from(this)
-                .rules(rules)
+                .rules(rulesOrDefault(rules))
                 .build();
+    }
+
+    private static CompetitionRules rulesOrDefault(@Nullable CompetitionRules rules) {
+        return rules != null ? rules : CompetitionRules.builder().build();
     }
 }

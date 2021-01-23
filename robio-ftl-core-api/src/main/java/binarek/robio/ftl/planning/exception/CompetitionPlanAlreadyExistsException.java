@@ -9,7 +9,7 @@ public class CompetitionPlanAlreadyExistsException extends BusinessException {
         super(message);
     }
 
-    public static CompetitionPlanAlreadyExistsException ofCompetitionId(CompetitionId competitionId) {
+    public static CompetitionPlanAlreadyExistsException of(CompetitionId competitionId) {
         return new CompetitionPlanAlreadyExistsException("Competition plan for id " + competitionId + " already exists");
     }
 }

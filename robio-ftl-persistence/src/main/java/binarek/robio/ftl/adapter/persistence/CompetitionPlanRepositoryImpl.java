@@ -6,8 +6,10 @@ import binarek.robio.ftl.adapter.persistence.db.tables.records.CompetitionPlanRo
 import binarek.robio.ftl.planning.CompetitionPlanRepository;
 import binarek.robio.ftl.planning.model.CompetitionPlan;
 import binarek.robio.ftl.planning.model.RobotPlaceholder;
+import binarek.robio.shared.exception.EntityHasChangedException;
 import binarek.robio.shared.model.CompetitionId;
 import org.jooq.DSLContext;
+import org.jooq.exception.DataChangedException;
 import org.jooq.impl.UpdatableRecordImpl;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -75,7 +77,11 @@ class CompetitionPlanRepositoryImpl implements CompetitionPlanRepository {
 
     private void updatePlan(CompetitionPlanRecord planRecord, CompetitionPlan plan) {
         mapper.update(planRecord, plan);
-        planRecord.store();
+        try {
+            planRecord.store();
+        } catch (DataChangedException e) {
+            throw new EntityHasChangedException(e);
+        }
 
         deleteRobots(planRecord.getId());
         insertRobots(plan.getRobots(), planRecord.getId());
