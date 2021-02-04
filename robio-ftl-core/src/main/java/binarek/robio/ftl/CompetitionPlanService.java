@@ -1,6 +1,6 @@
-package binarek.robio.ftl.planning;
+package binarek.robio.ftl;
 
-import binarek.robio.ftl.planning.exception.CompetitionPlanAlreadyExistsException;
+import binarek.robio.ftl.exception.CompetitionPlanAlreadyExistsException;
 import binarek.robio.shared.model.CompetitionId;
 import org.springframework.stereotype.Service;
 

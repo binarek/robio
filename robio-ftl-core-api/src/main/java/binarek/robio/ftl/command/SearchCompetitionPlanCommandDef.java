@@ -1,4 +1,4 @@
-package binarek.robio.ftl.planning.command;
+package binarek.robio.ftl.command;
 
 import binarek.robio.shared.model.CompetitionId;
 import binarek.robio.util.codegen.ValueDefStyle;

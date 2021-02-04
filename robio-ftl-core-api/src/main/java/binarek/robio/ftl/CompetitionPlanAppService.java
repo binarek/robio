@@ -1,11 +1,11 @@
-package binarek.robio.ftl.planning;
+package binarek.robio.ftl;
 
-import binarek.robio.ftl.planning.command.ChangePlanRulesCommand;
-import binarek.robio.ftl.planning.command.InitializeCompetitionPlanCommand;
-import binarek.robio.ftl.planning.command.SearchCompetitionPlanCommand;
-import binarek.robio.ftl.planning.exception.CompetitionPlanAlreadyExistsException;
-import binarek.robio.ftl.planning.exception.CompetitionPlanNotFoundException;
-import binarek.robio.ftl.planning.view.CompetitionPlanView;
+import binarek.robio.ftl.command.ChangeCompetitionPlanRulesCommand;
+import binarek.robio.ftl.command.InitializeCompetitionPlanCommand;
+import binarek.robio.ftl.command.SearchCompetitionPlanCommand;
+import binarek.robio.ftl.exception.CompetitionPlanAlreadyExistsException;
+import binarek.robio.ftl.exception.CompetitionPlanNotFoundException;
+import binarek.robio.ftl.view.CompetitionPlanView;
 
 public interface CompetitionPlanAppService {
 
@@ -24,7 +24,7 @@ public interface CompetitionPlanAppService {
      * @param command change rules command
      * @throws CompetitionPlanNotFoundException if no plan found
      */
-    void changePlanRules(ChangePlanRulesCommand command);
+    void changePlanRules(ChangeCompetitionPlanRulesCommand command);
 
     /**
      * Returns FTL plan for competition given id

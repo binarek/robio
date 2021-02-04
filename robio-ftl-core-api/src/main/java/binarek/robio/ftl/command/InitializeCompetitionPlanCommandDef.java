@@ -1,4 +1,4 @@
-package binarek.robio.ftl.planning.command;
+package binarek.robio.ftl.command;
 
 import binarek.robio.ftl.model.CompetitionRules;
 import binarek.robio.shared.model.CompetitionId;
@@ -8,7 +8,7 @@ import org.springframework.lang.Nullable;
 
 @Value.Immutable
 @ValueDefStyle
-interface ChangePlanRulesCommandDef {
+interface InitializeCompetitionPlanCommandDef {
 
     @Value.Parameter
     CompetitionId getCompetitionId();

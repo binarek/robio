@@ -1,11 +1,11 @@
-package binarek.robio.ftl.planning;
+package binarek.robio.ftl;
 
-import binarek.robio.ftl.planning.command.ChangePlanRulesCommand;
-import binarek.robio.ftl.planning.command.InitializeCompetitionPlanCommand;
-import binarek.robio.ftl.planning.command.SearchCompetitionPlanCommand;
-import binarek.robio.ftl.planning.exception.CompetitionPlanNotFoundException;
-import binarek.robio.ftl.planning.model.CompetitionPlan;
-import binarek.robio.ftl.planning.view.CompetitionPlanView;
+import binarek.robio.ftl.command.ChangeCompetitionPlanRulesCommand;
+import binarek.robio.ftl.command.InitializeCompetitionPlanCommand;
+import binarek.robio.ftl.command.SearchCompetitionPlanCommand;
+import binarek.robio.ftl.exception.CompetitionPlanNotFoundException;
+import binarek.robio.ftl.model.CompetitionPlan;
+import binarek.robio.ftl.view.CompetitionPlanView;
 import binarek.robio.shared.exception.EntityHasChangedException;
 import binarek.robio.shared.model.CompetitionId;
 import org.springframework.retry.annotation.Retryable;
@@ -34,7 +34,7 @@ class CompetitionPlanAppServiceImpl implements CompetitionPlanAppService {
 
     @Override
     @Retryable(value = EntityHasChangedException.class)
-    public void changePlanRules(ChangePlanRulesCommand command) {
+    public void changePlanRules(ChangeCompetitionPlanRulesCommand command) {
         var plan = getPlan(command.getCompetitionId());
         competitionPlanRepository.save(plan.changeRules(command.getRules()));
     }

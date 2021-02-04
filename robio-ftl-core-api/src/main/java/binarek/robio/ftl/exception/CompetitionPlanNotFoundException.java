@@ -1,4 +1,4 @@
-package binarek.robio.ftl.planning.exception;
+package binarek.robio.ftl.exception;
 
 import binarek.robio.shared.exception.BusinessException;
 import binarek.robio.shared.model.CompetitionId;

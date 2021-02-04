@@ -1,13 +1,13 @@
 package binarek.robio.ftl.adapter.persistence;
 
+import binarek.robio.ftl.CompetitionPlanRepository;
 import binarek.robio.ftl.adapter.persistence.configuration.FtlBeanNames;
 import binarek.robio.ftl.adapter.persistence.db.tables.records.CompetitionPlanRecord;
 import binarek.robio.ftl.adapter.persistence.db.tables.records.CompetitionPlanRobotRecord;
-import binarek.robio.ftl.planning.CompetitionPlanRepository;
-import binarek.robio.ftl.planning.model.CompetitionPlan;
-import binarek.robio.ftl.planning.model.RobotPlaceholder;
+import binarek.robio.ftl.model.CompetitionPlan;
 import binarek.robio.shared.exception.EntityHasChangedException;
 import binarek.robio.shared.model.CompetitionId;
+import binarek.robio.shared.model.RobotId;
 import org.jooq.DSLContext;
 import org.jooq.exception.DataChangedException;
 import org.jooq.impl.UpdatableRecordImpl;
@@ -69,7 +69,7 @@ class CompetitionPlanRepositoryImpl implements CompetitionPlanRepository {
         insertRobots(plan.getRobots(), planRecord.getId());
     }
 
-    private void insertRobots(List<RobotPlaceholder> robots, Long planRobotId) {
+    private void insertRobots(List<RobotId> robots, Long planRobotId) {
         robots.stream()
                 .map(robot -> buildNewRecord(robot, planRobotId))
                 .forEach(UpdatableRecordImpl::store);
@@ -99,7 +99,7 @@ class CompetitionPlanRepositoryImpl implements CompetitionPlanRepository {
         return record;
     }
 
-    private CompetitionPlanRobotRecord buildNewRecord(RobotPlaceholder robot, Long competitionPlanId) {
+    private CompetitionPlanRobotRecord buildNewRecord(RobotId robot, Long competitionPlanId) {
         var record = dsl.newRecord(COMPETITION_PLAN_ROBOT);
         mapper.update(record, robot, competitionPlanId);
         return record;

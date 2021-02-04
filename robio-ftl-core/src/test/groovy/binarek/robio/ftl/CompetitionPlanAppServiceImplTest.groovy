@@ -1,8 +1,8 @@
-package binarek.robio.ftl.planning
+package binarek.robio.ftl
 
-import binarek.robio.ftl.planning.exception.CompetitionPlanAlreadyExistsException
-import binarek.robio.ftl.planning.exception.CompetitionPlanNotFoundException
-import binarek.robio.ftl.planning.model.CompetitionPlan
+import binarek.robio.ftl.exception.CompetitionPlanAlreadyExistsException
+import binarek.robio.ftl.exception.CompetitionPlanNotFoundException
+import binarek.robio.ftl.model.CompetitionPlan
 import spock.lang.Specification
 import spock.lang.Subject
 

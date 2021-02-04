@@ -1,8 +1,8 @@
-package binarek.robio.ftl.planning.model;
+package binarek.robio.ftl.model;
 
-import binarek.robio.ftl.model.CompetitionRules;
-import binarek.robio.ftl.planning.view.CompetitionPlanView;
+import binarek.robio.ftl.view.CompetitionPlanView;
 import binarek.robio.shared.model.CompetitionId;
+import binarek.robio.shared.model.RobotId;
 import binarek.robio.util.codegen.BaseStyle;
 import org.immutables.value.Value;
 import org.springframework.lang.Nullable;
@@ -11,7 +11,6 @@ import java.util.List;
 
 @Value.Immutable
 @BaseStyle
-@SuppressWarnings("immutables:from")    // NOTE: do not use .from(CompetitionPlanView) - this should never happen
 public abstract class CompetitionPlan implements CompetitionPlanView {
 
     CompetitionPlan() {
@@ -22,13 +21,9 @@ public abstract class CompetitionPlan implements CompetitionPlanView {
     @Nullable
     public abstract Long getVersion();
 
-    public abstract List<RobotPlaceholder> getRobots();
+    public abstract List<RobotId> getRobots();
 
     public abstract CompetitionRules getRules();
-
-    public final boolean canBeApplied() {
-        return getRobots().stream().allMatch(RobotPlaceholder::isReady);
-    }
 
     public static CompetitionPlan newPlan(CompetitionId competitionId, @Nullable CompetitionRules rules) {
         return ImmutableCompetitionPlan.builder()
@@ -37,7 +32,7 @@ public abstract class CompetitionPlan implements CompetitionPlanView {
                 .build();
     }
 
-    public final CompetitionPlan addRobots(RobotPlaceholder... robots) {
+    public final CompetitionPlan addRobots(RobotId... robots) {
         return ImmutableCompetitionPlan.builder()
                 .from(this)
                 .addRobots(robots)
