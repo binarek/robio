@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import org.immutables.value.Value;
 import org.springframework.lang.Nullable;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
@@ -25,5 +26,6 @@ public interface CompetitionPlanDto {
     List<UUID> getRobots();
 
     @Nullable
+    @Valid
     CompetitionRulesDto getRules();
 }

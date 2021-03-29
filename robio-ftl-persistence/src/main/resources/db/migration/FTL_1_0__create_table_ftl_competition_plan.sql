@@ -8,8 +8,9 @@ CREATE TABLE ftl.competition_plan
 
 CREATE TABLE ftl.competition_plan_robot
 (
-    competition_plan_id bigint PRIMARY KEY,
+    competition_plan_id bigint NOT NULL,
     robot_id uuid NOT NULL,
 
+    PRIMARY KEY(competition_plan_id, robot_id),
     CONSTRAINT fk_competition_plan_id FOREIGN KEY(competition_plan_id) REFERENCES FTL.competition_plan(id)
 );
