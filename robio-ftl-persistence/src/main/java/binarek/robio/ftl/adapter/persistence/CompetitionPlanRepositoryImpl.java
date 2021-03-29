@@ -15,8 +15,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static binarek.robio.ftl.adapter.persistence.db.tables.CompetitionPlan.COMPETITION_PLAN;
 import static binarek.robio.ftl.adapter.persistence.db.tables.CompetitionPlanRobot.COMPETITION_PLAN_ROBOT;
@@ -69,9 +69,9 @@ class CompetitionPlanRepositoryImpl implements CompetitionPlanRepository {
         insertRobots(plan.getRobots(), planRecord.getId());
     }
 
-    private void insertRobots(List<RobotId> robots, Long planRobotId) {
+    private void insertRobots(Set<RobotId> robots, Long planRecordId) {
         robots.stream()
-                .map(robot -> buildNewRecord(robot, planRobotId))
+                .map(robot -> buildNewRecord(robot, planRecordId))
                 .forEach(UpdatableRecordImpl::store);
     }
 
@@ -99,9 +99,9 @@ class CompetitionPlanRepositoryImpl implements CompetitionPlanRepository {
         return record;
     }
 
-    private CompetitionPlanRobotRecord buildNewRecord(RobotId robot, Long competitionPlanId) {
+    private CompetitionPlanRobotRecord buildNewRecord(RobotId robot, Long planRecordId) {
         var record = dsl.newRecord(COMPETITION_PLAN_ROBOT);
-        mapper.update(record, robot, competitionPlanId);
+        mapper.update(record, robot, planRecordId);
         return record;
     }
 }

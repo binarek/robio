@@ -7,7 +7,9 @@ import binarek.robio.util.codegen.BaseStyle;
 import org.immutables.value.Value;
 import org.springframework.lang.Nullable;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Value.Immutable
 @BaseStyle
@@ -21,7 +23,7 @@ public abstract class CompetitionPlan implements CompetitionPlanView {
     @Nullable
     public abstract Long getVersion();
 
-    public abstract List<RobotId> getRobots();
+    public abstract Set<RobotId> getRobots();
 
     public abstract CompetitionRules getRules();
 
@@ -36,6 +38,23 @@ public abstract class CompetitionPlan implements CompetitionPlanView {
         return ImmutableCompetitionPlan.builder()
                 .from(this)
                 .addRobots(robots)
+                .build();
+    }
+
+    public final CompetitionPlan addRobots(Collection<RobotId> robots) {
+        return ImmutableCompetitionPlan.builder()
+                .from(this)
+                .addAllRobots(robots)
+                .build();
+    }
+
+    public final CompetitionPlan removeRobots(Collection<RobotId> robots) {
+        var robotsAfterRemoval = new HashSet<>(getRobots());
+        robotsAfterRemoval.removeAll(robots);
+
+        return ImmutableCompetitionPlan.builder()
+                .from(this)
+                .robots(robotsAfterRemoval)
                 .build();
     }
 

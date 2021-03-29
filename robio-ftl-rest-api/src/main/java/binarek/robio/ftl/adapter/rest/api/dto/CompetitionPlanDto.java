@@ -23,7 +23,7 @@ public interface CompetitionPlanDto {
     UUID getCompetitionId();
 
     @Nullable
-    List<UUID> getRobots();
+    List<CompetitionPlanRobotDto> getRobots();
 
     @Nullable
     @Valid

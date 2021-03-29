@@ -2,6 +2,7 @@ package binarek.robio.ftl.adapter.rest.api;
 
 import binarek.robio.ftl.CompetitionPlanAppService;
 import binarek.robio.ftl.adapter.rest.api.dto.CompetitionPlanDto;
+import binarek.robio.ftl.adapter.rest.api.dto.CompetitionPlanRobotDto;
 import binarek.robio.ftl.adapter.rest.api.dto.CompetitionRulesDto;
 import binarek.robio.ftl.adapter.rest.api.dto.InitializeCompetitionPlanCommandDto;
 import binarek.robio.ftl.command.SearchCompetitionPlanCommand;
@@ -34,6 +35,17 @@ class FtlCompetitionPlanController {
     @GetMapping("/{competitionId}")
     @Valid CompetitionPlanDto getPlan(@PathVariable UUID competitionId) {
         return dtoMapper.toCompetitionPlanDto(competitionPlanAppService.getPlan(dtoMapper.toSearchCompetitionPlanCommand(competitionId)));
+    }
+
+    @PutMapping("/{competitionId}/robots/{robotId}")
+    @Valid CompetitionPlanRobotDto addRobot(@PathVariable UUID competitionId, @PathVariable UUID robotId) {
+        competitionPlanAppService.addRobots(dtoMapper.toAddRobotsFromCompetitionPlanCommand(competitionId, robotId));
+        return dtoMapper.toCompetitionPlanRobotDto(robotId);
+    }
+
+    @DeleteMapping("/{competitionId}/robots/{robotId}")
+    void removeRobot(@PathVariable UUID competitionId, @PathVariable UUID robotId) {
+        competitionPlanAppService.removeRobots(dtoMapper.toRemoveRobotsFromCompetitionPlanCommand(competitionId, robotId));
     }
 
     @PutMapping("/{competitionId}/rules")

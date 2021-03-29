@@ -1,8 +1,6 @@
 package binarek.robio.ftl;
 
-import binarek.robio.ftl.command.ChangeCompetitionPlanRulesCommand;
-import binarek.robio.ftl.command.InitializeCompetitionPlanCommand;
-import binarek.robio.ftl.command.SearchCompetitionPlanCommand;
+import binarek.robio.ftl.command.*;
 import binarek.robio.ftl.exception.CompetitionPlanNotFoundException;
 import binarek.robio.ftl.model.CompetitionPlan;
 import binarek.robio.ftl.view.CompetitionPlanView;
@@ -33,10 +31,24 @@ class CompetitionPlanAppServiceImpl implements CompetitionPlanAppService {
     }
 
     @Override
-    @Retryable(value = EntityHasChangedException.class)
+    @Retryable(EntityHasChangedException.class)
     public void changePlanRules(ChangeCompetitionPlanRulesCommand command) {
         var plan = getPlan(command.getCompetitionId());
         competitionPlanRepository.save(plan.changeRules(command.getRules()));
+    }
+
+    @Override
+    @Retryable(EntityHasChangedException.class)
+    public void addRobots(AddRobotsToCompetitionPlanCommand command) {
+        var plan = getPlan(command.getCompetitionId());
+        competitionPlanRepository.save(plan.addRobots(command.getRobots()));
+    }
+
+    @Override
+    @Retryable(EntityHasChangedException.class)
+    public void removeRobots(RemoveRobotsFromCompetitionPlanCommand command) {
+        var plan = getPlan(command.getCompetitionId());
+        competitionPlanRepository.save(plan.removeRobots(command.getRobots()));
     }
 
     @Override

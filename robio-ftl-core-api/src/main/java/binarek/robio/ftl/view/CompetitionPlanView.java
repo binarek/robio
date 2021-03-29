@@ -4,13 +4,13 @@ import binarek.robio.ftl.model.CompetitionRules;
 import binarek.robio.shared.model.CompetitionId;
 import binarek.robio.shared.model.RobotId;
 
-import java.util.List;
+import java.util.Set;
 
 public interface CompetitionPlanView {
 
     CompetitionId getCompetitionId();
 
-    List<RobotId> getRobots();
+    Set<RobotId> getRobots();
 
     CompetitionRules getRules();
 }
