@@ -2,6 +2,7 @@ package binarek.robio.shared;
 
 import binarek.robio.shared.model.CompetitionId;
 import binarek.robio.shared.model.RobotId;
+import binarek.robio.shared.model.RobotName;
 import binarek.robio.shared.model.TeamId;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -31,6 +32,16 @@ public class SharedMapper {
     @Nullable
     public UUID toValue(@Nullable RobotId id) {
         return mapNullSafe(id, RobotId::getValue);
+    }
+
+    @Nullable
+    public RobotName toRobotName(@Nullable String value) {
+        return mapNullSafe(value, RobotName::of);
+    }
+
+    @Nullable
+    public String toValue(@Nullable RobotName name) {
+        return mapNullSafe(name, RobotName::getValue);
     }
 
     @Nullable

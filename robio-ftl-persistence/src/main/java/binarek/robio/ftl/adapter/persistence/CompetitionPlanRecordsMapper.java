@@ -1,12 +1,10 @@
 package binarek.robio.ftl.adapter.persistence;
 
 import binarek.robio.ftl.adapter.persistence.db.tables.records.CompetitionPlanRecord;
-import binarek.robio.ftl.adapter.persistence.db.tables.records.CompetitionPlanRobotRecord;
 import binarek.robio.ftl.model.CompetitionPlan;
 import binarek.robio.ftl.model.CompetitionRules;
 import binarek.robio.ftl.model.ImmutableCompetitionPlan;
 import binarek.robio.shared.SharedMapper;
-import binarek.robio.shared.model.RobotId;
 import binarek.robio.util.codegen.BaseMapperConfig;
 import org.jooq.JSON;
 import org.mapstruct.Mapper;
@@ -14,7 +12,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.springframework.lang.Nullable;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.UUID;
 
 @Mapper(config = BaseMapperConfig.class, uses = SharedMapper.class)
 abstract class CompetitionPlanRecordsMapper {
@@ -24,15 +23,9 @@ abstract class CompetitionPlanRecordsMapper {
     @Mapping(target = "id", ignore = true)
     abstract void update(@MappingTarget CompetitionPlanRecord record, CompetitionPlan competitionPlan);
 
-    abstract void update(@MappingTarget CompetitionPlanRobotRecord record, RobotId robotId, Long competitionPlanId);
-
-    @Mapping(target = "robots", source = "robotRecords")
+    @Mapping(target = "robots", source = "robotIds")
     abstract ImmutableCompetitionPlan toCompetitionPlan(CompetitionPlanRecord competitionPlanRecord,
-                                                        List<CompetitionPlanRobotRecord> robotRecords);
-
-    RobotId toRobotId(CompetitionPlanRobotRecord robotRecord) {
-        return RobotId.of(robotRecord.getRobotId());
-    }
+                                                        Collection<UUID> robotIds);
 
     @Nullable
     protected CompetitionRules toCompetitionRules(@Nullable JSON rulesJson) {
