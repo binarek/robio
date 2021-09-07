@@ -49,20 +49,16 @@ public abstract class CompetitionPlan implements CompetitionPlanView {
     }
 
     public final CompetitionPlan removeRobots(Collection<RobotId> robots) {
-        var robotsAfterRemoval = new HashSet<>(getRobots());
+        final var robotsAfterRemoval = new HashSet<>(getRobots());
         robotsAfterRemoval.removeAll(robots);
 
-        return ImmutableCompetitionPlan.builder()
-                .from(this)
-                .robots(robotsAfterRemoval)
-                .build();
+        return ImmutableCompetitionPlan.copyOf(this)
+                .withRobots(robotsAfterRemoval);
     }
 
     public final CompetitionPlan changeRules(@Nullable CompetitionRules rules) {
-        return ImmutableCompetitionPlan.builder()
-                .from(this)
-                .rules(rulesOrDefault(rules))
-                .build();
+        return ImmutableCompetitionPlan.copyOf(this)
+                .withRules(rulesOrDefault(rules));
     }
 
     private static CompetitionRules rulesOrDefault(@Nullable CompetitionRules rules) {

@@ -21,10 +21,23 @@ public abstract class Robot implements RobotView {
 
     public abstract RobotName getName();
 
+    public abstract RobotQualification getQualification();
+
     public static Robot newRobot(RobotId robotId, RobotName name) {
         return ImmutableRobot.builder()
                 .robotId(robotId)
                 .name(name)
+                .qualification(RobotQualification.PENDING)
                 .build();
+    }
+
+    public final Robot qualify() {
+        return ImmutableRobot.copyOf(this)
+                .withQualification(RobotQualification.QUALIFIED);
+    }
+
+    public final Robot disqualify() {
+        return ImmutableRobot.copyOf(this)
+                .withQualification(RobotQualification.DISQUALIFIED);
     }
 }

@@ -1,10 +1,14 @@
 package binarek.robio.ftl;
 
+import binarek.robio.ftl.command.ChangeRobotQualificationCommand;
 import binarek.robio.ftl.command.RegisterRobotCommand;
 import binarek.robio.ftl.command.SearchRobotCommand;
 import binarek.robio.ftl.exception.RobotNotFoundException;
 import binarek.robio.ftl.model.Robot;
 import binarek.robio.ftl.view.RobotView;
+import binarek.robio.shared.exception.EntityHasChangedException;
+import binarek.robio.shared.model.RobotId;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,8 +32,26 @@ class RobotAppServiceImpl implements RobotAppService {
     }
 
     @Override
+    @Retryable(EntityHasChangedException.class)
+    public void qualifyRobot(ChangeRobotQualificationCommand command) {
+        final var robot = getRobot(command.getRobotId());
+        robotRepository.save(robot.qualify());
+    }
+
+    @Override
+    @Retryable(EntityHasChangedException.class)
+    public void disqualifyRobot(ChangeRobotQualificationCommand command) {
+        final var robot = getRobot(command.getRobotId());
+        robotRepository.save(robot.disqualify());
+    }
+
+    @Override
     public RobotView getRobot(SearchRobotCommand command) {
-        return robotRepository.getByRobotId(command.getRobotId())
-                .orElseThrow(() -> RobotNotFoundException.of(command.getRobotId()));
+        return getRobot(command.getRobotId());
+    }
+
+    private Robot getRobot(RobotId robotId) {
+        return robotRepository.getByRobotId(robotId)
+                .orElseThrow(() -> RobotNotFoundException.of(robotId));
     }
 }

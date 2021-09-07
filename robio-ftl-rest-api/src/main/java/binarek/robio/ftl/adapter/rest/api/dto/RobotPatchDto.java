@@ -6,30 +6,21 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import org.immutables.value.Value;
 import org.springframework.lang.Nullable;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.util.UUID;
 
 @Value.Immutable
 @BaseStyle
-@JsonDeserialize(as = ImmutableRobotDto.class)
-@Schema(name = "Robot")
-public interface RobotDto {
+@JsonDeserialize(as = ImmutableRobotPatchDto.class)
+@Schema(name = "RobotPatch")
+public interface RobotPatchDto {
 
     @Nullable
     @Schema(required = true)
     @NotNull
-    UUID getRobotId();
+    Qualification getQualification();
 
-    @Nullable
-    @Schema(required = true)
-    @NotBlank
-    @Size(min = 3)
-    String getName();
-
-    @Nullable
-    @Schema(required = true)
-    @NotBlank
-    String getQualification();
+    enum Qualification {
+        QUALIFIED,
+        DISQUALIFIED,
+    }
 }

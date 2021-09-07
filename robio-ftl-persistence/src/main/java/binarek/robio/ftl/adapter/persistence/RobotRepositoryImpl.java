@@ -2,9 +2,12 @@ package binarek.robio.ftl.adapter.persistence;
 
 import binarek.robio.ftl.RobotRepository;
 import binarek.robio.ftl.adapter.persistence.configuration.FtlBeanNames;
+import binarek.robio.ftl.adapter.persistence.db.tables.records.RobotRecord;
 import binarek.robio.ftl.model.Robot;
+import binarek.robio.shared.exception.EntityHasChangedException;
 import binarek.robio.shared.model.RobotId;
 import org.jooq.DSLContext;
+import org.jooq.exception.DataChangedException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
@@ -26,9 +29,10 @@ public class RobotRepositoryImpl implements RobotRepository {
 
     @Override
     public void save(Robot robot) {
-        var record = dsl.newRecord(ROBOT);
-        mapper.update(record, robot);
-        record.store();
+        dsl.fetchOptional(ROBOT, ROBOT.ROBOT_ID.eq(robot.getRobotId().getValue()))
+                .ifPresentOrElse(
+                        robotRecord -> updateRobot(robotRecord, robot),
+                        () -> insertRobot(robot));
     }
 
     @Override
@@ -43,5 +47,20 @@ public class RobotRepositoryImpl implements RobotRepository {
                 .where(ROBOT.ROBOT_ID.eq(robotId.getValue()))
                 .fetchOptional()
                 .map(mapper::toRobot);
+    }
+
+    private void insertRobot(Robot robot) {
+        final var record = dsl.newRecord(ROBOT);
+        mapper.update(record, robot);
+        record.store();
+    }
+
+    private void updateRobot(RobotRecord robotRecord, Robot robot) {
+        mapper.update(robotRecord, robot);
+        try {
+            robotRecord.store();
+        } catch (DataChangedException e) {
+            throw new EntityHasChangedException(e);
+        }
     }
 }
