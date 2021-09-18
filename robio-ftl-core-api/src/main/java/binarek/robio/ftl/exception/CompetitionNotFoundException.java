@@ -10,6 +10,6 @@ public class CompetitionNotFoundException extends BusinessException {
     }
 
     public static CompetitionNotFoundException of(CompetitionId competitionId) {
-        return new CompetitionNotFoundException("Cannot find competition for competition id: " + competitionId);
+        return new CompetitionNotFoundException("Cannot find competition with competition id " + competitionId);
     }
 }

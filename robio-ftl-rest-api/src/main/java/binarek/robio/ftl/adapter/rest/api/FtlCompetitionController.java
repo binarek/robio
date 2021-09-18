@@ -25,14 +25,16 @@ class FtlCompetitionController {
     }
 
     @PostMapping
-    @Valid CompetitionDto startCompetition(@RequestBody @Valid StartCompetitionCommandDto commandDto) {
+    @Valid
+    CompetitionDto startCompetition(@RequestBody @Valid StartCompetitionCommandDto commandDto) {
         var command = dtoMapper.toStartCompetitionCommand(commandDto);
         competitionAppService.startCompetition(command);
         return getCompetitionDto(command.getCompetitionId());
     }
 
     @GetMapping("/{competitionId}")
-    @Valid CompetitionDto getCompetition(@PathVariable UUID competitionId) {
+    @Valid
+    CompetitionDto getCompetition(@PathVariable UUID competitionId) {
         return getCompetitionDto(CompetitionId.of(competitionId));
     }
 

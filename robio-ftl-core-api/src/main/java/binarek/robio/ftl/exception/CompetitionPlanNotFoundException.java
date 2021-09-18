@@ -10,6 +10,6 @@ public class CompetitionPlanNotFoundException extends BusinessException {
     }
 
     public static CompetitionPlanNotFoundException of(CompetitionId competitionId) {
-        return new CompetitionPlanNotFoundException("Cannot find plan for competition id: " + competitionId);
+        return new CompetitionPlanNotFoundException("Cannot find plan with competition id " + competitionId);
     }
 }

@@ -40,6 +40,12 @@ class AggregateRootEntityTableManager<R extends UpdatableRecord<R>> {
                         () -> insert(setRecordValues, insertDependentRecords));
     }
 
+    void deleteByBusinessId(UUID businessId) {
+        dsl.deleteFrom(table)
+                .where(businessIdField.eq(businessId))
+                .execute();
+    }
+
     boolean existsByBusinessId(UUID businessId) {
         return dsl.fetchExists(table, businessIdField.eq(businessId));
     }

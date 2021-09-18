@@ -38,9 +38,7 @@ class CompetitionAppServiceImpl implements CompetitionAppService {
 
         competitionService.checkIfCanStartCompetition(competitionPlan);
         final var competition = Competition.start(competitionPlan, dateTimeProvider.currentZonedDateTime());
-
         competitionRepository.save(competition);
-        competitionPlanRepository.deleteByCompetitionId(competitionId);
     }
 
     @Override

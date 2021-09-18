@@ -1,6 +1,6 @@
 package binarek.robio.ftl;
 
-import binarek.robio.ftl.exception.CompetitionPlanAlreadyExistsException;
+import binarek.robio.ftl.exception.CompetitionPlanAlreadyInitializedException;
 import binarek.robio.shared.model.CompetitionId;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +17,11 @@ public class CompetitionPlanService {
      * Checks if new plan for given competition id can be initialized
      *
      * @param competitionId competition id
-     * @throws CompetitionPlanAlreadyExistsException if plan for given competition id has already been initialized
+     * @throws CompetitionPlanAlreadyInitializedException if plan for given competition id has already been initialized
      */
     public void validateIfCanInitializeCompetitionPlan(CompetitionId competitionId) {
         if (competitionPlanRepository.existsByCompetitionId(competitionId)) {
-            throw CompetitionPlanAlreadyExistsException.of(competitionId);
+            throw CompetitionPlanAlreadyInitializedException.of(competitionId);
         }
     }
 }

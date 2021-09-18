@@ -4,7 +4,9 @@ import binarek.robio.ftl.adapter.rest.api.dto.CompetitionPlanDto;
 import binarek.robio.ftl.adapter.rest.api.dto.CompetitionPlanRobotDto;
 import binarek.robio.ftl.adapter.rest.api.dto.CompetitionRulesDto;
 import binarek.robio.ftl.adapter.rest.api.dto.InitializeCompetitionPlanCommandDto;
-import binarek.robio.ftl.command.*;
+import binarek.robio.ftl.command.ChangeCompetitionPlanRulesCommand;
+import binarek.robio.ftl.command.InitializeCompetitionPlanCommand;
+import binarek.robio.ftl.command.SearchCompetitionPlanCommand;
 import binarek.robio.ftl.model.CompetitionRules;
 import binarek.robio.ftl.view.CompetitionPlanView;
 import binarek.robio.shared.SharedMapper;
@@ -23,12 +25,6 @@ interface FtlCompetitionPlanDtoMapper {
     InitializeCompetitionPlanCommand toInitializeCompetitionPlanCommand(InitializeCompetitionPlanCommandDto dto);
 
     SearchCompetitionPlanCommand toSearchCompetitionPlanCommand(UUID competitionId);
-
-    @Mapping(target = "robots", expression = "java(Set.of(sharedMapper.toRobotId(robotId)))")
-    AddRobotsToCompetitionPlanCommand toAddRobotsFromCompetitionPlanCommand(UUID competitionId, UUID robotId);
-
-    @Mapping(target = "robots", expression = "java(Set.of(sharedMapper.toRobotId(robotId)))")
-    RemoveRobotsFromCompetitionPlanCommand toRemoveRobotsFromCompetitionPlanCommand(UUID competitionId, UUID robotId);
 
     @Mapping(target = "rules", source = "dto")
     ChangeCompetitionPlanRulesCommand toChangePlanRulesCommand(UUID competitionId, CompetitionRulesDto dto);

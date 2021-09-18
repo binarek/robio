@@ -20,6 +20,11 @@ public interface RobotDto {
     @Nullable
     @Schema(required = true)
     @NotNull
+    UUID getCompetitionId();
+
+    @Nullable
+    @Schema(required = true)
+    @NotNull
     UUID getRobotId();
 
     @Nullable

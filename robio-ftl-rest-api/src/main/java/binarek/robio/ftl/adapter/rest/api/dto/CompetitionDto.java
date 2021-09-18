@@ -10,7 +10,6 @@ import org.springframework.lang.Nullable;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Value.Immutable
@@ -25,17 +24,18 @@ public interface CompetitionDto {
     UUID getCompetitionId();
 
     @Nullable
-    List<CompetitionPlanRobotDto> getRobots();
-
-    @Nullable
+    @Schema(required = true)
+    @NotNull
     @Valid
     CompetitionRulesDto getRules();
 
     @Nullable
+    @Schema(required = true)
     @NotNull
     CompetitionState getState();
 
     @Nullable
+    @Schema(required = true)
     @NotNull
     ZonedDateTime getStartDateTime();
 

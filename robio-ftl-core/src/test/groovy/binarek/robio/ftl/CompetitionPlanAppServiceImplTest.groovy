@@ -1,6 +1,6 @@
 package binarek.robio.ftl
 
-import binarek.robio.ftl.exception.CompetitionPlanAlreadyExistsException
+import binarek.robio.ftl.exception.CompetitionPlanAlreadyInitializedException
 import binarek.robio.ftl.exception.CompetitionPlanNotFoundException
 import binarek.robio.ftl.model.CompetitionPlan
 import spock.lang.Specification
@@ -35,13 +35,13 @@ class CompetitionPlanAppServiceImplTest extends Specification implements Competi
 
         then: 'checks that plan cannot be initialized'
         1 * competitionPlanService.validateIfCanInitializeCompetitionPlan(COMPETITION_ID) >> {
-            throw CompetitionPlanAlreadyExistsException.of(COMPETITION_ID)
+            throw CompetitionPlanAlreadyInitializedException.of(COMPETITION_ID)
         }
         and: 'no plan is persisted'
         0 * competitionPlanRepository.save(_)
 
         then: 'validation exception is thrown'
-        thrown(CompetitionPlanAlreadyExistsException)
+        thrown(CompetitionPlanAlreadyInitializedException)
     }
 
     def 'gets plan for existing competition id'() {

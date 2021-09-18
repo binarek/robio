@@ -1,6 +1,6 @@
 package binarek.robio.ftl.adapter.rest.api;
 
-import binarek.robio.ftl.exception.CompetitionPlanAlreadyExistsException;
+import binarek.robio.ftl.exception.CompetitionPlanAlreadyInitializedException;
 import binarek.robio.ftl.exception.CompetitionPlanNotFoundException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -17,12 +17,12 @@ import org.zalando.problem.spring.web.advice.ProblemHandling;
 class FtlCompetitionPlanExceptionHandler implements ProblemHandling {
 
     @ExceptionHandler(CompetitionPlanNotFoundException.class)
-    ResponseEntity<Problem> handleCompetitionPlanNotFoundException(Exception exception, NativeWebRequest request) {
+    ResponseEntity<Problem> handleNotFoundException(Exception exception, NativeWebRequest request) {
         return create(Status.NOT_FOUND, exception, request);
     }
 
-    @ExceptionHandler(CompetitionPlanAlreadyExistsException.class)
-    ResponseEntity<Problem> handleCompetitionPlanAlreadyExistsException(Exception exception, NativeWebRequest request) {
+    @ExceptionHandler(CompetitionPlanAlreadyInitializedException.class)
+    ResponseEntity<Problem> handleConflictException(Exception exception, NativeWebRequest request) {
         return create(Status.CONFLICT, exception, request);
     }
 }

@@ -12,8 +12,6 @@ import org.springframework.lang.Nullable;
 
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
-import java.util.Collection;
-import java.util.UUID;
 
 import static binarek.robio.util.MapperUtil.mapNullSafe;
 
@@ -23,9 +21,7 @@ abstract class CompetitionRecordsMapper {
     @Mapping(target = "id", ignore = true)
     abstract void update(@MappingTarget CompetitionRecord record, Competition competition);
 
-    @Mapping(target = "robots", source = "robotIds")
-    abstract ImmutableCompetition toCompetition(CompetitionRecord competitionRecord,
-                                                Collection<UUID> robotIds);
+    abstract ImmutableCompetition toCompetition(CompetitionRecord competitionRecord);
 
     @Nullable
     protected ZonedDateTime toZonedDateTime(@Nullable OffsetDateTime offsetDateTime) {

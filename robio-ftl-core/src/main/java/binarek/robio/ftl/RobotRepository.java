@@ -1,6 +1,7 @@
 package binarek.robio.ftl;
 
 import binarek.robio.ftl.model.Robot;
+import binarek.robio.shared.model.CompetitionId;
 import binarek.robio.shared.model.RobotId;
 
 import java.util.Collection;
@@ -10,9 +11,9 @@ public interface RobotRepository {
 
     void save(Robot robot);
 
-    boolean existsByRobotId(RobotId robotId);
+    boolean existsByCompetitionIdAndRobotId(CompetitionId competitionId, RobotId robotId);
 
-    Optional<Robot> getByRobotId(RobotId robotId);
+    Optional<Robot> getByCompetitionIdAndRobotId(CompetitionId competitionId, RobotId robotId);
 
-    Collection<Robot> getByRobotId(Collection<RobotId> robotIds);
+    Collection<Robot> getByCompetitionId(CompetitionId competitionId);
 }

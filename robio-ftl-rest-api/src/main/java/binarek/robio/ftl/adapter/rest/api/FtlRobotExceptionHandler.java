@@ -1,6 +1,8 @@
 package binarek.robio.ftl.adapter.rest.api;
 
-import binarek.robio.ftl.exception.RobotAlreadyExistsException;
+import binarek.robio.ftl.exception.CompetitionAlreadyStartedException;
+import binarek.robio.ftl.exception.CompetitionPlanNotFoundException;
+import binarek.robio.ftl.exception.RobotAlreadyRegisteredException;
 import binarek.robio.ftl.exception.RobotNotFoundException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -16,13 +18,18 @@ import org.zalando.problem.spring.web.advice.ProblemHandling;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 class FtlRobotExceptionHandler implements ProblemHandling {
 
-    @ExceptionHandler(RobotNotFoundException.class)
-    ResponseEntity<Problem> handleRobotNotFoundException(Exception exception, NativeWebRequest request) {
+    @ExceptionHandler({RobotNotFoundException.class, CompetitionPlanNotFoundException.class})
+    ResponseEntity<Problem> handleNotFoundException(Exception exception, NativeWebRequest request) {
         return create(Status.NOT_FOUND, exception, request);
     }
 
-    @ExceptionHandler(RobotAlreadyExistsException.class)
-    ResponseEntity<Problem> handleRobotAlreadyExistsException(Exception exception, NativeWebRequest request) {
+    @ExceptionHandler(RobotAlreadyRegisteredException.class)
+    ResponseEntity<Problem> handleConflictException(Exception exception, NativeWebRequest request) {
         return create(Status.CONFLICT, exception, request);
+    }
+
+    @ExceptionHandler(CompetitionAlreadyStartedException.class)
+    ResponseEntity<Problem> handleCompetitionAlreadyStartedException(Exception exception, NativeWebRequest request) {
+        return create(Status.UNPROCESSABLE_ENTITY, exception, request);
     }
 }

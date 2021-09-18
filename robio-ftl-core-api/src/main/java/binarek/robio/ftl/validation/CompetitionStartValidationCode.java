@@ -3,5 +3,5 @@ package binarek.robio.ftl.validation;
 public enum CompetitionStartValidationCode {
 
     NOT_ENOUGH_ROBOTS,
-    ROBOT_CANNOT_START,
+    ROBOT_NOT_READY,
 }

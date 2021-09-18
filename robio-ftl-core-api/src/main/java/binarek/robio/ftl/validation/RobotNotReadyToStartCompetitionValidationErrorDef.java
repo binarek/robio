@@ -6,13 +6,13 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @ValueDefStyle
-abstract class RobotCannotStartInCompetitionValidationErrorDef implements CompetitionStartValidationError {
+abstract class RobotNotReadyToStartCompetitionValidationErrorDef implements CompetitionStartValidationError {
 
     @Value.Parameter
     public abstract RobotId getRobotId();
 
     @Override
     public final CompetitionStartValidationCode getCode() {
-        return CompetitionStartValidationCode.ROBOT_CANNOT_START;
+        return CompetitionStartValidationCode.ROBOT_NOT_READY;
     }
 }

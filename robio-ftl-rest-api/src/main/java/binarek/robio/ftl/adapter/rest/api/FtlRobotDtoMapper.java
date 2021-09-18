@@ -16,7 +16,7 @@ interface FtlRobotDtoMapper {
 
     RegisterRobotCommand toRegisterRobotCommand(RegisterRobotCommandDto dto);
 
-    ChangeRobotQualificationCommand toChangeRobotQualificationCommand(UUID robotId);
+    ChangeRobotQualificationCommand toChangeRobotQualificationCommand(UUID competitionId, UUID robotId);
 
     RobotDto toRobotDto(RobotView robot);
 }

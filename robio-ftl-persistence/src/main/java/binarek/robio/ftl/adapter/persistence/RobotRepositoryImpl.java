@@ -5,6 +5,7 @@ import binarek.robio.ftl.adapter.persistence.configuration.FtlBeanNames;
 import binarek.robio.ftl.adapter.persistence.db.tables.records.RobotRecord;
 import binarek.robio.ftl.model.Robot;
 import binarek.robio.shared.exception.EntityHasChangedException;
+import binarek.robio.shared.model.CompetitionId;
 import binarek.robio.shared.model.RobotId;
 import org.jooq.DSLContext;
 import org.jooq.exception.DataChangedException;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static binarek.robio.ftl.adapter.persistence.db.tables.Robot.ROBOT;
 
@@ -31,33 +31,33 @@ class RobotRepositoryImpl implements RobotRepository {
 
     @Override
     public void save(Robot robot) {
-        dsl.fetchOptional(ROBOT, ROBOT.ROBOT_ID.eq(robot.getRobotId().getValue()))
+        dsl.fetchOptional(ROBOT,
+                ROBOT.COMPETITION_ID.eq(robot.getCompetitionId().getValue()),
+                ROBOT.ROBOT_ID.eq(robot.getRobotId().getValue()))
                 .ifPresentOrElse(
                         robotRecord -> updateRobot(robotRecord, robot),
                         () -> insertRobot(robot));
     }
 
     @Override
-    public boolean existsByRobotId(RobotId robotId) {
+    public boolean existsByCompetitionIdAndRobotId(CompetitionId competitionId, RobotId robotId) {
         return dsl.fetchExists(dsl.selectFrom(ROBOT)
-                .where(ROBOT.ROBOT_ID.eq(robotId.getValue())));
+                .where(ROBOT.COMPETITION_ID.eq(competitionId.getValue()))
+                .and(ROBOT.ROBOT_ID.eq(robotId.getValue())));
     }
 
     @Override
-    public Optional<Robot> getByRobotId(RobotId robotId) {
+    public Optional<Robot> getByCompetitionIdAndRobotId(CompetitionId competitionId, RobotId robotId) {
         return dsl.selectFrom(ROBOT)
-                .where(ROBOT.ROBOT_ID.eq(robotId.getValue()))
+                .where(ROBOT.COMPETITION_ID.eq(competitionId.getValue()))
+                .and(ROBOT.ROBOT_ID.eq(robotId.getValue()))
                 .fetchOptional(mapper::toRobot);
     }
 
     @Override
-    public Collection<Robot> getByRobotId(Collection<RobotId> robotIds) {
-        final var robotRecordIds = robotIds.stream()
-                .map(RobotId::getValue)
-                .collect(Collectors.toSet());
-
+    public Collection<Robot> getByCompetitionId(CompetitionId competitionId) {
         return dsl.selectFrom(ROBOT)
-                .where(ROBOT.ROBOT_ID.in(robotRecordIds))
+                .where(ROBOT.COMPETITION_ID.eq(competitionId.getValue()))
                 .fetch(mapper::toRobot);
     }
 

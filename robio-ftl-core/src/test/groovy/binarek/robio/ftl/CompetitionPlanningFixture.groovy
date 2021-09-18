@@ -6,7 +6,6 @@ import binarek.robio.ftl.command.SearchCompetitionPlanCommand
 import binarek.robio.ftl.model.CompetitionPlan
 import binarek.robio.ftl.model.CompetitionRules
 import binarek.robio.shared.model.CompetitionId
-import binarek.robio.shared.model.RobotId
 
 trait CompetitionPlanningFixture {
 
@@ -27,10 +26,7 @@ trait CompetitionPlanningFixture {
     }
 
     CompetitionPlan competitionPlan() {
-        return CompetitionPlan.newPlan(COMPETITION_ID, competitionRules())
-                .addRobots(
-                        RobotId.of(UUID.fromString('37cd59cf-592b-4f47-adb1-631795b25420')),
-                        RobotId.of(UUID.fromString('ece90805-66b1-4df0-9872-6dfb1e1c6e84')))
+        return CompetitionPlan.initializePlan(COMPETITION_ID, competitionRules())
     }
 
     CompetitionRules competitionRules(runsLimitPerRobot = RUNS_LIMIT_PER_ROBOT) {

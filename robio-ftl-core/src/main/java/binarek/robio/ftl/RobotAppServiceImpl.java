@@ -7,6 +7,7 @@ import binarek.robio.ftl.exception.RobotNotFoundException;
 import binarek.robio.ftl.model.Robot;
 import binarek.robio.ftl.view.RobotView;
 import binarek.robio.shared.exception.EntityHasChangedException;
+import binarek.robio.shared.model.CompetitionId;
 import binarek.robio.shared.model.RobotId;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
@@ -26,32 +27,37 @@ class RobotAppServiceImpl implements RobotAppService {
     @Override
     @Transactional
     public void registerRobot(RegisterRobotCommand command) {
-        robotService.validateIfCanRegisterRobot(command.getRobotId());
-        final var robot = Robot.newRobot(command.getRobotId(), command.getName());
+        final var competitionId = command.getCompetitionId();
+        final var robotId = command.getRobotId();
+
+        robotService.validateIfCanRegisterRobot(competitionId, robotId);
+        final var robot = Robot.registerRobot(competitionId, robotId, command.getName());
         robotRepository.save(robot);
     }
 
     @Override
     @Retryable(EntityHasChangedException.class)
     public void qualifyRobot(ChangeRobotQualificationCommand command) {
-        final var robot = getRobot(command.getRobotId());
-        robotRepository.save(robot.qualify());
+        final var robot = getRobot(command.getCompetitionId(), command.getRobotId())
+                .qualify();
+        robotRepository.save(robot);
     }
 
     @Override
     @Retryable(EntityHasChangedException.class)
     public void disqualifyRobot(ChangeRobotQualificationCommand command) {
-        final var robot = getRobot(command.getRobotId());
-        robotRepository.save(robot.disqualify());
+        final var robot = getRobot(command.getCompetitionId(), command.getRobotId())
+                .disqualify();
+        robotRepository.save(robot);
     }
 
     @Override
     public RobotView getRobot(SearchRobotCommand command) {
-        return getRobot(command.getRobotId());
+        return getRobot(command.getCompetitionId(), command.getRobotId());
     }
 
-    private Robot getRobot(RobotId robotId) {
-        return robotRepository.getByRobotId(robotId)
-                .orElseThrow(() -> RobotNotFoundException.of(robotId));
+    private Robot getRobot(CompetitionId competitionId, RobotId robotId) {
+        return robotRepository.getByCompetitionIdAndRobotId(competitionId, robotId)
+                .orElseThrow(() -> RobotNotFoundException.of(competitionId, robotId));
     }
 }

@@ -11,7 +11,7 @@ abstract class NotEnoughRobotsToStartCompetitionValidationErrorDef implements Co
     public abstract Integer getMinRobotsToStartCompetition();
 
     @Value.Parameter
-    public abstract Integer getRobotsNumber();
+    public abstract Long getRobotsNumber();
 
     @Override
     public final CompetitionStartValidationCode getCode() {

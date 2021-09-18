@@ -1,6 +1,8 @@
 package binarek.robio.ftl;
 
-import binarek.robio.ftl.command.*;
+import binarek.robio.ftl.command.ChangeCompetitionPlanRulesCommand;
+import binarek.robio.ftl.command.InitializeCompetitionPlanCommand;
+import binarek.robio.ftl.command.SearchCompetitionPlanCommand;
 import binarek.robio.ftl.exception.CompetitionPlanNotFoundException;
 import binarek.robio.ftl.model.CompetitionPlan;
 import binarek.robio.ftl.view.CompetitionPlanView;
@@ -26,29 +28,16 @@ class CompetitionPlanAppServiceImpl implements CompetitionPlanAppService {
     @Transactional
     public void initializePlan(InitializeCompetitionPlanCommand command) {
         competitionPlanService.validateIfCanInitializeCompetitionPlan(command.getCompetitionId());
-        var newPlan = CompetitionPlan.newPlan(command.getCompetitionId(), command.getRules());
-        competitionPlanRepository.save(newPlan);
+        var plan = CompetitionPlan.initializePlan(command.getCompetitionId(), command.getRules());
+        competitionPlanRepository.save(plan);
     }
 
     @Override
     @Retryable(EntityHasChangedException.class)
     public void changePlanRules(ChangeCompetitionPlanRulesCommand command) {
-        var plan = getPlan(command.getCompetitionId());
-        competitionPlanRepository.save(plan.changeRules(command.getRules()));
-    }
-
-    @Override
-    @Retryable(EntityHasChangedException.class)
-    public void addRobots(AddRobotsToCompetitionPlanCommand command) {
-        var plan = getPlan(command.getCompetitionId());
-        competitionPlanRepository.save(plan.addRobots(command.getRobots()));
-    }
-
-    @Override
-    @Retryable(EntityHasChangedException.class)
-    public void removeRobots(RemoveRobotsFromCompetitionPlanCommand command) {
-        var plan = getPlan(command.getCompetitionId());
-        competitionPlanRepository.save(plan.removeRobots(command.getRobots()));
+        var plan = getPlan(command.getCompetitionId())
+                .changeRules(command.getRules());
+        competitionPlanRepository.save(plan);
     }
 
     @Override
