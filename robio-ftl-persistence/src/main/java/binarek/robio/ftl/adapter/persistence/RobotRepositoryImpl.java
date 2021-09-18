@@ -11,18 +11,20 @@ import org.jooq.exception.DataChangedException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static binarek.robio.ftl.adapter.persistence.db.tables.Robot.ROBOT;
 
 @Repository
-public class RobotRepositoryImpl implements RobotRepository {
+class RobotRepositoryImpl implements RobotRepository {
 
     private final DSLContext dsl;
     private final RobotRecordsMapper mapper;
 
-    public RobotRepositoryImpl(@Qualifier(FtlBeanNames.DSL_CONTEXT) DSLContext dsl,
-                               RobotRecordsMapper mapper) {
+    RobotRepositoryImpl(@Qualifier(FtlBeanNames.DSL_CONTEXT) DSLContext dsl,
+                        RobotRecordsMapper mapper) {
         this.dsl = dsl;
         this.mapper = mapper;
     }
@@ -45,8 +47,18 @@ public class RobotRepositoryImpl implements RobotRepository {
     public Optional<Robot> getByRobotId(RobotId robotId) {
         return dsl.selectFrom(ROBOT)
                 .where(ROBOT.ROBOT_ID.eq(robotId.getValue()))
-                .fetchOptional()
-                .map(mapper::toRobot);
+                .fetchOptional(mapper::toRobot);
+    }
+
+    @Override
+    public Collection<Robot> getByRobotId(Collection<RobotId> robotIds) {
+        final var robotRecordIds = robotIds.stream()
+                .map(RobotId::getValue)
+                .collect(Collectors.toSet());
+
+        return dsl.selectFrom(ROBOT)
+                .where(ROBOT.ROBOT_ID.in(robotRecordIds))
+                .fetch(mapper::toRobot);
     }
 
     private void insertRobot(Robot robot) {

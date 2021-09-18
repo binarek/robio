@@ -1,5 +1,7 @@
 package binarek.robio.ftl.model;
 
+import binarek.robio.ftl.validation.CompetitionStartValidation;
+import binarek.robio.ftl.validation.NotEnoughRobotsToStartCompetitionValidationError;
 import binarek.robio.ftl.view.CompetitionPlanView;
 import binarek.robio.shared.model.CompetitionId;
 import binarek.robio.shared.model.RobotId;
@@ -59,6 +61,17 @@ public abstract class CompetitionPlan implements CompetitionPlanView {
     public final CompetitionPlan changeRules(@Nullable CompetitionRules rules) {
         return ImmutableCompetitionPlan.copyOf(this)
                 .withRules(rulesOrDefault(rules));
+    }
+
+    public final CompetitionStartValidation checkCanStartCompetition() {
+        final var minRobotsToStartCompetition = getRules().getMinRobotsToStartCompetition();
+        final var robotsNumber = getRobots().size();
+
+        if (robotsNumber < minRobotsToStartCompetition) {
+            return CompetitionStartValidation.error(NotEnoughRobotsToStartCompetitionValidationError.of(minRobotsToStartCompetition, robotsNumber));
+        } else {
+            return CompetitionStartValidation.success();
+        }
     }
 
     private static CompetitionRules rulesOrDefault(@Nullable CompetitionRules rules) {

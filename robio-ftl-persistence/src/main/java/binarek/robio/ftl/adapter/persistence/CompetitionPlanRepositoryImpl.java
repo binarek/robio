@@ -47,12 +47,28 @@ class CompetitionPlanRepositoryImpl implements CompetitionPlanRepository {
     }
 
     @Override
+    @Transactional
+    public void deleteByCompetitionId(CompetitionId competitionId) {
+        dsl.select(COMPETITION_PLAN.ID)
+                .from(COMPETITION_PLAN)
+                .where(COMPETITION_PLAN.COMPETITION_ID.eq(competitionId.getValue()))
+                .fetchOptional(Record1::value1)
+                .ifPresent(competitionRecordId -> {
+                    deleteRobots(competitionRecordId);
+                    dsl.deleteFrom(COMPETITION_PLAN)
+                            .where(COMPETITION_PLAN.ID.eq(competitionRecordId))
+                            .execute();
+                });
+    }
+
+    @Override
     public boolean existsByCompetitionId(CompetitionId competitionId) {
         return dsl.fetchExists(dsl.selectFrom(COMPETITION_PLAN)
                 .where(COMPETITION_PLAN.COMPETITION_ID.eq(competitionId.getValue())));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<CompetitionPlan> getByCompetitionId(CompetitionId competitionId) {
         return dsl.selectFrom(COMPETITION_PLAN)
                 .where(COMPETITION_PLAN.COMPETITION_ID.eq(competitionId.getValue()))
@@ -98,12 +114,12 @@ class CompetitionPlanRepositoryImpl implements CompetitionPlanRepository {
                 .execute();
     }
 
-    private List<UUID> fetchRobotIdsByCompetitionPlanId(Long planId) {
+    private List<UUID> fetchRobotIdsByCompetitionPlanId(Long planRecordId) {
         return dsl.select(ROBOT.ROBOT_ID)
                 .from(ROBOT)
                 .whereExists(dsl.selectOne()
                         .from(COMPETITION_PLAN_ROBOT)
-                        .where(COMPETITION_PLAN_ROBOT.COMPETITION_PLAN_ID.eq(planId))
+                        .where(COMPETITION_PLAN_ROBOT.COMPETITION_PLAN_ID.eq(planRecordId))
                         .and(COMPETITION_PLAN_ROBOT.ROBOT_ID.eq(ROBOT.ID)))
                 .fetch()
                 .map(Record1::value1);

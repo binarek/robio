@@ -1,5 +1,7 @@
 package binarek.robio.ftl.model;
 
+import binarek.robio.ftl.validation.CompetitionStartValidation;
+import binarek.robio.ftl.validation.RobotCannotStartInCompetitionValidationError;
 import binarek.robio.ftl.view.RobotView;
 import binarek.robio.shared.model.RobotId;
 import binarek.robio.shared.model.RobotName;
@@ -22,6 +24,14 @@ public abstract class Robot implements RobotView {
     public abstract RobotName getName();
 
     public abstract RobotQualification getQualification();
+
+    public final CompetitionStartValidation checkCanStartInCompetition() {
+        if (getQualification() != RobotQualification.QUALIFIED) {
+            return CompetitionStartValidation.error(RobotCannotStartInCompetitionValidationError.of(getRobotId()));
+        } else {
+            return CompetitionStartValidation.success();
+        }
+    }
 
     public static Robot newRobot(RobotId robotId, RobotName name) {
         return ImmutableRobot.builder()
