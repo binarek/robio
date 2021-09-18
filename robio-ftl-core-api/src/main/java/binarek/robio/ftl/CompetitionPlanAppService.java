@@ -6,6 +6,9 @@ import binarek.robio.ftl.command.SearchCompetitionPlanCommand;
 import binarek.robio.ftl.exception.CompetitionPlanAlreadyInitializedException;
 import binarek.robio.ftl.exception.CompetitionPlanNotFoundException;
 import binarek.robio.ftl.view.CompetitionPlanView;
+import binarek.robio.ftl.view.RobotView;
+
+import java.util.Collection;
 
 public interface CompetitionPlanAppService {
 
@@ -34,4 +37,13 @@ public interface CompetitionPlanAppService {
      * @throws CompetitionPlanNotFoundException if no plan found
      */
     CompetitionPlanView getPlan(SearchCompetitionPlanCommand command);
+
+    /**
+     * Returns robots registered in FTL plan.
+     *
+     * @param command plan search command
+     * @return robots
+     * @throws CompetitionPlanNotFoundException if no plan found
+     */
+    Collection<? extends RobotView> getPlanRobots(SearchCompetitionPlanCommand command);
 }

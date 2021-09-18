@@ -9,10 +9,11 @@ import spock.lang.Subject
 class CompetitionPlanAppServiceImplTest extends Specification implements CompetitionPlanningFixture {
 
     def competitionPlanRepository = Mock(CompetitionPlanRepository)
+    def robotRepository = Mock(RobotRepository)
     def competitionPlanService = Mock(CompetitionPlanService)
 
     @Subject
-    def competitionPlanAppService = new CompetitionPlanAppServiceImpl(competitionPlanRepository, competitionPlanService)
+    def competitionPlanAppService = new CompetitionPlanAppServiceImpl(competitionPlanRepository, robotRepository, competitionPlanService)
 
     def 'initializes new plan from command'() {
         when: 'invokes plan initialization'
@@ -97,5 +98,33 @@ class CompetitionPlanAppServiceImplTest extends Specification implements Competi
         thrown(CompetitionPlanNotFoundException)
         and: 'no plan is persisted'
         0 * competitionPlanRepository.save(_)
+    }
+
+    def 'gets plan robots for existing competition id'() {
+        given: 'existing competition plan'
+        competitionPlanRepository.existsByCompetitionId(COMPETITION_ID) >> true
+        and: 'robots exist in competition plan'
+        robotRepository.getByCompetitionId(COMPETITION_ID) >> robots()
+
+        when: 'invoking getting plan robots'
+        def result = competitionPlanAppService.getPlanRobots(searchCompetitionPlanCommand())
+
+        then:
+        noExceptionThrown()
+        and: 'returned plan robots are valid'
+        result == robots()
+    }
+
+    def 'throws exception while getting plan robots for non-existing competition id'() {
+        given: 'nonexistent competition plan id'
+        competitionPlanRepository.existsByCompetitionId(COMPETITION_ID) >> false
+
+        when: 'invoking getting plan robots'
+        competitionPlanAppService.getPlanRobots(searchCompetitionPlanCommand())
+
+        then: 'not found exception is thrown'
+        thrown(CompetitionPlanNotFoundException)
+        and: 'no robots get from repository'
+        0 * robotRepository.getByCompetitionId(_)
     }
 }

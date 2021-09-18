@@ -4,9 +4,6 @@ import binarek.robio.ftl.RobotAppService;
 import binarek.robio.ftl.adapter.rest.api.dto.RegisterRobotCommandDto;
 import binarek.robio.ftl.adapter.rest.api.dto.RobotDto;
 import binarek.robio.ftl.adapter.rest.api.dto.RobotPatchDto;
-import binarek.robio.ftl.command.SearchRobotCommand;
-import binarek.robio.shared.model.CompetitionId;
-import binarek.robio.shared.model.RobotId;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,20 +19,26 @@ import static binarek.robio.ftl.adapter.rest.api.dto.RobotPatchDto.Qualification
 class FtlRobotController {
 
     private final RobotAppService robotAppService;
-    private final FtlRobotDtoMapper dtoMapper;
+    private final FtlRobotDtoMapper robotDtoMapper;
 
     FtlRobotController(RobotAppService robotAppService,
-                       FtlRobotDtoMapper dtoMapper) {
+                       FtlRobotDtoMapper robotDtoMapper) {
         this.robotAppService = robotAppService;
-        this.dtoMapper = dtoMapper;
+        this.robotDtoMapper = robotDtoMapper;
     }
 
     @PostMapping
     @Valid
     RobotDto registerRobot(@RequestBody @Valid RegisterRobotCommandDto commandDto) {
-        final var command = dtoMapper.toRegisterRobotCommand(commandDto);
+        final var command = robotDtoMapper.toRegisterRobotCommand(commandDto);
         robotAppService.registerRobot(command);
-        return getRobotDto(command.getCompetitionId(), command.getRobotId());
+        return getRobotDto(commandDto.getCompetitionId(), commandDto.getRobotId());
+    }
+
+    @GetMapping("/{competitionId}/{robotId}")
+    @Valid
+    RobotDto getRobot(@PathVariable UUID competitionId, @PathVariable UUID robotId) {
+        return getRobotDto(competitionId, robotId);
     }
 
     @PatchMapping("/{competitionId}/{robotId}")
@@ -43,7 +46,7 @@ class FtlRobotController {
     RobotDto changeRobotQualification(@PathVariable UUID competitionId,
                                       @PathVariable UUID robotId,
                                       @RequestBody @Valid RobotPatchDto dto) {
-        final var command = dtoMapper.toChangeRobotQualificationCommand(competitionId, robotId);
+        final var command = robotDtoMapper.toChangeRobotQualificationCommand(competitionId, robotId);
 
         if (dto.getQualification() == QUALIFIED) {
             robotAppService.qualifyRobot(command);
@@ -52,10 +55,11 @@ class FtlRobotController {
         } else {
             throw new IllegalStateException("Robot qualification " + dto.getQualification() + " is not supported!");
         }
-        return getRobotDto(command.getCompetitionId(), command.getRobotId());
+        return getRobotDto(competitionId, robotId);
     }
 
-    private RobotDto getRobotDto(CompetitionId competitionId, RobotId robotId) {
-        return dtoMapper.toRobotDto(robotAppService.getRobot(SearchRobotCommand.of(competitionId, robotId)));
+    private RobotDto getRobotDto(UUID competitionId, UUID robotId) {
+        final var command = robotDtoMapper.toSearchRobotCommand(competitionId, robotId);
+        return robotDtoMapper.toRobotDto(robotAppService.getRobot(command));
     }
 }

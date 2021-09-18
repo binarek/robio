@@ -5,7 +5,6 @@ import binarek.robio.ftl.adapter.rest.api.dto.CompetitionPlanDto;
 import binarek.robio.ftl.adapter.rest.api.dto.CompetitionRulesDto;
 import binarek.robio.ftl.adapter.rest.api.dto.InitializeCompetitionPlanCommandDto;
 import binarek.robio.ftl.adapter.rest.api.dto.RobotDto;
-import binarek.robio.ftl.command.SearchCompetitionPlanCommand;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,36 +18,46 @@ import java.util.UUID;
 class FtlCompetitionPlanController {
 
     private final CompetitionPlanAppService competitionPlanAppService;
-    private final FtlCompetitionPlanDtoMapper dtoMapper;
+    private final FtlCompetitionPlanDtoMapper planDtoMapper;
+    private final FtlRobotDtoMapper robotDtoMapper;
 
-    FtlCompetitionPlanController(CompetitionPlanAppService competitionPlanAppService, FtlCompetitionPlanDtoMapper dtoMapper) {
+    FtlCompetitionPlanController(CompetitionPlanAppService competitionPlanAppService,
+                                 FtlCompetitionPlanDtoMapper planDtoMapper,
+                                 FtlRobotDtoMapper robotDtoMapper) {
         this.competitionPlanAppService = competitionPlanAppService;
-        this.dtoMapper = dtoMapper;
+        this.planDtoMapper = planDtoMapper;
+        this.robotDtoMapper = robotDtoMapper;
     }
 
     @PostMapping
     @Valid
     CompetitionPlanDto initializePlan(@RequestBody @Valid InitializeCompetitionPlanCommandDto commandDto) {
-        var command = dtoMapper.toInitializeCompetitionPlanCommand(commandDto);
+        final var command = planDtoMapper.toInitializeCompetitionPlanCommand(commandDto);
         competitionPlanAppService.initializePlan(command);
-        return dtoMapper.toCompetitionPlanDto(competitionPlanAppService.getPlan(SearchCompetitionPlanCommand.of(command.getCompetitionId())));
+        return getCompetitionPlanDto(commandDto.getCompetitionId());
     }
 
     @GetMapping("/{competitionId}")
     @Valid
     CompetitionPlanDto getPlan(@PathVariable UUID competitionId) {
-        return dtoMapper.toCompetitionPlanDto(competitionPlanAppService.getPlan(dtoMapper.toSearchCompetitionPlanCommand(competitionId)));
+        return getCompetitionPlanDto(competitionId);
     }
 
     @GetMapping("/{competitionId}/robots")
     @Valid
-    List<@Valid RobotDto> getRobots(@PathVariable UUID competitionId) {
-        // TODO
-        return List.of();
+    List<@Valid RobotDto> getPlanRobots(@PathVariable UUID competitionId) {
+        final var command = planDtoMapper.toSearchCompetitionPlanCommand(competitionId);
+        return robotDtoMapper.toRobotDtos(competitionPlanAppService.getPlanRobots(command));
     }
 
     @PutMapping("/{competitionId}/rules")
     void changePlanRules(@PathVariable UUID competitionId, @RequestBody @Valid CompetitionRulesDto competitionRulesDto) {
-        competitionPlanAppService.changePlanRules(dtoMapper.toChangePlanRulesCommand(competitionId, competitionRulesDto));
+        final var command = planDtoMapper.toChangePlanRulesCommand(competitionId, competitionRulesDto);
+        competitionPlanAppService.changePlanRules(command);
+    }
+
+    private CompetitionPlanDto getCompetitionPlanDto(UUID competitionId) {
+        final var command = planDtoMapper.toSearchCompetitionPlanCommand(competitionId);
+        return planDtoMapper.toCompetitionPlanDto(competitionPlanAppService.getPlan(command));
     }
 }
