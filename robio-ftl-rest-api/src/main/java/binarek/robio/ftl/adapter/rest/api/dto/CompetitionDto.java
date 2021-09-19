@@ -37,6 +37,9 @@ public interface CompetitionDto {
     @Nullable
     @Schema(required = true)
     @NotNull
+    ZonedDateTime getInitializeDateTime();
+
+    @Nullable
     ZonedDateTime getStartDateTime();
 
     @Nullable

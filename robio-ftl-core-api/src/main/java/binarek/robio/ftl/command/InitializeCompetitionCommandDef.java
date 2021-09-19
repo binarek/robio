@@ -8,7 +8,7 @@ import org.springframework.lang.Nullable;
 
 @Value.Immutable
 @ValueDefStyle
-interface InitializeCompetitionPlanCommandDef {
+interface InitializeCompetitionCommandDef {
 
     @Value.Parameter
     CompetitionId getCompetitionId();

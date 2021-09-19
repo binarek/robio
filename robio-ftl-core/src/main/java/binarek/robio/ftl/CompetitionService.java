@@ -1,8 +1,9 @@
 package binarek.robio.ftl;
 
+import binarek.robio.ftl.exception.CompetitionAlreadyInitializedException;
 import binarek.robio.ftl.exception.CompetitionAlreadyStartedException;
 import binarek.robio.ftl.exception.CompetitionStartValidationException;
-import binarek.robio.ftl.model.CompetitionPlan;
+import binarek.robio.ftl.model.Competition;
 import binarek.robio.ftl.model.Robot;
 import binarek.robio.ftl.validation.CompetitionStartValidation;
 import binarek.robio.ftl.validation.NotEnoughRobotsToStartCompetitionValidationError;
@@ -19,44 +20,57 @@ public class CompetitionService {
     private final CompetitionRepository competitionRepository;
     private final RobotRepository robotRepository;
 
-    public CompetitionService(CompetitionRepository competitionRepository, RobotRepository robotRepository) {
+    public CompetitionService(CompetitionRepository competitionRepository,
+                              RobotRepository robotRepository) {
         this.competitionRepository = competitionRepository;
         this.robotRepository = robotRepository;
     }
 
     /**
-     * Checks if can start competition from given competition plan.
+     * Validates if can initialize competition.
      *
-     * @param competitionPlan competition plan to start
-     * @throws CompetitionAlreadyStartedException  if competition with given id is already started
-     * @throws CompetitionStartValidationException if competition cannot start because of validation error
+     * @param competitionId competition id
+     * @throws CompetitionAlreadyInitializedException if competition is already initialized
      */
-    public void checkIfCanStartCompetition(CompetitionPlan competitionPlan) {
-        checkIfCompetitionAlreadyStarted(competitionPlan.getCompetitionId());
-        checkIfCompetitionPlanIsEligibleToStart(competitionPlan);
-    }
-
-    private void checkIfCompetitionAlreadyStarted(CompetitionId competitionId) {
+    public void validateIfCanInitializeCompetition(CompetitionId competitionId) {
         if (competitionRepository.existsByCompetitionId(competitionId)) {
-            throw CompetitionAlreadyStartedException.of(competitionId);
+            throw CompetitionAlreadyInitializedException.of(competitionId);
         }
     }
 
-    private void checkIfCompetitionPlanIsEligibleToStart(CompetitionPlan competitionPlan) {
-        final var validations = new HashSet<CompetitionStartValidation>();
-        final var robots = robotRepository.getByCompetitionId(competitionPlan.getCompetitionId());
+    /**
+     * Validates if can start competition.
+     *
+     * @param competition competition to start
+     * @throws CompetitionAlreadyStartedException  if competition is already started
+     * @throws CompetitionStartValidationException if competition cannot start because of validation error
+     */
+    public void validateIfCanStartCompetition(Competition competition) {
+        validateIfCompetitionAlreadyStarted(competition);
+        validateIfCompetitionIsEligibleToStart(competition);
+    }
 
-        addCanStartPlanValidations(validations, competitionPlan, robots);
+    private void validateIfCompetitionAlreadyStarted(Competition competition) {
+        if (competition.wasStarted()) {
+            throw CompetitionAlreadyStartedException.of(competition.getCompetitionId());
+        }
+    }
+
+    private void validateIfCompetitionIsEligibleToStart(Competition competition) {
+        final var validations = new HashSet<CompetitionStartValidation>();
+        final var robots = robotRepository.getByCompetitionId(competition.getCompetitionId());
+
+        addCanStartCompetitionValidations(validations, competition, robots);
         addRobotsValidations(validations, robots);
 
         final var finalValidation = CompetitionStartValidation.mergeValidations(validations);
         if (!finalValidation.isSuccess()) {
-            throw CompetitionStartValidationException.of(competitionPlan.getCompetitionId(), finalValidation);
+            throw CompetitionStartValidationException.of(competition.getCompetitionId(), finalValidation);
         }
     }
 
-    private void addCanStartPlanValidations(Set<CompetitionStartValidation> validations, CompetitionPlan competitionPlan, Collection<Robot> robots) {
-        validations.add(canStartPlanValidation(competitionPlan, robots));
+    private void addCanStartCompetitionValidations(Set<CompetitionStartValidation> validations, Competition competition, Collection<Robot> robots) {
+        validations.add(canStartCompetitionValidation(competition, robots));
     }
 
     private void addRobotsValidations(Set<CompetitionStartValidation> validations, Collection<Robot> robots) {
@@ -65,8 +79,8 @@ public class CompetitionService {
                 .forEach(validations::add);
     }
 
-    private CompetitionStartValidation canStartPlanValidation(CompetitionPlan competitionPlan, Collection<Robot> robots) {
-        final var minRobotsToStartCompetition = competitionPlan.getRules().getMinRobotsToStartCompetition();
+    private CompetitionStartValidation canStartCompetitionValidation(Competition competition, Collection<Robot> robots) {
+        final var minRobotsToStartCompetition = competition.getRules().getMinRobotsToStartCompetition();
         final var robotsNumber = robots.stream().filter(Robot::canParticipateInCompetition).count();
 
         if (robotsNumber < minRobotsToStartCompetition) {

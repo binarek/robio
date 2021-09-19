@@ -13,4 +13,8 @@ public class DateTimeProvider {
     public ZonedDateTime currentZonedDateTime() {
         return ZonedDateTime.now(BUSINESS_ZONE_ID);
     }
+
+    public ZoneId getBusinessZoneId() {
+        return BUSINESS_ZONE_ID;
+    }
 }

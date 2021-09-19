@@ -24,17 +24,41 @@ public abstract class Competition implements CompetitionView {
 
     public abstract CompetitionState getState();
 
+    public abstract ZonedDateTime getInitializeDateTime();
+
+    @Nullable
     public abstract ZonedDateTime getStartDateTime();
 
     @Nullable
     public abstract ZonedDateTime getFinishDateTime();
 
-    public static Competition start(CompetitionPlan plan, ZonedDateTime startDateTime) {
+    public final boolean wasStarted() {
+        return getState() != CompetitionState.INITIALIZED;
+    }
+
+    public final Competition start(ZonedDateTime startDateTime) {
         return ImmutableCompetition.builder()
-                .competitionId(plan.getCompetitionId())
-                .rules(plan.getRules())
+                .from(this)
                 .state(CompetitionState.STARTED)
                 .startDateTime(startDateTime)
                 .build();
+    }
+
+    public static Competition initialize(CompetitionId competitionId, @Nullable CompetitionRules rules, ZonedDateTime initializeDateTime) {
+        return ImmutableCompetition.builder()
+                .competitionId(competitionId)
+                .rules(rulesOrDefault(rules))
+                .state(CompetitionState.INITIALIZED)
+                .initializeDateTime(initializeDateTime)
+                .build();
+    }
+
+    public final Competition changeRules(@Nullable CompetitionRules rules) {
+        return ImmutableCompetition.copyOf(this)
+                .withRules(rulesOrDefault(rules));
+    }
+
+    private static CompetitionRules rulesOrDefault(@Nullable CompetitionRules rules) {
+        return rules != null ? rules : CompetitionRules.builder().build();
     }
 }

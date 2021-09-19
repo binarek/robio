@@ -1,14 +1,17 @@
 package binarek.robio.ftl;
 
+import binarek.robio.ftl.command.ChangeCompetitionRulesCommand;
+import binarek.robio.ftl.command.InitializeCompetitionCommand;
 import binarek.robio.ftl.command.SearchCompetitionCommand;
 import binarek.robio.ftl.command.StartCompetitionCommand;
 import binarek.robio.ftl.exception.CompetitionNotFoundException;
-import binarek.robio.ftl.exception.CompetitionPlanNotFoundException;
 import binarek.robio.ftl.model.Competition;
 import binarek.robio.ftl.view.CompetitionView;
 import binarek.robio.ftl.view.RobotView;
 import binarek.robio.shared.DateTimeProvider;
+import binarek.robio.shared.exception.EntityHasChangedException;
 import binarek.robio.shared.model.CompetitionId;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,18 +20,15 @@ import java.util.Collection;
 @Service
 class CompetitionAppServiceImpl implements CompetitionAppService {
 
-    private final CompetitionPlanRepository competitionPlanRepository;
     private final CompetitionRepository competitionRepository;
     private final RobotRepository robotRepository;
     private final CompetitionService competitionService;
     private final DateTimeProvider dateTimeProvider;
 
-    CompetitionAppServiceImpl(CompetitionPlanRepository competitionPlanRepository,
-                              CompetitionRepository competitionRepository,
+    CompetitionAppServiceImpl(CompetitionRepository competitionRepository,
                               RobotRepository robotRepository,
                               CompetitionService competitionService,
                               DateTimeProvider dateTimeProvider) {
-        this.competitionPlanRepository = competitionPlanRepository;
         this.competitionRepository = competitionRepository;
         this.robotRepository = robotRepository;
         this.competitionService = competitionService;
@@ -37,13 +37,29 @@ class CompetitionAppServiceImpl implements CompetitionAppService {
 
     @Override
     @Transactional
+    public void initializeCompetition(InitializeCompetitionCommand command) {
+        competitionService.validateIfCanInitializeCompetition(command.getCompetitionId());
+        var competition = Competition.initialize(command.getCompetitionId(), command.getRules(), dateTimeProvider.currentZonedDateTime());
+        competitionRepository.save(competition);
+    }
+
+    @Override
+    @Retryable(EntityHasChangedException.class)
     public void startCompetition(StartCompetitionCommand command) {
         final var competitionId = command.getCompetitionId();
-        final var competitionPlan = competitionPlanRepository.getByCompetitionId(competitionId)
-                .orElseThrow(() -> CompetitionPlanNotFoundException.of(competitionId));
+        var competition = competitionRepository.getByCompetitionId(competitionId)
+                .orElseThrow(() -> CompetitionNotFoundException.of(competitionId));
 
-        competitionService.checkIfCanStartCompetition(competitionPlan);
-        final var competition = Competition.start(competitionPlan, dateTimeProvider.currentZonedDateTime());
+        competitionService.validateIfCanStartCompetition(competition);
+        competition = competition.start(dateTimeProvider.currentZonedDateTime());
+        competitionRepository.save(competition);
+    }
+
+    @Override
+    @Retryable(EntityHasChangedException.class)
+    public void changeCompetitionRules(ChangeCompetitionRulesCommand command) {
+        var competition = getCompetition(command.getCompetitionId())
+                .changeRules(command.getRules());
         competitionRepository.save(competition);
     }
 

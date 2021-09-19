@@ -15,6 +15,9 @@ public interface CompetitionView {
 
     CompetitionState getState();
 
+    ZonedDateTime getInitializeDateTime();
+
+    @Nullable
     ZonedDateTime getStartDateTime();
 
     @Nullable

@@ -3,8 +3,7 @@ package binarek.robio.ftl;
 import binarek.robio.ftl.command.ChangeRobotQualificationCommand;
 import binarek.robio.ftl.command.RegisterRobotCommand;
 import binarek.robio.ftl.command.SearchRobotCommand;
-import binarek.robio.ftl.exception.CompetitionAlreadyStartedException;
-import binarek.robio.ftl.exception.CompetitionPlanNotFoundException;
+import binarek.robio.ftl.exception.CompetitionNotFoundException;
 import binarek.robio.ftl.exception.RobotAlreadyRegisteredException;
 import binarek.robio.ftl.exception.RobotNotFoundException;
 import binarek.robio.ftl.view.RobotView;
@@ -15,9 +14,8 @@ public interface RobotAppService {
      * Registers FTL robot.
      *
      * @param command register command
-     * @throws CompetitionPlanNotFoundException   if competition plan for given id not found
-     * @throws CompetitionAlreadyStartedException if competition already started
-     * @throws RobotAlreadyRegisteredException    if robot with id has already been registered in competition
+     * @throws CompetitionNotFoundException    if no competition found
+     * @throws RobotAlreadyRegisteredException if robot with id has already been registered in competition
      */
     void registerRobot(RegisterRobotCommand command);
 
