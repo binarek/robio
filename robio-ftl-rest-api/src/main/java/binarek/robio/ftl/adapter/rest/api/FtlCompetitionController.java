@@ -4,17 +4,17 @@ import binarek.robio.ftl.CompetitionAppService;
 import binarek.robio.ftl.adapter.rest.api.dto.CompetitionDto;
 import binarek.robio.ftl.adapter.rest.api.dto.CompetitionRulesDto;
 import binarek.robio.ftl.adapter.rest.api.dto.InitializeCompetitionCommandDto;
-import binarek.robio.ftl.adapter.rest.api.dto.RobotDto;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/ftl/competitions")
 @Validated
+@Tag(name = "competitions")
 class FtlCompetitionController {
 
     private final CompetitionAppService competitionAppService;
@@ -56,13 +56,6 @@ class FtlCompetitionController {
     @Valid
     CompetitionDto getCompetition(@PathVariable UUID competitionId) {
         return getCompetitionDto(competitionId);
-    }
-
-    @GetMapping("/{competitionId}/robots")
-    @Valid
-    List<@Valid RobotDto> getCompetitionRobots(@PathVariable UUID competitionId) {
-        final var command = competitionDtoMapper.toSearchCompetitionCommand(competitionId);
-        return robotDtoMapper.toRobotDtos(competitionAppService.getCompetitionRobots(command));
     }
 
     private CompetitionDto getCompetitionDto(UUID competitionId) {

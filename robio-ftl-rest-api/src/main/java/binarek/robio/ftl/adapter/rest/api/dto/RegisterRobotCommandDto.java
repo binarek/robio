@@ -20,11 +20,6 @@ public interface RegisterRobotCommandDto {
     @Nullable
     @Schema(required = true)
     @NotNull
-    UUID getCompetitionId();
-
-    @Nullable
-    @Schema(required = true)
-    @NotNull
     UUID getRobotId();
 
     @Nullable

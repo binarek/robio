@@ -4,7 +4,9 @@ spring:
     username: robio
     password: robio
     driverClassName: org.postgresql.Driver
-
+springdoc:
+  swagger-ui:
+    operationsSorter: alpha
 robio:
   ftl:
     persistence:

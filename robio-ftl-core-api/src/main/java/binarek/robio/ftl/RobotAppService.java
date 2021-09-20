@@ -3,10 +3,13 @@ package binarek.robio.ftl;
 import binarek.robio.ftl.command.ChangeRobotQualificationCommand;
 import binarek.robio.ftl.command.RegisterRobotCommand;
 import binarek.robio.ftl.command.SearchRobotCommand;
+import binarek.robio.ftl.command.SearchRobotsCommand;
 import binarek.robio.ftl.exception.CompetitionNotFoundException;
 import binarek.robio.ftl.exception.RobotAlreadyRegisteredException;
 import binarek.robio.ftl.exception.RobotNotFoundException;
 import binarek.robio.ftl.view.RobotView;
+
+import java.util.Collection;
 
 public interface RobotAppService {
 
@@ -45,4 +48,12 @@ public interface RobotAppService {
      * @throws RobotNotFoundException if robot with given criteria does not exist
      */
     RobotView getRobot(SearchRobotCommand command);
+
+    /**
+     * Returns FTL robots.
+     *
+     * @param command robots search command
+     * @return robots
+     */
+    Collection<? extends RobotView> getRobots(SearchRobotsCommand command);
 }

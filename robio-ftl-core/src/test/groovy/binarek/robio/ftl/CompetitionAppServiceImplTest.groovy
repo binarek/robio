@@ -10,14 +10,13 @@ import spock.lang.Subject
 class CompetitionAppServiceImplTest extends Specification implements CompetitionFixture {
 
     def competitionRepository = Mock(CompetitionRepository)
-    def robotRepository = Mock(RobotRepository)
     def competitionService = Mock(CompetitionService)
     def dateTimeProvider = Stub(DateTimeProvider) {
         currentZonedDateTime() >> DATE_TIME
     }
 
     @Subject
-    def competitionAppService = new CompetitionAppServiceImpl(competitionRepository, robotRepository, competitionService, dateTimeProvider)
+    def competitionAppService = new CompetitionAppServiceImpl(competitionRepository, competitionService, dateTimeProvider)
 
 
     def 'initializes new competition from command'() {
@@ -105,34 +104,5 @@ class CompetitionAppServiceImplTest extends Specification implements Competition
         thrown(CompetitionNotFoundException)
         and: 'no competition is persisted'
         0 * competitionRepository.save(_)
-    }
-
-
-    def 'gets competition robots for existing competition id'() {
-        given: 'existing competition'
-        competitionRepository.existsByCompetitionId(COMPETITION_ID) >> true
-        and: 'robots exist in competition'
-        robotRepository.getByCompetitionId(COMPETITION_ID) >> robots()
-
-        when: 'invoking getting competition robots'
-        def result = competitionAppService.getCompetitionRobots(searchCompetitionCommand())
-
-        then:
-        noExceptionThrown()
-        and: 'returned competition robots are valid'
-        result == robots()
-    }
-
-    def 'throws exception while getting competition robots for non-existing competition id'() {
-        given: 'nonexistent competition'
-        competitionRepository.existsByCompetitionId(COMPETITION_ID) >> false
-
-        when: 'invoking getting competition robots'
-        competitionAppService.getCompetitionRobots(searchCompetitionCommand())
-
-        then: 'not found exception is thrown'
-        thrown(CompetitionNotFoundException)
-        and: 'no robots get from repository'
-        0 * robotRepository.getByCompetitionId(_)
     }
 }

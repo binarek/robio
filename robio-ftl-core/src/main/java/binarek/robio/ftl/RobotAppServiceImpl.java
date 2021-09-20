@@ -3,6 +3,7 @@ package binarek.robio.ftl;
 import binarek.robio.ftl.command.ChangeRobotQualificationCommand;
 import binarek.robio.ftl.command.RegisterRobotCommand;
 import binarek.robio.ftl.command.SearchRobotCommand;
+import binarek.robio.ftl.command.SearchRobotsCommand;
 import binarek.robio.ftl.exception.RobotNotFoundException;
 import binarek.robio.ftl.model.Robot;
 import binarek.robio.ftl.view.RobotView;
@@ -12,6 +13,8 @@ import binarek.robio.shared.model.RobotId;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collection;
 
 @Service
 class RobotAppServiceImpl implements RobotAppService {
@@ -54,6 +57,11 @@ class RobotAppServiceImpl implements RobotAppService {
     @Override
     public RobotView getRobot(SearchRobotCommand command) {
         return getRobot(command.getCompetitionId(), command.getRobotId());
+    }
+
+    @Override
+    public Collection<? extends RobotView> getRobots(SearchRobotsCommand command) {
+        return robotRepository.getByCompetitionId(command.getCompetitionId());
     }
 
     private Robot getRobot(CompetitionId competitionId, RobotId robotId) {

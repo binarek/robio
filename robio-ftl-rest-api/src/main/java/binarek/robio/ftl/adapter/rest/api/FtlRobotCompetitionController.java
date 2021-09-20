@@ -4,47 +4,57 @@ import binarek.robio.ftl.RobotAppService;
 import binarek.robio.ftl.adapter.rest.api.dto.RegisterRobotCommandDto;
 import binarek.robio.ftl.adapter.rest.api.dto.RobotDto;
 import binarek.robio.ftl.adapter.rest.api.dto.RobotPatchDto;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.UUID;
 
 import static binarek.robio.ftl.adapter.rest.api.dto.RobotPatchDto.Qualification.DISQUALIFIED;
 import static binarek.robio.ftl.adapter.rest.api.dto.RobotPatchDto.Qualification.QUALIFIED;
 
 @RestController
-@RequestMapping("/ftl/robots")
+@RequestMapping("/ftl/competitions/{competitionId}/robots")
 @Validated
-class FtlRobotController {
+@Tag(name = "competitions")
+@Tag(name = "robots")
+class FtlRobotCompetitionController {
 
     private final RobotAppService robotAppService;
     private final FtlRobotDtoMapper robotDtoMapper;
 
-    FtlRobotController(RobotAppService robotAppService,
-                       FtlRobotDtoMapper robotDtoMapper) {
+    FtlRobotCompetitionController(RobotAppService robotAppService,
+                                  FtlRobotDtoMapper robotDtoMapper) {
         this.robotAppService = robotAppService;
         this.robotDtoMapper = robotDtoMapper;
     }
 
     @PostMapping
     @Valid
-    RobotDto registerRobot(@RequestBody @Valid RegisterRobotCommandDto commandDto) {
-        final var command = robotDtoMapper.toRegisterRobotCommand(commandDto);
+    RobotDto registerRobot(@PathVariable UUID competitionId, @RequestBody @Valid RegisterRobotCommandDto commandDto) {
+        final var command = robotDtoMapper.toRegisterRobotCommand(competitionId, commandDto);
         robotAppService.registerRobot(command);
-        return getRobotDto(commandDto.getCompetitionId(), commandDto.getRobotId());
+        return getRobotDto(competitionId, commandDto.getRobotId());
     }
 
-    @GetMapping("/{competitionId}/{robotId}")
+    @GetMapping("/{robotId}")
     @Valid
     RobotDto getRobot(@PathVariable UUID competitionId, @PathVariable UUID robotId) {
         return getRobotDto(competitionId, robotId);
     }
 
-    @PatchMapping("/{competitionId}/{robotId}")
+    @GetMapping
     @Valid
-    RobotDto changeRobotQualification(@PathVariable UUID competitionId,
-                                      @PathVariable UUID robotId,
+    List<@Valid RobotDto> getRobots(@PathVariable UUID competitionId) {
+        final var command = robotDtoMapper.toSearchRobotsCommand(competitionId);
+        return robotDtoMapper.toRobotDtos(robotAppService.getRobots(command));
+    }
+
+    @PatchMapping("/{robotId}")
+    @Valid
+    RobotDto changeRobotQualification(@PathVariable UUID competitionId, @PathVariable UUID robotId,
                                       @RequestBody @Valid RobotPatchDto dto) {
         final var command = robotDtoMapper.toChangeRobotQualificationCommand(competitionId, robotId);
 

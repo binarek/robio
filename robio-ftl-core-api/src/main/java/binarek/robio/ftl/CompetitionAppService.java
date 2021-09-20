@@ -9,9 +9,6 @@ import binarek.robio.ftl.exception.CompetitionAlreadyStartedException;
 import binarek.robio.ftl.exception.CompetitionNotFoundException;
 import binarek.robio.ftl.exception.CompetitionStartValidationException;
 import binarek.robio.ftl.view.CompetitionView;
-import binarek.robio.ftl.view.RobotView;
-
-import java.util.Collection;
 
 public interface CompetitionAppService {
 
@@ -50,13 +47,4 @@ public interface CompetitionAppService {
      * @throws CompetitionNotFoundException if no competition found
      */
     CompetitionView getCompetition(SearchCompetitionCommand command);
-
-    /**
-     * Returns robots started in FTL competition.
-     *
-     * @param command competition search command
-     * @return robots
-     * @throws CompetitionNotFoundException if no competition found
-     */
-    Collection<? extends RobotView> getCompetitionRobots(SearchCompetitionCommand command);
 }

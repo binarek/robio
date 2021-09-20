@@ -14,7 +14,7 @@ import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
 import org.zalando.problem.spring.web.advice.ProblemHandling;
 
-@RestControllerAdvice(assignableTypes = FtlRobotController.class)
+@RestControllerAdvice(assignableTypes = FtlRobotCompetitionController.class)
 @Order(Ordered.HIGHEST_PRECEDENCE)
 class FtlRobotExceptionHandler implements ProblemHandling {
 
