@@ -1,5 +1,7 @@
 package binarek.robio.shared.validation;
 
+import org.apache.commons.collections4.CollectionUtils;
+
 import java.util.Collection;
 
 import static binarek.robio.shared.validation.BusinessValidationResult.VALIDATION_ERROR;
@@ -14,7 +16,6 @@ public interface BusinessValidation<T extends BusinessValidationError<?>> {
     }
 
     default BusinessValidationResult getResult() {
-        final var errors = getErrors();
-        return errors == null || errors.isEmpty() ? VALIDATION_SUCCESS : VALIDATION_ERROR;
+        return CollectionUtils.isEmpty(getErrors()) ? VALIDATION_SUCCESS : VALIDATION_ERROR;
     }
 }

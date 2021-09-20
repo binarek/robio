@@ -5,9 +5,9 @@ import binarek.robio.util.codegen.BaseStyle;
 import org.immutables.value.Value;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
+
+import static binarek.robio.shared.validation.BusinessValidationUtil.mergeErrors;
 
 @Value.Immutable
 @BaseStyle
@@ -26,11 +26,7 @@ public abstract class CompetitionStartValidation implements BusinessValidation<C
     }
 
     public static CompetitionStartValidation mergeValidations(Collection<CompetitionStartValidation> validations) {
-        final var errors = new HashSet<CompetitionStartValidationError>();
-        for (CompetitionStartValidation validation : validations) {
-            errors.addAll(validation.getErrors());
-        }
-        return ImmutableCompetitionStartValidation.of(Collections.unmodifiableCollection(errors));
+        return ImmutableCompetitionStartValidation.of(mergeErrors(validations));
     }
 
     @Override

@@ -18,7 +18,6 @@ import static binarek.robio.ftl.adapter.rest.api.dto.RobotPatchDto.Qualification
 @RestController
 @RequestMapping("/ftl/competitions/{competitionId}/robots")
 @Validated
-@Tag(name = "competitions")
 @Tag(name = "robots")
 class FtlRobotCompetitionController {
 

@@ -1,5 +1,7 @@
 package binarek.robio.ftl.model;
 
+import binarek.robio.ftl.validation.RunAddValidation;
+import binarek.robio.ftl.validation.RunAddValidationError;
 import binarek.robio.ftl.view.CompetitionView;
 import binarek.robio.shared.model.CompetitionId;
 import binarek.robio.util.codegen.BaseStyle;
@@ -7,6 +9,9 @@ import org.immutables.value.Value;
 import org.springframework.lang.Nullable;
 
 import java.time.ZonedDateTime;
+
+import static binarek.robio.ftl.validation.RunAddValidationCode.COMPETITION_FINISHED;
+import static binarek.robio.ftl.validation.RunAddValidationCode.COMPETITION_NOT_STARTED;
 
 @Value.Immutable
 @BaseStyle
@@ -34,6 +39,17 @@ public abstract class Competition implements CompetitionView {
 
     public final boolean wasStarted() {
         return getState() != CompetitionState.INITIALIZED;
+    }
+
+    public final RunAddValidation checkCanAddRun() {
+        switch (getState()) {
+            case INITIALIZED:
+                return RunAddValidation.error(RunAddValidationError.defaultError(COMPETITION_NOT_STARTED));
+            case FINISHED:
+                return RunAddValidation.error(RunAddValidationError.defaultError(COMPETITION_FINISHED));
+            default:
+                return RunAddValidation.success();
+        }
     }
 
     public final Competition start(ZonedDateTime startDateTime) {
