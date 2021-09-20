@@ -48,8 +48,8 @@ class FtlRobotCompetitionController {
     @GetMapping
     @Valid
     List<@Valid RobotDto> getRobots(@PathVariable UUID competitionId) {
-        final var command = robotDtoMapper.toSearchRobotsCommand(competitionId);
-        return robotDtoMapper.toRobotDtos(robotAppService.getRobots(command));
+        final var query = robotDtoMapper.toRobotsByCompetitionIdQuery(competitionId);
+        return robotDtoMapper.toRobotDtos(robotAppService.getRobots(query));
     }
 
     @PatchMapping("/{robotId}")
@@ -69,7 +69,7 @@ class FtlRobotCompetitionController {
     }
 
     private RobotDto getRobotDto(UUID competitionId, UUID robotId) {
-        final var command = robotDtoMapper.toSearchRobotCommand(competitionId, robotId);
-        return robotDtoMapper.toRobotDto(robotAppService.getRobot(command));
+        final var query = robotDtoMapper.toRobotByIdQuery(competitionId, robotId);
+        return robotDtoMapper.toRobotDto(robotAppService.getRobot(query));
     }
 }

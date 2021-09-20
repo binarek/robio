@@ -2,10 +2,10 @@ package binarek.robio.ftl;
 
 import binarek.robio.ftl.command.ChangeRobotQualificationCommand;
 import binarek.robio.ftl.command.RegisterRobotCommand;
-import binarek.robio.ftl.command.SearchRobotCommand;
-import binarek.robio.ftl.command.SearchRobotsCommand;
 import binarek.robio.ftl.exception.RobotNotFoundException;
 import binarek.robio.ftl.model.Robot;
+import binarek.robio.ftl.query.RobotByIdQuery;
+import binarek.robio.ftl.query.RobotsByCompetitionIdQuery;
 import binarek.robio.ftl.view.RobotView;
 import binarek.robio.shared.exception.EntityHasChangedException;
 import binarek.robio.shared.model.CompetitionId;
@@ -55,13 +55,13 @@ class RobotAppServiceImpl implements RobotAppService {
     }
 
     @Override
-    public RobotView getRobot(SearchRobotCommand command) {
-        return getRobot(command.getCompetitionId(), command.getRobotId());
+    public RobotView getRobot(RobotByIdQuery query) {
+        return getRobot(query.getCompetitionId(), query.getRobotId());
     }
 
     @Override
-    public Collection<? extends RobotView> getRobots(SearchRobotsCommand command) {
-        return robotRepository.getByCompetitionId(command.getCompetitionId());
+    public Collection<? extends RobotView> getRobots(RobotsByCompetitionIdQuery query) {
+        return robotRepository.getByCompetitionId(query.getCompetitionId());
     }
 
     private Robot getRobot(CompetitionId competitionId, RobotId robotId) {

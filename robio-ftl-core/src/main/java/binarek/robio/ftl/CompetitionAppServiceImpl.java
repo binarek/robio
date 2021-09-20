@@ -2,10 +2,10 @@ package binarek.robio.ftl;
 
 import binarek.robio.ftl.command.ChangeCompetitionRulesCommand;
 import binarek.robio.ftl.command.InitializeCompetitionCommand;
-import binarek.robio.ftl.command.SearchCompetitionCommand;
 import binarek.robio.ftl.command.StartCompetitionCommand;
 import binarek.robio.ftl.exception.CompetitionNotFoundException;
 import binarek.robio.ftl.model.Competition;
+import binarek.robio.ftl.query.CompetitionByIdQuery;
 import binarek.robio.ftl.view.CompetitionView;
 import binarek.robio.shared.DateTimeProvider;
 import binarek.robio.shared.exception.EntityHasChangedException;
@@ -58,8 +58,8 @@ class CompetitionAppServiceImpl implements CompetitionAppService {
     }
 
     @Override
-    public CompetitionView getCompetition(SearchCompetitionCommand command) {
-        return getCompetition(command.getCompetitionId());
+    public CompetitionView getCompetition(CompetitionByIdQuery query) {
+        return getCompetition(query.getCompetitionId());
     }
 
     private Competition getCompetition(CompetitionId competitionId) {

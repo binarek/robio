@@ -19,14 +19,11 @@ class FtlCompetitionController {
 
     private final CompetitionAppService competitionAppService;
     private final FtlCompetitionDtoMapper competitionDtoMapper;
-    private final FtlRobotDtoMapper robotDtoMapper;
 
     FtlCompetitionController(CompetitionAppService competitionAppService,
-                             FtlCompetitionDtoMapper competitionDtoMapper,
-                             FtlRobotDtoMapper robotDtoMapper) {
+                             FtlCompetitionDtoMapper competitionDtoMapper) {
         this.competitionAppService = competitionAppService;
         this.competitionDtoMapper = competitionDtoMapper;
-        this.robotDtoMapper = robotDtoMapper;
     }
 
     @PostMapping
@@ -59,7 +56,7 @@ class FtlCompetitionController {
     }
 
     private CompetitionDto getCompetitionDto(UUID competitionId) {
-        final var command = competitionDtoMapper.toSearchCompetitionCommand(competitionId);
-        return competitionDtoMapper.toCompetitionDto(competitionAppService.getCompetition(command));
+        final var query = competitionDtoMapper.toCompetitionByIdQuery(competitionId);
+        return competitionDtoMapper.toCompetitionDto(competitionAppService.getCompetition(query));
     }
 }

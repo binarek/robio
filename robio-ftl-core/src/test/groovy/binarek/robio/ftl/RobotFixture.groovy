@@ -1,7 +1,7 @@
 package binarek.robio.ftl
 
-import binarek.robio.ftl.command.SearchRobotsCommand
 import binarek.robio.ftl.model.Robot
+import binarek.robio.ftl.query.RobotsByCompetitionIdQuery
 import binarek.robio.ftl.view.RobotView
 import binarek.robio.shared.model.RobotId
 import binarek.robio.shared.model.RobotName
@@ -13,8 +13,8 @@ trait RobotFixture extends CompetitionFixture {
     static RobotId ROBOT_2_ID = RobotId.of(UUID.fromString('81524c4b-9c8d-4269-b96c-9df2b9faeb00'))
     static RobotName ROBOT_2_NAME = RobotName.of('Speeder')
 
-    SearchRobotsCommand searchRobotsCommand() {
-        return SearchRobotsCommand.builder().competitionId(COMPETITION_ID).build()
+    RobotsByCompetitionIdQuery robotsByCompetitionIdQuery() {
+        return RobotsByCompetitionIdQuery.builder().competitionId(COMPETITION_ID).build()
     }
 
     Collection<? extends RobotView> robots() {

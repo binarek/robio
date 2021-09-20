@@ -2,9 +2,9 @@ package binarek.robio.ftl
 
 import binarek.robio.ftl.command.ChangeCompetitionRulesCommand
 import binarek.robio.ftl.command.InitializeCompetitionCommand
-import binarek.robio.ftl.command.SearchCompetitionCommand
 import binarek.robio.ftl.model.Competition
 import binarek.robio.ftl.model.CompetitionRules
+import binarek.robio.ftl.query.CompetitionByIdQuery
 import binarek.robio.shared.model.CompetitionId
 
 import java.time.ZoneOffset
@@ -26,8 +26,8 @@ trait CompetitionFixture {
         return ChangeCompetitionRulesCommand.of(COMPETITION_ID, competitionRules(NEW_RUNS_LIMIT_PER_ROBOT))
     }
 
-    SearchCompetitionCommand searchCompetitionCommand() {
-        return SearchCompetitionCommand.of(COMPETITION_ID)
+    CompetitionByIdQuery competitionByIdQuery() {
+        return CompetitionByIdQuery.of(COMPETITION_ID)
     }
 
     Competition competition() {

@@ -5,8 +5,8 @@ import binarek.robio.ftl.adapter.rest.api.dto.CompetitionRulesDto;
 import binarek.robio.ftl.adapter.rest.api.dto.InitializeCompetitionCommandDto;
 import binarek.robio.ftl.command.ChangeCompetitionRulesCommand;
 import binarek.robio.ftl.command.InitializeCompetitionCommand;
-import binarek.robio.ftl.command.SearchCompetitionCommand;
 import binarek.robio.ftl.command.StartCompetitionCommand;
+import binarek.robio.ftl.query.CompetitionByIdQuery;
 import binarek.robio.ftl.view.CompetitionView;
 import binarek.robio.shared.SharedMapper;
 import binarek.robio.util.codegen.BaseMapperConfig;
@@ -27,7 +27,7 @@ interface FtlCompetitionDtoMapper {
     @Mapping(target = "rules", source = "dto")
     ChangeCompetitionRulesCommand toChangeCompetitionRulesCommand(UUID competitionId, CompetitionRulesDto dto);
 
-    SearchCompetitionCommand toSearchCompetitionCommand(UUID competitionId);
+    CompetitionByIdQuery toCompetitionByIdQuery(UUID competitionId);
 
     CompetitionDto toCompetitionDto(CompetitionView competition);
 }

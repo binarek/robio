@@ -2,12 +2,12 @@ package binarek.robio.ftl;
 
 import binarek.robio.ftl.command.ChangeCompetitionRulesCommand;
 import binarek.robio.ftl.command.InitializeCompetitionCommand;
-import binarek.robio.ftl.command.SearchCompetitionCommand;
 import binarek.robio.ftl.command.StartCompetitionCommand;
 import binarek.robio.ftl.exception.CompetitionAlreadyInitializedException;
 import binarek.robio.ftl.exception.CompetitionAlreadyStartedException;
 import binarek.robio.ftl.exception.CompetitionNotFoundException;
 import binarek.robio.ftl.exception.CompetitionStartValidationException;
+import binarek.robio.ftl.query.CompetitionByIdQuery;
 import binarek.robio.ftl.view.CompetitionView;
 
 public interface CompetitionAppService {
@@ -42,9 +42,9 @@ public interface CompetitionAppService {
     /**
      * Returns FTL competition for given id.
      *
-     * @param command search command
+     * @param query query
      * @return competition
      * @throws CompetitionNotFoundException if no competition found
      */
-    CompetitionView getCompetition(SearchCompetitionCommand command);
+    CompetitionView getCompetition(CompetitionByIdQuery query);
 }

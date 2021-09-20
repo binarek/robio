@@ -17,7 +17,7 @@ class RobotAppServiceImplTest extends Specification implements RobotFixture {
         robotRepository.getByCompetitionId(COMPETITION_ID) >> robots()
 
         when: 'invoking getting robots'
-        def result = robotAppService.getRobots(searchRobotsCommand())
+        def result = robotAppService.getRobots(robotsByCompetitionIdQuery())
 
         then:
         noExceptionThrown()
