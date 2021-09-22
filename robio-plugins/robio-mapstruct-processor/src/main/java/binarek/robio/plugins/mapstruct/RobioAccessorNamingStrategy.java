@@ -1,4 +1,4 @@
-package binarek.robio.mapstruct;
+package binarek.robio.plugins.mapstruct;
 
 import org.mapstruct.ap.spi.ImmutablesAccessorNamingStrategy;
 import org.mapstruct.ap.spi.util.IntrospectorUtils;
