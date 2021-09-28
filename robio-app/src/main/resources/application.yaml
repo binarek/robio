@@ -11,3 +11,5 @@ robio:
   ftl:
     persistence:
       schema: ftl
+      flyway:
+        enabled: true

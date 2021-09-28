@@ -77,7 +77,6 @@
                                     <recordVersionFields>VERSION</recordVersionFields>
                                     <name>org.jooq.meta.extensions.ddl.DDLDatabase</name>
                                     <inputCatalog></inputCatalog>
-                                    <inputSchema>FTL</inputSchema>
                                     <outputSchemaToDefault>true</outputSchemaToDefault>
                                     <outputCatalogToDefault>true</outputCatalogToDefault>
                                     <properties>

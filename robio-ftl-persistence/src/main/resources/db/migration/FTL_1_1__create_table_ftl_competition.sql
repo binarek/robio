@@ -1,4 +1,4 @@
-CREATE TABLE ftl.competition
+CREATE TABLE competition
 (
     id bigserial PRIMARY KEY,
     competition_id uuid UNIQUE NOT NULL,
@@ -10,4 +10,4 @@ CREATE TABLE ftl.competition
     finish_date_time timestamp without time zone
 );
 
-CREATE UNIQUE INDEX competition_competition_id_idx ON ftl.competition(competition_id);
+CREATE UNIQUE INDEX competition_competition_id_idx ON competition(competition_id);

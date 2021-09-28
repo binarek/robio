@@ -1,19 +1,20 @@
 package binarek.robio.ftl.adapter.persistence.configuration;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.context.properties.ConstructorBinding;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
-@Component
 @ConfigurationProperties(prefix = "robio.ftl.persistence")
+@ConstructorBinding
 class FtlPersistenceProperties {
 
-    private String schema = "ftl";
+    private final String schema;
+
+    FtlPersistenceProperties(@DefaultValue("ftl") String schema) {
+        this.schema = schema;
+    }
 
     String getSchema() {
         return schema;
-    }
-
-    void setSchema(String schema) {
-        this.schema = schema;
     }
 }

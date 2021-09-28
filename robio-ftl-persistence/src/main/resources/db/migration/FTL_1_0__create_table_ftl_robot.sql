@@ -1,4 +1,4 @@
-CREATE TABLE ftl.robot
+CREATE TABLE robot
 (
     id bigserial PRIMARY KEY,
     competition_id uuid NOT NULL,
@@ -8,4 +8,4 @@ CREATE TABLE ftl.robot
     version bigint NOT NULL
 );
 
-CREATE UNIQUE INDEX robot_competition_id_robot_id_idx ON ftl.robot(competition_id, robot_id);
+CREATE UNIQUE INDEX robot_competition_id_robot_id_idx ON robot(competition_id, robot_id);
