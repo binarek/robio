@@ -5,7 +5,6 @@ import binarek.robio.ftl.adapter.rest.api.dto.CompetitionDto;
 import binarek.robio.ftl.adapter.rest.api.dto.CompetitionRulesDto;
 import binarek.robio.ftl.adapter.rest.api.dto.InitializeCompetitionCommandDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -13,7 +12,6 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/ftl/competitions")
-@Validated
 @Tag(name = "competitions")
 class FtlCompetitionController {
 
@@ -43,10 +41,10 @@ class FtlCompetitionController {
     }
 
     @PutMapping("/{competitionId}/rules")
-    CompetitionDto changeCompetitionRules(@PathVariable UUID competitionId, @RequestBody @Valid CompetitionRulesDto competitionRulesDto) {
+    CompetitionRulesDto changeCompetitionRules(@PathVariable UUID competitionId, @RequestBody @Valid CompetitionRulesDto competitionRulesDto) {
         final var command = competitionDtoMapper.toChangeCompetitionRulesCommand(competitionId, competitionRulesDto);
         competitionAppService.changeCompetitionRules(command);
-        return getCompetitionDto(competitionId);
+        return getCompetitionDto(competitionId).getRules();
     }
 
     @GetMapping("/{competitionId}")

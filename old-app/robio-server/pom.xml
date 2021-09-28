@@ -5,13 +5,27 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>binarek.robio</groupId>
-        <artifactId>robio</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.6.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <artifactId>robio-server</artifactId>
+
+    <properties>
+        <java.version>11</java.version>
+        <commons-collections4.version>4.4</commons-collections4.version>
+        <commons-validator.version>1.6</commons-validator.version>
+        <org.codehaus.gmavenplus.version>1.9.0</org.codehaus.gmavenplus.version>
+        <org.immutables.version>2.8.3</org.immutables.version>
+        <org.mapstruct.version>1.4.1.Final</org.mapstruct.version>
+        <org.spockframework.version>2.0-M1-groovy-2.5</org.spockframework.version>
+        <org.springdoc.version>1.3.4</org.springdoc.version>
+        <org.zalando.version>0.25.2</org.zalando.version>
+        <!-- Override Spring properties -->
+        <jooq.version>3.14.4</jooq.version>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -40,15 +54,18 @@
         <dependency>
             <groupId>commons-validator</groupId>
             <artifactId>commons-validator</artifactId>
+            <version>${commons-validator.version}</version>
         </dependency>
         <dependency>
             <groupId>org.immutables</groupId>
             <artifactId>value</artifactId>
+            <version>${org.immutables.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
+            <version>${org.mapstruct.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -65,10 +82,12 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${org.springdoc.version}</version>
         </dependency>
         <dependency>
             <groupId>org.zalando</groupId>
             <artifactId>problem-spring-web</artifactId>
+            <version>${org.zalando.version}</version>
         </dependency>
 
         <dependency>
@@ -91,11 +110,13 @@
         <dependency>
             <groupId>org.spockframework</groupId>
             <artifactId>spock-core</artifactId>
+            <version>${org.spockframework.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.spockframework</groupId>
             <artifactId>spock-spring</artifactId>
+            <version>${org.spockframework.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -109,6 +130,7 @@
             <plugin>
                 <groupId>org.codehaus.gmavenplus</groupId>
                 <artifactId>gmavenplus-plugin</artifactId>
+                <version>${org.codehaus.gmavenplus.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

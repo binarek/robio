@@ -5,7 +5,6 @@ import binarek.robio.ftl.adapter.rest.api.dto.AddRunCommandDto;
 import binarek.robio.ftl.adapter.rest.api.dto.RunDto;
 import binarek.robio.ftl.adapter.rest.api.dto.RunPatchDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -13,7 +12,6 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/ftl/competitions/{competitionId}/robots/{robotId}/runs")
-@Validated
 @Tag(name = "runs")
 class FtlRunRobotCompetitionController {
 

@@ -5,7 +5,6 @@ import binarek.robio.ftl.adapter.rest.api.dto.RegisterRobotCommandDto;
 import binarek.robio.ftl.adapter.rest.api.dto.RobotDto;
 import binarek.robio.ftl.adapter.rest.api.dto.RobotPatchDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -17,7 +16,6 @@ import static binarek.robio.ftl.adapter.rest.api.dto.RobotPatchDto.Qualification
 
 @RestController
 @RequestMapping("/ftl/competitions/{competitionId}/robots")
-@Validated
 @Tag(name = "robots")
 class FtlRobotCompetitionController {
 
