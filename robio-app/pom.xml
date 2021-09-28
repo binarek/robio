@@ -15,6 +15,16 @@
     <dependencies>
         <dependency>
             <groupId>binarek.robio</groupId>
+            <artifactId>robio-auth-core</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>binarek.robio</groupId>
+            <artifactId>robio-auth-persistence</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>binarek.robio</groupId>
             <artifactId>robio-ftl-core</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

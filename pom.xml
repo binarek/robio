@@ -18,6 +18,8 @@
 
     <modules>
         <module>robio-app</module>
+        <module>robio-auth-core</module>
+        <module>robio-auth-persistence</module>
         <module>robio-ftl-core</module>
         <module>robio-ftl-core-api</module>
         <module>robio-ftl-persistence</module>
@@ -31,6 +33,7 @@
     <properties>
         <java.version>11</java.version>
         <commons-collections4.version>4.4</commons-collections4.version>
+        <commons-validator.version>1.7</commons-validator.version>
         <org.codehaus.gmavenplus.version>1.13.0</org.codehaus.gmavenplus.version>
         <org.immutables.version>2.8.8</org.immutables.version>
         <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
@@ -45,6 +48,11 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-collections4</artifactId>
                 <version>${commons-collections4.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-validator</groupId>
+                <artifactId>commons-validator</artifactId>
+                <version>${commons-validator.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.immutables</groupId>
