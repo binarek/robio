@@ -8,6 +8,11 @@ springdoc:
   swagger-ui:
     operationsSorter: alpha
 robio:
+  auth:
+    persistence:
+      schema: auth
+      flyway:
+        enabled: true
   ftl:
     persistence:
       schema: ftl

@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface HumanUserRepository {
 
-    Optional<HumanUser> getUserByUsername(HumanUsername username);
+    Optional<HumanUser> getByUsername(HumanUsername username);
 }

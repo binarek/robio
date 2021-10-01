@@ -9,11 +9,14 @@ import java.util.Optional;
 public class UserService {
 
     private final SpecialUserCredentialsRepository specialUserCredentialsRepository;
+    private final SpecialUserCredentialsFactory specialUserCredentialsFactory;
     private final HumanUserRepository humanUserRepository;
 
     UserService(SpecialUserCredentialsRepository specialUserCredentialsRepository,
+                SpecialUserCredentialsFactory specialUserCredentialsFactory,
                 HumanUserRepository humanUserRepository) {
         this.specialUserCredentialsRepository = specialUserCredentialsRepository;
+        this.specialUserCredentialsFactory = specialUserCredentialsFactory;
         this.humanUserRepository = humanUserRepository;
     }
 
@@ -38,7 +41,7 @@ public class UserService {
     }
 
     private Optional<HumanUser> getHumanUser(HumanUsername username) {
-        return humanUserRepository.getUserByUsername(username);
+        return humanUserRepository.getByUsername(username);
     }
 
     private SpecialUser getSpecialUser(SpecialUsername username) {
@@ -48,7 +51,7 @@ public class UserService {
     }
 
     private SpecialUser createAndGetSpecialUser(SpecialUsername username) {
-        specialUserCredentialsRepository.saveIfNotExist(SpecialUserCredentials.defaultCredentials(username));
+        specialUserCredentialsRepository.saveIfNotExist(specialUserCredentialsFactory.defaultCredentials(username));
         return specialUserCredentialsRepository.getByUsername(username)
                 .map(SpecialUser::newUser)
                 .orElseThrow(() -> new IllegalStateException("Cannot get special user for username " + username));

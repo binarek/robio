@@ -18,20 +18,10 @@ public abstract class SpecialUserCredentials {
     @Nullable
     public abstract Long getVersion();
 
-    public static SpecialUserCredentials defaultCredentials(SpecialUsername username) {
+    public static SpecialUserCredentials newCredentials(SpecialUsername username, HashedPassword password) {
         return ImmutableSpecialUserCredentials.builder()
                 .username(username)
-                .hashedPassword(defaultHashedPassword(username))
+                .hashedPassword(password)
                 .build();
-    }
-
-    private static HashedPassword defaultHashedPassword(SpecialUsername username) {
-        if (username == SpecialUsername.DEFAULT_ADMIN) {
-            // TODO better (more secure) default password definition implementation
-            // default password: C0mp3tit1onTim3!
-            return HashedPassword.of("$2a$10$V0hKbUlM62SP/fabGByUW.L5JqmbLvChteugLhZjXSaF1JgLHxlQm");
-        } else {
-            throw new IllegalArgumentException("No default password is defined for username " + username);
-        }
     }
 }
