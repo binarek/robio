@@ -1,4 +1,4 @@
-package binarek.robio.auth.user.model;
+package binarek.robio.auth.model;
 
 public enum UserRole {
     ADMIN,

@@ -1,12 +1,14 @@
-package binarek.robio.auth.user.model;
+package binarek.robio.auth.model;
 
 import binarek.robio.util.codegen.AbstractSingleValue;
 import binarek.robio.util.codegen.ValueDefStyle;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.immutables.value.Value;
+import org.springframework.util.Assert;
 
 @Value.Immutable
 @ValueDefStyle
-abstract class UsernameDef extends AbstractSingleValue<String> {
+abstract class EmailDef extends AbstractSingleValue<String> {
 
     @Override
     @Value.Parameter
@@ -14,9 +16,6 @@ abstract class UsernameDef extends AbstractSingleValue<String> {
 
     @Value.Check
     protected void validate() {
-        final var username = getValue();
-        if (!SpecialUsernames.allUsernames().contains(username)) {
-            Email.of(username);
-        }
+        Assert.state(EmailValidator.getInstance().isValid(getValue()), "Invalid email format");
     }
 }

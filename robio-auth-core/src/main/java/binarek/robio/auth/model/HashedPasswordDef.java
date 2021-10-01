@@ -1,16 +1,15 @@
-package binarek.robio.auth.user.model;
+package binarek.robio.auth.model;
 
 import binarek.robio.util.codegen.AbstractSingleValue;
 import binarek.robio.util.codegen.ValueDefStyle;
 import org.immutables.value.Value;
 
-import java.util.UUID;
-
 @Value.Immutable
 @ValueDefStyle
-abstract class UserIdDef extends AbstractSingleValue<UUID> {
+abstract class HashedPasswordDef extends AbstractSingleValue<String> {
 
-    @Value.Parameter
     @Override
-    public abstract UUID getValue();
+    @Value.Parameter
+    @Value.Redacted
+    public abstract String getValue();
 }

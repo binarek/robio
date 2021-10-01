@@ -1,6 +1,5 @@
-package binarek.robio.auth.user.model;
+package binarek.robio.auth.model;
 
-import binarek.robio.auth.user.view.UserView;
 import binarek.robio.shared.model.CompetitorId;
 import binarek.robio.util.codegen.BaseStyle;
 import org.immutables.value.Value;
@@ -8,7 +7,7 @@ import org.springframework.lang.Nullable;
 
 @Value.Immutable
 @BaseStyle
-public abstract class HumanUser implements UserView {
+public abstract class HumanUser implements User {
 
     HumanUser() {
     }
@@ -17,8 +16,8 @@ public abstract class HumanUser implements UserView {
 
     @Override
     @Value.Derived
-    public Username getUsername() {
-        return Username.of(getEmail().getValue());
+    public HumanUsername getUsername() {
+        return HumanUsername.of(getEmail().getValue());
     }
 
     public abstract Email getEmail();
@@ -33,48 +32,48 @@ public abstract class HumanUser implements UserView {
     public abstract UserRole getRole();
 
     @Value.Redacted
-    public abstract PersonFirstName getFirstName();
+    public abstract FirstName getFirstName();
 
     @Value.Redacted
-    public abstract PersonLastName getLastName();
+    public abstract LastName getLastName();
 
     @Nullable
     public abstract CompetitorId getCompetitorId();
 
     public static HumanUser newAdmin(UserId userId, Email email, HashedPassword hashedPassword,
-                                     PersonFirstName firstName, PersonLastName lastName) {
+                                     FirstName firstName, LastName lastName) {
         return ImmutableHumanUser.builder()
                 .userId(userId)
                 .email(email)
                 .hashedPassword(hashedPassword)
+                .role(UserRole.ADMIN)
                 .firstName(firstName)
                 .lastName(lastName)
-                .role(UserRole.ADMIN)
                 .build();
     }
 
     public static HumanUser newCompetitor(UserId userId, Email email, HashedPassword hashedPassword,
-                                          PersonFirstName firstName, PersonLastName lastName, CompetitorId competitorId) {
+                                          FirstName firstName, LastName lastName, CompetitorId competitorId) {
         return ImmutableHumanUser.builder()
                 .userId(userId)
                 .email(email)
-                .competitorId(competitorId)
                 .hashedPassword(hashedPassword)
+                .role(UserRole.COMPETITOR)
                 .firstName(firstName)
                 .lastName(lastName)
-                .role(UserRole.COMPETITOR)
+                .competitorId(competitorId)
                 .build();
     }
 
     public static HumanUser newOrganizer(UserId userId, Email email, HashedPassword hashedPassword,
-                                         PersonFirstName firstName, PersonLastName lastName) {
+                                         FirstName firstName, LastName lastName) {
         return ImmutableHumanUser.builder()
                 .userId(userId)
                 .email(email)
                 .hashedPassword(hashedPassword)
+                .role(UserRole.ORGANIZER)
                 .firstName(firstName)
                 .lastName(lastName)
-                .role(UserRole.ORGANIZER)
                 .build();
     }
 }

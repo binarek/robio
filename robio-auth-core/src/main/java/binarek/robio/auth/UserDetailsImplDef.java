@@ -1,6 +1,6 @@
-package binarek.robio.auth.user;
+package binarek.robio.auth;
 
-import binarek.robio.auth.user.view.UserView;
+import binarek.robio.auth.model.User;
 import binarek.robio.util.codegen.ValueDefStyle;
 import org.immutables.value.Value;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,7 +17,7 @@ abstract class UserDetailsImplDef implements UserDetails {
     private static final String ROLE_PREFIX = "ROLE_";
 
     @Value.Parameter
-    protected abstract UserView getUser();
+    protected abstract User getUser();
 
     @Override
     @Value.Derived

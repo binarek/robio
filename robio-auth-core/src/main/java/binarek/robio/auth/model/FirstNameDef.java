@@ -1,4 +1,4 @@
-package binarek.robio.auth.user.model;
+package binarek.robio.auth.model;
 
 import binarek.robio.util.codegen.AbstractSingleValue;
 import binarek.robio.util.codegen.ValueDefStyle;
@@ -7,7 +7,7 @@ import org.springframework.util.Assert;
 
 @Value.Immutable
 @ValueDefStyle
-abstract class PersonFirstNameDef extends AbstractSingleValue<String> {
+abstract class FirstNameDef extends AbstractSingleValue<String> {
 
     @Value.Parameter
     @Override
