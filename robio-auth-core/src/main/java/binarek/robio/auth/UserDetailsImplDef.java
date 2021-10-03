@@ -12,12 +12,13 @@ import java.util.Set;
 
 @Value.Immutable
 @ValueDefStyle
-abstract class UserDetailsImplDef implements UserDetails {
+abstract class UserDetailsImplDef implements UserDetails, UserHolder {
 
     private static final String ROLE_PREFIX = "ROLE_";
 
+    @Override
     @Value.Parameter
-    protected abstract User getUser();
+    public abstract User getUser();
 
     @Override
     @Value.Derived

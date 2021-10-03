@@ -4,6 +4,7 @@ import binarek.robio.ftl.RunAppService;
 import binarek.robio.ftl.adapter.rest.api.dto.AddRunCommandDto;
 import binarek.robio.ftl.adapter.rest.api.dto.RunDto;
 import binarek.robio.ftl.adapter.rest.api.dto.RunPatchDto;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/ftl/competitions/{competitionId}/robots/{robotId}/runs")
 @Tag(name = "runs")
+@SecurityRequirement(name = "bearerAuth")
 class FtlRunRobotCompetitionController {
 
     private final RunAppService runAppService;

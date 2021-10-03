@@ -4,6 +4,7 @@ import binarek.robio.ftl.CompetitionAppService;
 import binarek.robio.ftl.adapter.rest.api.dto.CompetitionDto;
 import binarek.robio.ftl.adapter.rest.api.dto.CompetitionRulesDto;
 import binarek.robio.ftl.adapter.rest.api.dto.InitializeCompetitionCommandDto;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/ftl/competitions")
 @Tag(name = "competitions")
+@SecurityRequirement(name = "bearerAuth")
 class FtlCompetitionController {
 
     private final CompetitionAppService competitionAppService;

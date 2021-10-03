@@ -4,6 +4,7 @@ import binarek.robio.ftl.RobotAppService;
 import binarek.robio.ftl.adapter.rest.api.dto.RegisterRobotCommandDto;
 import binarek.robio.ftl.adapter.rest.api.dto.RobotDto;
 import binarek.robio.ftl.adapter.rest.api.dto.RobotPatchDto;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,7 @@ import static binarek.robio.ftl.adapter.rest.api.dto.RobotPatchDto.Qualification
 @RestController
 @RequestMapping("/ftl/competitions/{competitionId}/robots")
 @Tag(name = "robots")
+@SecurityRequirement(name = "bearerAuth")
 class FtlRobotCompetitionController {
 
     private final RobotAppService robotAppService;

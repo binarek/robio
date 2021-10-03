@@ -10,17 +10,12 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>robio-auth-core</artifactId>
+    <artifactId>robio-auth-web</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>binarek.robio</groupId>
-            <artifactId>robio-shared</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>binarek.robio</groupId>
-            <artifactId>robio-util</artifactId>
+            <artifactId>robio-auth-core</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
@@ -28,18 +23,30 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.zalando</groupId>
+            <artifactId>problem-spring-web</artifactId>
+        </dependency>
 
-        <dependency>
-            <groupId>commons-validator</groupId>
-            <artifactId>commons-validator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.auth0</groupId>
-            <artifactId>java-jwt</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.immutables</groupId>
             <artifactId>value</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
         </dependency>
     </dependencies>
 </project>
