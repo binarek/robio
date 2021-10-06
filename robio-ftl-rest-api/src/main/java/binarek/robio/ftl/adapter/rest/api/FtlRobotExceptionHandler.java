@@ -13,10 +13,11 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
 import org.zalando.problem.spring.web.advice.ProblemHandling;
+import org.zalando.problem.spring.web.advice.security.SecurityAdviceTrait;
 
 @RestControllerAdvice(assignableTypes = FtlRobotCompetitionController.class)
 @Order(Ordered.HIGHEST_PRECEDENCE)
-class FtlRobotExceptionHandler implements ProblemHandling {
+class FtlRobotExceptionHandler implements ProblemHandling, SecurityAdviceTrait {
 
     @ExceptionHandler({RobotNotFoundException.class, CompetitionNotFoundException.class})
     ResponseEntity<Problem> handleNotFoundException(Exception exception, NativeWebRequest request) {

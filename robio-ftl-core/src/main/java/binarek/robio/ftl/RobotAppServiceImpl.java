@@ -11,6 +11,7 @@ import binarek.robio.shared.exception.EntityHasChangedException;
 import binarek.robio.shared.model.CompetitionId;
 import binarek.robio.shared.model.RobotId;
 import org.springframework.retry.annotation.Retryable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,7 @@ class RobotAppServiceImpl implements RobotAppService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_ORGANIZER')")
     @Transactional
     public void registerRobot(RegisterRobotCommand command) {
         final var competitionId = command.getCompetitionId();
@@ -39,6 +41,7 @@ class RobotAppServiceImpl implements RobotAppService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_ORGANIZER')")
     @Retryable(EntityHasChangedException.class)
     public void qualifyRobot(ChangeRobotQualificationCommand command) {
         final var robot = getRobot(command.getCompetitionId(), command.getRobotId())
@@ -48,6 +51,7 @@ class RobotAppServiceImpl implements RobotAppService {
 
     @Override
     @Retryable(EntityHasChangedException.class)
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_ORGANIZER')")
     public void disqualifyRobot(ChangeRobotQualificationCommand command) {
         final var robot = getRobot(command.getCompetitionId(), command.getRobotId())
                 .disqualify();
@@ -55,6 +59,7 @@ class RobotAppServiceImpl implements RobotAppService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_ORGANIZER')")
     public RobotView getRobot(RobotByIdQuery query) {
         return getRobot(query.getCompetitionId(), query.getRobotId());
     }

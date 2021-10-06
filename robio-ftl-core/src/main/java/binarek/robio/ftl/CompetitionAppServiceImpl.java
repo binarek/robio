@@ -11,6 +11,7 @@ import binarek.robio.shared.DateTimeProvider;
 import binarek.robio.shared.exception.EntityHasChangedException;
 import binarek.robio.shared.model.CompetitionId;
 import org.springframework.retry.annotation.Retryable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,7 @@ class CompetitionAppServiceImpl implements CompetitionAppService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional
     public void initializeCompetition(InitializeCompetitionCommand command) {
         competitionService.validateIfCanInitializeCompetition(command.getCompetitionId());
@@ -38,6 +40,7 @@ class CompetitionAppServiceImpl implements CompetitionAppService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Retryable(EntityHasChangedException.class)
     public void startCompetition(StartCompetitionCommand command) {
         final var competitionId = command.getCompetitionId();
@@ -50,6 +53,7 @@ class CompetitionAppServiceImpl implements CompetitionAppService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Retryable(EntityHasChangedException.class)
     public void changeCompetitionRules(ChangeCompetitionRulesCommand command) {
         var competition = getCompetition(command.getCompetitionId())
@@ -58,6 +62,7 @@ class CompetitionAppServiceImpl implements CompetitionAppService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_ORGANIZER')")
     public CompetitionView getCompetition(CompetitionByIdQuery query) {
         return getCompetition(query.getCompetitionId());
     }
