@@ -10,7 +10,7 @@ import java.time.Instant;
 abstract class AccessTokenClaimsDef {
 
     @Value.Parameter
-    public abstract Username getSubject();
+    public abstract UserId getSubject();
 
     @Value.Parameter
     public abstract Instant getIssuedAt();

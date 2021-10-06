@@ -1,7 +1,7 @@
 package binarek.robio.auth;
 
 import binarek.robio.auth.model.User;
-import binarek.robio.util.codegen.ValueDefStyle;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.immutables.value.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,19 +11,22 @@ import java.util.Collection;
 import java.util.Set;
 
 @Value.Immutable
-@ValueDefStyle
-abstract class UserDetailsImplDef implements UserDetails, UserHolder {
+@JsonSerialize
+@Value.Style(
+        typeAbstract = "*Def",
+        typeImmutable = "*",
+        visibility = Value.Style.ImplementationVisibility.PACKAGE,
+        defaults = @Value.Immutable(copy = false, builder = false),
+        redactedMask = "***")
+abstract class UserDetailsImplDef implements UserDetails {
 
-    private static final String ROLE_PREFIX = "ROLE_";
-
-    @Override
     @Value.Parameter
     public abstract User getUser();
 
     @Override
     @Value.Derived
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Set.of(new SimpleGrantedAuthority(ROLE_PREFIX + getUser().getRole()));
+        return Set.of(new SimpleGrantedAuthority(getUser().getRole().getSpringRole()));
     }
 
     @Override

@@ -1,5 +1,7 @@
 package binarek.robio.auth.model;
 
+import binarek.robio.auth.view.AccessTokenView;
+import binarek.robio.auth.view.RefreshTokenView;
 import binarek.robio.util.codegen.ValueDefStyle;
 import org.immutables.value.Value;
 
@@ -8,8 +10,8 @@ import org.immutables.value.Value;
 abstract class TokensPairDef {
 
     @Value.Parameter
-    public abstract RefreshToken getRefreshToken();
+    public abstract RefreshTokenView getRefreshToken();
 
     @Value.Parameter
-    public abstract AccessToken getAccessToken();
+    public abstract AccessTokenView getAccessToken();
 }

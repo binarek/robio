@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>binarek.robio</groupId>
-            <artifactId>robio-auth-core</artifactId>
+            <artifactId>robio-auth-core-api</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
@@ -49,4 +49,29 @@
             <artifactId>mapstruct</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <useIncrementalCompilation>false</useIncrementalCompilation>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.immutables</groupId>
+                            <artifactId>value</artifactId>
+                            <version>${org.immutables.version}</version>
+                        </path>
+                        <path>
+                            <groupId>binarek.robio.plugins</groupId>
+                            <artifactId>robio-mapstruct-processor</artifactId>
+                            <version>0.0.1-SNAPSHOT</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

@@ -2,29 +2,30 @@ package binarek.robio.auth;
 
 import binarek.robio.auth.configuration.AuthTokenProperties;
 import binarek.robio.auth.model.*;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.util.UUID;
 
-@Service
-public class TokenService {
+@Component
+public class TokenFactory {
 
     private final AuthTokenProperties tokenProperties;
     private final JwtService jwtService;
 
-    TokenService(AuthTokenProperties tokenProperties, JwtService jwtService) {
+    TokenFactory(AuthTokenProperties tokenProperties,
+                 JwtService jwtService) {
         this.tokenProperties = tokenProperties;
         this.jwtService = jwtService;
     }
 
-    public TokensPair createTokensPair(User user) {
+    public TokensPair generateNewTokensForUser(User user) {
         final var refreshToken = createRefreshToken(user);
         final var accessToken = createAccessToken(refreshToken.getClaims(), user);
         return TokensPair.of(refreshToken, accessToken);
     }
 
-    public AccessToken validateAndCreateAccessTokenFromJwt(String jwt) {
+    public AccessToken createValidAccessTokenFromJwt(String jwt) {
         final var claims = jwtService.validateAndParseAccessJwtClaims(jwt);
         return AccessToken.of(jwt, claims);
     }
@@ -33,7 +34,7 @@ public class TokenService {
         final var now = jwtService.getNow();
         final var claims = RefreshTokenClaims.builder()
                 .tokenId(RefreshTokenId.of(UUID.randomUUID()))
-                .subject(user.getUsername())
+                .subject(user.getUserId())
                 .issuedAt(now)
                 .expiredAt(resolveExpiredAtForRefreshToken(now))
                 .build();

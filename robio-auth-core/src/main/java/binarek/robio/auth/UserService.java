@@ -1,59 +1,55 @@
 package binarek.robio.auth;
 
-import binarek.robio.auth.model.*;
+import binarek.robio.auth.model.User;
+import binarek.robio.auth.model.UserId;
+import binarek.robio.auth.model.Username;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService {
 
-    private final SpecialUserCredentialsRepository specialUserCredentialsRepository;
-    private final SpecialUserCredentialsFactory specialUserCredentialsFactory;
-    private final HumanUserRepository humanUserRepository;
+    private final UserCredentialsFactory userCredentialsFactory;
+    private final UserRepository userRepository;
 
-    UserService(SpecialUserCredentialsRepository specialUserCredentialsRepository,
-                SpecialUserCredentialsFactory specialUserCredentialsFactory,
-                HumanUserRepository humanUserRepository) {
-        this.specialUserCredentialsRepository = specialUserCredentialsRepository;
-        this.specialUserCredentialsFactory = specialUserCredentialsFactory;
-        this.humanUserRepository = humanUserRepository;
+    UserService(UserCredentialsFactory userCredentialsFactory,
+                UserRepository userRepository) {
+        this.userCredentialsFactory = userCredentialsFactory;
+        this.userRepository = userRepository;
     }
 
     /**
      * Returns user with given username.
-     * Two types of users are handled: special users and human users.
-     * In case of special user, username needs to be an instance of SpecialUsername. Special user always exits.
-     * If special user credentials are missing in repository new ones are created, persisted and returned.
-     * In case of human user, username needs to be an instance of HumanUsername. Human user may or may not exist.
+     * Special users always exits.
+     * If special user is missing in repository a new one is created, persisted and returned.
+     * Users of the other types may or may not exist.
      *
-     * @param username username, needs to an instance of SpecialUsername or HumanUsername class
-     * @return user, which always exists if special user and may not exist if human user
+     * @param username username
+     * @return user, which always exists if special user and may not exist for the other types of users
      */
-    public Optional<? extends User> getUser(Username username) {
-        if (username instanceof SpecialUsername) {
-            return Optional.of(getSpecialUser((SpecialUsername) username));
-        } else if (username instanceof HumanUsername) {
-            return getHumanUser((HumanUsername) username);
+    public Optional<User> getUser(Username username) {
+        final var userOptional = userRepository.getByUsername(username);
+        if (userOptional.isPresent() || !username.isSpecial()) {
+            return userOptional;
         } else {
-            throw new IllegalArgumentException("Cannot get user for username class " + username.getClass().getName());
+            return createAndGetSpecialUser(username);
         }
     }
 
-    private Optional<HumanUser> getHumanUser(HumanUsername username) {
-        return humanUserRepository.getByUsername(username);
+    private Optional<User> createAndGetSpecialUser(Username username) {
+        createSpecialUser(username);
+        final var userOptional = userRepository.getByUsername(username);
+        if (userOptional.isEmpty()) {
+            throw new IllegalStateException("Cannot get special user for username " + username);
+        }
+        return userOptional;
     }
 
-    private SpecialUser getSpecialUser(SpecialUsername username) {
-        return specialUserCredentialsRepository.getByUsername(username)
-                .map(SpecialUser::newUser)
-                .orElseGet(() -> createAndGetSpecialUser(username));
-    }
-
-    private SpecialUser createAndGetSpecialUser(SpecialUsername username) {
-        specialUserCredentialsRepository.saveIfNotExist(specialUserCredentialsFactory.defaultCredentials(username));
-        return specialUserCredentialsRepository.getByUsername(username)
-                .map(SpecialUser::newUser)
-                .orElseThrow(() -> new IllegalStateException("Cannot get special user for username " + username));
+    private void createSpecialUser(Username username) {
+        final var user = User.newDefaultAdminUser(
+                UserId.of(UUID.randomUUID()), userCredentialsFactory.defaultCredentials(username).getHashedPassword());
+        userRepository.saveIfNotExistByUsername(user);
     }
 }

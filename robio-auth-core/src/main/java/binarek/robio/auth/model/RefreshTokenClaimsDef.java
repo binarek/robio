@@ -13,7 +13,7 @@ abstract class RefreshTokenClaimsDef {
     public abstract RefreshTokenId getTokenId();
 
     @Value.Parameter
-    public abstract Username getSubject();
+    public abstract UserId getSubject();
 
     @Value.Parameter
     public abstract Instant getIssuedAt();

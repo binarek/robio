@@ -1,8 +1,6 @@
 package binarek.robio.auth.adapter.rest.api;
 
-import binarek.robio.auth.TokenService;
-import binarek.robio.auth.UserHolder;
-import binarek.robio.auth.adapter.rest.api.dto.ImmutableTokensDto;
+import binarek.robio.auth.AuthAppService;
 import binarek.robio.auth.adapter.rest.api.dto.TokensDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -16,28 +14,22 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
-@Tag(name = "authentication")
+@Tag(name = "authentication, authorization")
 class AuthController {
 
-    private final TokenService tokenService;
+    private final AuthAppService authAppService;
+    private final AuthDtoMapper authDtoMapper;
 
-    AuthController(TokenService tokenService) {
-        this.tokenService = tokenService;
+    AuthController(AuthAppService authAppService, AuthDtoMapper authDtoMapper) {
+        this.authAppService = authAppService;
+        this.authDtoMapper = authDtoMapper;
     }
 
     @PostMapping("/login")
     @Operation(security = @SecurityRequirement(name = "basicAuth"))
     @Valid
     TokensDto login(Authentication authentication) {
-        if (authentication.getPrincipal() instanceof UserHolder) {
-            final var user = ((UserHolder) authentication.getPrincipal()).getUser();
-            final var tokens = tokenService.createTokensPair(user);
-            return ImmutableTokensDto.builder()
-                    .accessToken(tokens.getAccessToken().getJwt())
-                    .refreshToken(tokens.getRefreshToken().getJwt())
-                    .build();
-        } else {
-            throw new IllegalStateException("Cannot resolve user for principal class " + authentication.getPrincipal().getClass());
-        }
+        final var tokens = authAppService.generateTokens(authentication);
+        return authDtoMapper.toTokensDto(tokens);
     }
 }

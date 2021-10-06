@@ -10,12 +10,17 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>robio-auth-core</artifactId>
+    <artifactId>robio-auth-core-api</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>binarek.robio</groupId>
-            <artifactId>robio-auth-core-api</artifactId>
+            <artifactId>robio-shared</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>binarek.robio</groupId>
+            <artifactId>robio-util</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
@@ -23,18 +28,14 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-
         <dependency>
             <groupId>commons-validator</groupId>
             <artifactId>commons-validator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.auth0</groupId>
-            <artifactId>java-jwt</artifactId>
         </dependency>
         <dependency>
             <groupId>org.immutables</groupId>
             <artifactId>value</artifactId>
         </dependency>
     </dependencies>
+
 </project>

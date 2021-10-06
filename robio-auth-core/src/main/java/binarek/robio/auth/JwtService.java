@@ -4,8 +4,8 @@ import binarek.robio.auth.configuration.AuthTokenProperties;
 import binarek.robio.auth.exception.JwtValidationException;
 import binarek.robio.auth.model.AccessTokenClaims;
 import binarek.robio.auth.model.RefreshTokenClaims;
+import binarek.robio.auth.model.UserId;
 import binarek.robio.auth.model.UserRole;
-import binarek.robio.auth.model.Username;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.UUID;
 
 @Service
 public class JwtService {
@@ -36,19 +37,31 @@ public class JwtService {
         this.accessJwtVerifier = createAccessJwtVerifier(tokenProperties);
     }
 
+    /**
+     * Creates JWT for refresh token from given claims.
+     *
+     * @param claims claims
+     * @return JWT
+     */
     public String createRefreshJwt(RefreshTokenClaims claims) {
         return JWT.create()
                 .withJWTId(claims.getTokenId().getValue().toString())
-                .withSubject(claims.getSubject().getValue())
+                .withSubject(claims.getSubject().getValue().toString())
                 .withExpiresAt(Date.from(claims.getExpiredAt()))
                 .withIssuer(issuer)
                 .withIssuedAt(Date.from(claims.getIssuedAt()))
                 .sign(algorithm);
     }
 
+    /**
+     * Creates JWT for access token from given claims.
+     *
+     * @param claims claims
+     * @return JWT
+     */
     public String createAccessJwt(AccessTokenClaims claims) {
         return JWT.create()
-                .withSubject(claims.getSubject().getValue())
+                .withSubject(claims.getSubject().getValue().toString())
                 .withExpiresAt(Date.from(claims.getExpiredAt()))
                 .withIssuer(issuer)
                 .withIssuedAt(Date.from(claims.getIssuedAt()))
@@ -56,6 +69,12 @@ public class JwtService {
                 .sign(algorithm);
     }
 
+    /**
+     * Validates and parses JWT of access token.
+     *
+     * @param jwt access token JWT
+     * @return access token claims
+     */
     public AccessTokenClaims validateAndParseAccessJwtClaims(String jwt) {
         final var decodedJwt = decodeJwt(jwt);
         validateDecodedAccessJwt(decodedJwt);
@@ -68,6 +87,11 @@ public class JwtService {
                 .build();
     }
 
+    /**
+     * Returns current instant that is compatible with the way of verifying JWT time claims (like expired at).
+     *
+     * @return current instant, compatible with JWT verification
+     */
     public Instant getNow() {
         return new Date().toInstant();  // For compatibility with JWT library, which internally uses `new Date()`
     }
@@ -97,12 +121,15 @@ public class JwtService {
         }
     }
 
-    private static Username getAndValidateSubject(DecodedJWT decodedJwt) {
+    private static UserId getAndValidateSubject(DecodedJWT decodedJwt) {
         final var subject = decodedJwt.getSubject();
-        if (!Username.isValidUsername(subject)) {
+        UUID subjectUuid;
+        try {
+            subjectUuid = UUID.fromString(subject);
+        } catch (IllegalArgumentException e) {
             throw new JwtValidationException("Token contains invalid subject " + subject);
         }
-        return Username.of(subject);
+        return UserId.of(subjectUuid);
     }
 
     private static UserRole getAndValidateRole(DecodedJWT decodedJwt) {

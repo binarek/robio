@@ -42,23 +42,13 @@ public class AuthMapper {
     }
 
     @Nullable
-    public HumanUsername toHumanUsername(@Nullable String value) {
-        return mapNullSafe(value, HumanUsername::of);
+    public Username toUsername(@Nullable String value) {
+        return mapNullSafe(value, Username::of);
     }
 
     @Nullable
-    public String toValue(@Nullable HumanUsername username) {
-        return mapNullSafe(username, HumanUsername::getValue);
-    }
-
-    @Nullable
-    public SpecialUsername toSpecialUsername(@Nullable String value) {
-        return mapNullSafe(value, SpecialUsername::of);
-    }
-
-    @Nullable
-    public String toValue(@Nullable SpecialUsername username) {
-        return mapNullSafe(username, SpecialUsername::getValue);
+    public String toValue(@Nullable Username username) {
+        return mapNullSafe(username, Username::getValue);
     }
 
     @Nullable

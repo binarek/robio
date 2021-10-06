@@ -1,34 +1,51 @@
 package binarek.robio.auth.model;
 
+import binarek.robio.util.codegen.AbstractSingleValue;
 import org.apache.commons.validator.routines.EmailValidator;
+import org.immutables.value.Value;
+import org.springframework.util.Assert;
 
-import java.util.Arrays;
+@Value.Immutable
+@Value.Style(visibility = Value.Style.ImplementationVisibility.PACKAGE)
+public abstract class Username extends AbstractSingleValue<String> {
 
-public interface Username {
+    private static final String DEFAULT_ADMIN_USERNAME_VALUE = "admin";
 
-    String getValue();
+    public static final Username DEFAULT_ADMIN_USERNAME = Username.of(DEFAULT_ADMIN_USERNAME_VALUE);
 
-    static Username of(String usernameValue) {
-        if (isSpecialUsername(usernameValue)) {
-            return SpecialUsername.of(usernameValue);
-        } else if (isHumanUsername(usernameValue)) {
-            return HumanUsername.of(usernameValue);
-        } else {
-            throw new IllegalArgumentException("Cannot create username for value: " + usernameValue);
-        }
+    Username() {
     }
 
-    static boolean isValidUsername(String usernameValue) {
-        return isSpecialUsername(usernameValue) || isHumanUsername(usernameValue);
+    @Override
+    @Value.Parameter
+    public abstract String getValue();
+
+    public final boolean isSpecial() {
+        return isSpecialUsername(getValue());
     }
 
-    static boolean isSpecialUsername(String usernameValue) {
-        return Arrays.stream(SpecialUsername.values())
-                .map(SpecialUsername::getValue)
-                .anyMatch(usernameValue::equals);
+    public final boolean isEmail() {
+        return isEmailUsername(getValue());
     }
 
-    static boolean isHumanUsername(String usernameValue) {
+    @Value.Check
+    protected void validate() {
+        Assert.state(isValidUsername(getValue()), () -> getValue() + " is not valid username");
+    }
+
+    public static Username of(String value) {
+        return ImmutableUsername.of(value);
+    }
+
+    public static boolean isValidUsername(String usernameValue) {
+        return isSpecialUsername(usernameValue) || isEmailUsername(usernameValue);
+    }
+
+    private static boolean isSpecialUsername(String usernameValue) {
+        return DEFAULT_ADMIN_USERNAME_VALUE.equals(usernameValue);
+    }
+
+    private static boolean isEmailUsername(String usernameValue) {
         return EmailValidator.getInstance().isValid(usernameValue);
     }
 }
