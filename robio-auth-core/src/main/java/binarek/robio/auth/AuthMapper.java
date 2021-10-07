@@ -62,6 +62,16 @@ public class AuthMapper {
     }
 
     @Nullable
+    public RefreshTokenId toRefreshTokenId(@Nullable UUID value) {
+        return mapNullSafe(value, RefreshTokenId::of);
+    }
+
+    @Nullable
+    public UUID toValue(@Nullable RefreshTokenId id) {
+        return mapNullSafe(id, RefreshTokenId::getValue);
+    }
+
+    @Nullable
     public UserId toUserId(@Nullable UUID value) {
         return mapNullSafe(value, UserId::of);
     }

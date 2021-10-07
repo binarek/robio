@@ -3,6 +3,7 @@ package binarek.robio.auth.adapter.persistence;
 import binarek.robio.auth.UserRepository;
 import binarek.robio.auth.adapter.persistence.configuration.AuthBeanNames;
 import binarek.robio.auth.model.User;
+import binarek.robio.auth.model.UserId;
 import binarek.robio.auth.model.Username;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -34,6 +35,13 @@ public class UserRepositoryImpl implements UserRepository {
                 .onConflict(AUTH_USER.USERNAME)
                 .doNothing()
                 .execute();
+    }
+
+    @Override
+    public Optional<User> getByUserId(UserId userId) {
+        return dsl.selectFrom(AUTH_USER)
+                .where(AUTH_USER.USER_ID.eq(userId.getValue()))
+                .fetchOptional(mapper::toUser);
     }
 
     @Override

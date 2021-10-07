@@ -14,14 +14,14 @@ import java.io.IOException;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-public class AccessTokenFilter extends OncePerRequestFilter {
+public class TokenFilter extends OncePerRequestFilter {
 
     private static final String AUTH_HEADER_SCHEME_PREFIX = "Bearer ";
     private static final int AUTH_HEADER_SCHEME_PREFIX_LENGTH = 7;  // "Bearer ".length()
 
     private final AuthAppService authAppService;
 
-    public AccessTokenFilter(AuthAppService authAppService) {
+    public TokenFilter(AuthAppService authAppService) {
         this.authAppService = authAppService;
     }
 
@@ -31,8 +31,8 @@ public class AccessTokenFilter extends OncePerRequestFilter {
         try {
             final var jwt = readJwt(request);
             if (jwt != null) {
-                final var accessToken = authAppService.validateAndParseAccessJwt(jwt);
-                final var authentication = new TokenAuthentication(accessToken, request);
+                final var token = authAppService.validateAndParseJwt(jwt);
+                final var authentication = new TokenAuthentication(token, request);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (JwtValidationException e) {

@@ -29,7 +29,15 @@ class AuthController {
     @Operation(security = @SecurityRequirement(name = "basicAuth"))
     @Valid
     TokensDto login(Authentication authentication) {
-        final var tokens = authAppService.generateTokens(authentication);
+        final var tokens = authAppService.generateTokens(authentication.getPrincipal());
+        return authDtoMapper.toTokensDto(tokens);
+    }
+
+    @PostMapping("/tokens")
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
+    @Valid
+    TokensDto getNewAccessToken(Authentication authentication) {
+        final var tokens = authAppService.generateTokens(authentication.getPrincipal());
         return authDtoMapper.toTokensDto(tokens);
     }
 }

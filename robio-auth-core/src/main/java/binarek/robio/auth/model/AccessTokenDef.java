@@ -1,6 +1,6 @@
 package binarek.robio.auth.model;
 
-import binarek.robio.auth.view.AccessTokenView;
+import binarek.robio.auth.view.TokenView;
 import binarek.robio.util.codegen.ValueDefStyle;
 import org.immutables.value.Value;
 import org.springframework.security.core.GrantedAuthority;
@@ -8,11 +8,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Collection;
 import java.util.Set;
-import java.util.UUID;
 
 @Value.Immutable
 @ValueDefStyle
-abstract class AccessTokenDef implements AccessTokenView {
+abstract class AccessTokenDef implements TokenView {
 
     @Override
     @Value.Parameter
@@ -20,11 +19,6 @@ abstract class AccessTokenDef implements AccessTokenView {
 
     @Value.Parameter
     public abstract AccessTokenClaims getClaims();
-
-    @Override
-    public final UUID getSubject() {
-        return getClaims().getSubject().getValue();
-    }
 
     @Override
     public final Collection<? extends GrantedAuthority> getAuthorities() {

@@ -1,7 +1,9 @@
 package binarek.robio.auth;
 
 import binarek.robio.auth.configuration.AuthTokenProperties;
+import binarek.robio.auth.exception.JwtValidationException;
 import binarek.robio.auth.model.*;
+import binarek.robio.auth.view.TokenView;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -25,16 +27,19 @@ public class TokenFactory {
         return TokensPair.of(refreshToken, accessToken);
     }
 
-    public AccessToken createValidAccessTokenFromJwt(String jwt) {
-        final var claims = jwtService.validateAndParseAccessJwtClaims(jwt);
-        return AccessToken.of(jwt, claims);
+    public TokenView createValidTokenFromJwt(String jwt) {
+        try {
+            return AccessToken.of(jwt, jwtService.validateAndParseAccessJwtClaims(jwt));
+        } catch (JwtValidationException e) {
+            return RefreshToken.of(jwt, jwtService.validateAndParseRefreshJwtClaims(jwt));
+        }
     }
 
     private RefreshToken createRefreshToken(User user) {
         final var now = jwtService.getNow();
         final var claims = RefreshTokenClaims.builder()
                 .tokenId(RefreshTokenId.of(UUID.randomUUID()))
-                .subject(user.getUserId())
+                .userId(user.getUserId())
                 .issuedAt(now)
                 .expiredAt(resolveExpiredAtForRefreshToken(now))
                 .build();
@@ -43,7 +48,7 @@ public class TokenFactory {
 
     private AccessToken createAccessToken(RefreshTokenClaims refreshTokenClaims, User user) {
         final var claims = AccessTokenClaims.builder()
-                .subject(refreshTokenClaims.getSubject())
+                .userId(refreshTokenClaims.getUserId())
                 .issuedAt(refreshTokenClaims.getIssuedAt())
                 .expiredAt(resolveExpiredAtForAccessToken(refreshTokenClaims.getIssuedAt()))
                 .role(user.getRole())

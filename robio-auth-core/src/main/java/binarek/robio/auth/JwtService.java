@@ -2,10 +2,7 @@ package binarek.robio.auth;
 
 import binarek.robio.auth.configuration.AuthTokenProperties;
 import binarek.robio.auth.exception.JwtValidationException;
-import binarek.robio.auth.model.AccessTokenClaims;
-import binarek.robio.auth.model.RefreshTokenClaims;
-import binarek.robio.auth.model.UserId;
-import binarek.robio.auth.model.UserRole;
+import binarek.robio.auth.model.*;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -25,15 +22,18 @@ public class JwtService {
 
     private static final String ROLE_CLAIM = "role";
     private static final String SUBJECT_CLAIM = PublicClaims.SUBJECT;
+    private static final String JWT_ID_CLAIM = PublicClaims.JWT_ID;
 
     @Nullable
     private final String issuer;
     private final Algorithm algorithm;
+    private final JWTVerifier refreshJwtVerifier;
     private final JWTVerifier accessJwtVerifier;
 
     public JwtService(AuthTokenProperties tokenProperties) {
         this.issuer = tokenProperties.getIssuer();
         this.algorithm = Algorithm.HMAC256(tokenProperties.getKeySecret());
+        this.refreshJwtVerifier = createRefreshJwtVerifier(tokenProperties);
         this.accessJwtVerifier = createAccessJwtVerifier(tokenProperties);
     }
 
@@ -46,7 +46,7 @@ public class JwtService {
     public String createRefreshJwt(RefreshTokenClaims claims) {
         return JWT.create()
                 .withJWTId(claims.getTokenId().getValue().toString())
-                .withSubject(claims.getSubject().getValue().toString())
+                .withSubject(claims.getUserId().getValue().toString())
                 .withExpiresAt(Date.from(claims.getExpiredAt()))
                 .withIssuer(issuer)
                 .withIssuedAt(Date.from(claims.getIssuedAt()))
@@ -61,12 +61,30 @@ public class JwtService {
      */
     public String createAccessJwt(AccessTokenClaims claims) {
         return JWT.create()
-                .withSubject(claims.getSubject().getValue().toString())
+                .withSubject(claims.getUserId().getValue().toString())
                 .withExpiresAt(Date.from(claims.getExpiredAt()))
                 .withIssuer(issuer)
                 .withIssuedAt(Date.from(claims.getIssuedAt()))
                 .withClaim(ROLE_CLAIM, claims.getRole().name())
                 .sign(algorithm);
+    }
+
+    /**
+     * Validates and parses JWT of refresh token.
+     *
+     * @param jwt refresh token JWT
+     * @return refresh token claims
+     */
+    public RefreshTokenClaims validateAndParseRefreshJwtClaims(String jwt) {
+        final var decodedJwt = decodeJwt(jwt);
+        validateDecodedRefreshJwt(decodedJwt);
+
+        return RefreshTokenClaims.builder()
+                .tokenId(getAndValidateJwtId(decodedJwt))
+                .userId(getAndValidateSubject(decodedJwt))
+                .issuedAt(decodedJwt.getIssuedAt().toInstant())
+                .expiredAt(decodedJwt.getExpiresAt().toInstant())
+                .build();
     }
 
     /**
@@ -80,7 +98,7 @@ public class JwtService {
         validateDecodedAccessJwt(decodedJwt);
 
         return AccessTokenClaims.builder()
-                .subject(getAndValidateSubject(decodedJwt))
+                .userId(getAndValidateSubject(decodedJwt))
                 .issuedAt(decodedJwt.getIssuedAt().toInstant())
                 .expiredAt(decodedJwt.getExpiresAt().toInstant())
                 .role(getAndValidateRole(decodedJwt))
@@ -94,6 +112,15 @@ public class JwtService {
      */
     public Instant getNow() {
         return new Date().toInstant();  // For compatibility with JWT library, which internally uses `new Date()`
+    }
+
+    private JWTVerifier createRefreshJwtVerifier(AuthTokenProperties tokenProperties) {
+        return JWT.require(algorithm)
+                .acceptLeeway(2)
+                .withIssuer(tokenProperties.getIssuer())
+                .withClaimPresence(JWT_ID_CLAIM)
+                .withClaimPresence(SUBJECT_CLAIM)
+                .build();
     }
 
     private JWTVerifier createAccessJwtVerifier(AuthTokenProperties tokenProperties) {
@@ -113,12 +140,32 @@ public class JwtService {
         }
     }
 
+    private void validateDecodedRefreshJwt(DecodedJWT decodedJwt) {
+        try {
+            refreshJwtVerifier.verify(decodedJwt);
+        } catch (JWTVerificationException e) {
+            throw new JwtValidationException(e.getMessage());
+        }
+    }
+
+
     private void validateDecodedAccessJwt(DecodedJWT decodedJwt) {
         try {
             accessJwtVerifier.verify(decodedJwt);
         } catch (JWTVerificationException e) {
             throw new JwtValidationException(e.getMessage());
         }
+    }
+
+    private static RefreshTokenId getAndValidateJwtId(DecodedJWT decodedJwt) {
+        final var id = decodedJwt.getId();
+        UUID idUuid;
+        try {
+            idUuid = UUID.fromString(id);
+        } catch (IllegalArgumentException e) {
+            throw new JwtValidationException("Token contains invalid JWT  id " + id);
+        }
+        return RefreshTokenId.of(idUuid);
     }
 
     private static UserId getAndValidateSubject(DecodedJWT decodedJwt) {

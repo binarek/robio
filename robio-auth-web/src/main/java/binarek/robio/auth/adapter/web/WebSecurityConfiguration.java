@@ -20,14 +20,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        final var accessTokenFilter = new AccessTokenFilter(authAppService);
+        final var accessTokenFilter = new TokenFilter(authAppService);
         // @formatter:off
         http
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
                 .authorizeRequests()
-                    .antMatchers("/auth/**").permitAll()
                     .antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                     .anyRequest().authenticated()
             .and()
