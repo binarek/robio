@@ -9,6 +9,10 @@ import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+
 import static binarek.robio.auth.adapter.persistence.db.tables.RefreshTokenWhitelist.REFRESH_TOKEN_WHITELIST;
 
 @Repository
@@ -45,6 +49,14 @@ public class RefreshTokenWhitelistRepositoryImpl implements RefreshTokenWhitelis
     public void removeAllByUserId(UserId userId) {
         dsl.deleteFrom(REFRESH_TOKEN_WHITELIST)
                 .where(REFRESH_TOKEN_WHITELIST.USER_ID.eq(userId.getValue()))
+                .execute();
+    }
+
+    @Override
+    public void removeByExpireAtBefore(Instant instant) {
+        final LocalDateTime dateTime = instant.atZone(ZoneOffset.UTC).toLocalDateTime();
+        dsl.deleteFrom(REFRESH_TOKEN_WHITELIST)
+                .where(REFRESH_TOKEN_WHITELIST.EXPIRED_AT.lt(dateTime))
                 .execute();
     }
 }

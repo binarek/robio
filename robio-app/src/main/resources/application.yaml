@@ -10,13 +10,16 @@ springdoc:
 robio:
   auth:
     core:
+      scheduler:
+        remove-expired-refresh-tokens:
+          cron: 0 0 0 * * *
       token:
         key-secret: PV)GbnDpdDQ^uM3
         issuer: http://localhost:8080/auth
         refresh:
           validity-duration: 3d
         access:
-          validity- duration: 15m
+          validity-duration: 15m
     persistence:
       schema: auth
       flyway:
