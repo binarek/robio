@@ -29,3 +29,5 @@ robio:
       schema: ftl
       flyway:
         enabled: true
+  shared:
+    timezone: Europe/Warsaw
