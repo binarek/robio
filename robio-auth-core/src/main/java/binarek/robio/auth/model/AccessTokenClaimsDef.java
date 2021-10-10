@@ -9,15 +9,11 @@ import java.time.Instant;
 @ValueDefStyle
 abstract class AccessTokenClaimsDef {
 
-    @Value.Parameter
     public abstract UserId getUserId();
 
-    @Value.Parameter
     public abstract Instant getIssuedAt();
 
-    @Value.Parameter
     public abstract Instant getExpiredAt();
 
-    @Value.Parameter
     public abstract UserRole getRole();
 }

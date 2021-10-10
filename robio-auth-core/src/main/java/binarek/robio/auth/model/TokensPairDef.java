@@ -1,11 +1,11 @@
 package binarek.robio.auth.model;
 
 import binarek.robio.auth.view.TokensPairView;
-import binarek.robio.util.codegen.ValueDefStyle;
+import binarek.robio.util.codegen.ValueWithoutBuilderDefStyle;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@ValueDefStyle
+@ValueWithoutBuilderDefStyle
 abstract class TokensPairDef implements TokensPairView {
 
     @Override

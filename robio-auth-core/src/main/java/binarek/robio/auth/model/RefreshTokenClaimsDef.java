@@ -9,16 +9,12 @@ import java.time.Instant;
 @ValueDefStyle
 abstract class RefreshTokenClaimsDef {
 
-    @Value.Parameter
     public abstract RefreshTokenId getTokenId();
 
-    @Value.Parameter
     public abstract UserId getUserId();
 
-    @Value.Parameter
     public abstract Instant getIssuedAt();
 
-    @Value.Parameter
     public abstract Instant getExpiredAt();
 
 }

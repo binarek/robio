@@ -1,11 +1,13 @@
 package binarek.robio.shared;
 
 import binarek.robio.shared.configuration.SharedProperties;
+import binarek.robio.shared.model.BusinessDateTime;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Component
 public class DateTimeProvider {
@@ -16,15 +18,15 @@ public class DateTimeProvider {
         this.businessZoneId = sharedProperties.getTimezone();
     }
 
-    public ZonedDateTime currentZonedDateTime() {
-        return ZonedDateTime.now(businessZoneId);
+    public ZoneId getBusinessZoneId() {
+        return businessZoneId;
+    }
+
+    public BusinessDateTime currentBusinessDateTime() {
+        return BusinessDateTime.of(ZonedDateTime.now(businessZoneId).truncatedTo(ChronoUnit.SECONDS));
     }
 
     public Instant currentInstant() {
         return Instant.now();
-    }
-
-    public ZoneId getBusinessZoneId() {
-        return businessZoneId;
     }
 }

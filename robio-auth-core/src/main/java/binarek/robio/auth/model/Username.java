@@ -5,6 +5,8 @@ import org.apache.commons.validator.routines.EmailValidator;
 import org.immutables.value.Value;
 import org.springframework.util.Assert;
 
+import static binarek.robio.util.StringUtil.isTrimmed;
+
 @Value.Immutable
 @Value.Style(visibility = Value.Style.ImplementationVisibility.PACKAGE)
 public abstract class Username extends AbstractSingleValue<String> {
@@ -29,8 +31,14 @@ public abstract class Username extends AbstractSingleValue<String> {
     }
 
     @Value.Check
-    protected void validate() {
-        Assert.state(isValidUsername(getValue()), () -> getValue() + " is not valid username");
+    protected Username normalizeAndValidate() {
+        final var username = getValue();
+        if (!isTrimmed(username)) {
+            return ImmutableUsername.of(username.trim());
+        } else {
+            Assert.state(isValidUsername(getValue()), () -> getValue() + " is not valid username");
+            return this;
+        }
     }
 
     public static Username of(String value) {

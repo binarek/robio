@@ -35,7 +35,7 @@ class CompetitionAppServiceImpl implements CompetitionAppService {
     @Transactional
     public void initializeCompetition(InitializeCompetitionCommand command) {
         competitionService.validateIfCanInitializeCompetition(command.getCompetitionId());
-        var competition = Competition.initialize(command.getCompetitionId(), command.getRules(), dateTimeProvider.currentZonedDateTime());
+        var competition = Competition.initialize(command.getCompetitionId(), command.getRules(), dateTimeProvider.currentBusinessDateTime());
         competitionRepository.save(competition);
     }
 
@@ -48,7 +48,7 @@ class CompetitionAppServiceImpl implements CompetitionAppService {
                 .orElseThrow(() -> CompetitionNotFoundException.of(competitionId));
 
         competitionService.validateIfCanStartCompetition(competition);
-        competition = competition.start(dateTimeProvider.currentZonedDateTime());
+        competition = competition.start(dateTimeProvider.currentBusinessDateTime());
         competitionRepository.save(competition);
     }
 

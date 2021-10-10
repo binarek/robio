@@ -6,6 +6,8 @@ import org.apache.commons.validator.routines.EmailValidator;
 import org.immutables.value.Value;
 import org.springframework.util.Assert;
 
+import static binarek.robio.util.StringUtil.isTrimmed;
+
 @Value.Immutable
 @ValueDefStyle
 abstract class EmailDef extends AbstractSingleValue<String> {
@@ -15,7 +17,13 @@ abstract class EmailDef extends AbstractSingleValue<String> {
     public abstract String getValue();
 
     @Value.Check
-    protected void validate() {
-        Assert.state(EmailValidator.getInstance().isValid(getValue()), "Invalid email format");
+    protected EmailDef normalizeAndValidate() {
+        final var email = getValue();
+        if (!isTrimmed(email)) {
+            return Email.of(email.trim());
+        } else {
+            Assert.state(EmailValidator.getInstance().isValid(email), "Invalid email format");
+            return this;
+        }
     }
 }

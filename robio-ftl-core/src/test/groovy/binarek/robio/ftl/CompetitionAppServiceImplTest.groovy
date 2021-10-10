@@ -12,7 +12,7 @@ class CompetitionAppServiceImplTest extends Specification implements Competition
     def competitionRepository = Mock(CompetitionRepository)
     def competitionService = Mock(CompetitionService)
     def dateTimeProvider = Stub(DateTimeProvider) {
-        currentZonedDateTime() >> DATE_TIME
+        currentBusinessDateTime() >> DATE_TIME
     }
 
     @Subject

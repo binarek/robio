@@ -2,10 +2,9 @@ package binarek.robio.ftl.view;
 
 import binarek.robio.ftl.model.CompetitionRules;
 import binarek.robio.ftl.model.CompetitionState;
+import binarek.robio.shared.model.BusinessDateTime;
 import binarek.robio.shared.model.CompetitionId;
 import org.springframework.lang.Nullable;
-
-import java.time.ZonedDateTime;
 
 public interface CompetitionView {
 
@@ -15,11 +14,11 @@ public interface CompetitionView {
 
     CompetitionState getState();
 
-    ZonedDateTime getInitializeDateTime();
+    BusinessDateTime getInitializeDateTime();
 
     @Nullable
-    ZonedDateTime getStartDateTime();
+    BusinessDateTime getStartDateTime();
 
     @Nullable
-    ZonedDateTime getFinishDateTime();
+    BusinessDateTime getFinishDateTime();
 }

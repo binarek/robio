@@ -5,6 +5,8 @@ import binarek.robio.util.codegen.ValueDefStyle;
 import org.immutables.value.Value;
 import org.springframework.util.Assert;
 
+import static binarek.robio.util.StringUtil.isTrimmed;
+
 @Value.Immutable
 @ValueDefStyle
 abstract class LastNameDef extends AbstractSingleValue<String> {
@@ -14,11 +16,15 @@ abstract class LastNameDef extends AbstractSingleValue<String> {
     public abstract String getValue();
 
     @Value.Check
-    protected void validate() {
+    protected LastNameDef normalizeAndValidate() {
         final var name = getValue();
-        Assert.state(name.length() == name.trim().length(), "Last name needs to be trimmed");
-        Assert.state(name.length() >= 2, "Last name must have at least 2 characters length");
-        Assert.state(name.matches("^\\S*$"), "Last name cannot contain any whitespace");
-        Assert.state(name.matches("^[^0-9!@#$%^&*()\\-_=+\\[\\]{};:'\",<.>/?]*$"), "Last name contains invalid character");
+        if (!isTrimmed(name)) {
+            return LastName.of(name.trim());
+        } else {
+            Assert.state(name.length() >= 2, "Last name must have at least 2 characters length");
+            Assert.state(name.matches("^[\\S ]+$"), "Last name cannot contain any whitespace except space");
+            Assert.state(name.matches("^[^0-9!@#$%^&*()_=+\\[\\]{};:\",<.>/?]*$"), "Last name contains invalid character");
+            return this;
+        }
     }
 }

@@ -4,12 +4,23 @@ import binarek.robio.shared.model.*;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 import static binarek.robio.util.MapperUtil.mapNullSafe;
 
 @Component
 public class SharedMapper {
+
+    @Nullable
+    public BusinessDateTime toBusinessDateTime(@Nullable ZonedDateTime value) {
+        return mapNullSafe(value, BusinessDateTime::of);
+    }
+
+    @Nullable
+    public ZonedDateTime toValue(@Nullable BusinessDateTime dateTime) {
+        return mapNullSafe(dateTime, BusinessDateTime::getValue);
+    }
 
     @Nullable
     public CompetitionId toCompetitionId(@Nullable UUID value) {

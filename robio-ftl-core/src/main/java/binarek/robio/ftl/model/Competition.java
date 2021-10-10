@@ -3,12 +3,11 @@ package binarek.robio.ftl.model;
 import binarek.robio.ftl.validation.RunAddValidation;
 import binarek.robio.ftl.validation.RunAddValidationError;
 import binarek.robio.ftl.view.CompetitionView;
+import binarek.robio.shared.model.BusinessDateTime;
 import binarek.robio.shared.model.CompetitionId;
 import binarek.robio.util.codegen.BaseStyle;
 import org.immutables.value.Value;
 import org.springframework.lang.Nullable;
-
-import java.time.ZonedDateTime;
 
 import static binarek.robio.ftl.validation.RunAddValidationCode.COMPETITION_FINISHED;
 import static binarek.robio.ftl.validation.RunAddValidationCode.COMPETITION_NOT_STARTED;
@@ -29,13 +28,13 @@ public abstract class Competition implements CompetitionView {
 
     public abstract CompetitionState getState();
 
-    public abstract ZonedDateTime getInitializeDateTime();
+    public abstract BusinessDateTime getInitializeDateTime();
 
     @Nullable
-    public abstract ZonedDateTime getStartDateTime();
+    public abstract BusinessDateTime getStartDateTime();
 
     @Nullable
-    public abstract ZonedDateTime getFinishDateTime();
+    public abstract BusinessDateTime getFinishDateTime();
 
     public final boolean wasStarted() {
         return getState() != CompetitionState.INITIALIZED;
@@ -52,7 +51,7 @@ public abstract class Competition implements CompetitionView {
         }
     }
 
-    public final Competition start(ZonedDateTime startDateTime) {
+    public final Competition start(BusinessDateTime startDateTime) {
         return ImmutableCompetition.builder()
                 .from(this)
                 .state(CompetitionState.STARTED)
@@ -60,7 +59,8 @@ public abstract class Competition implements CompetitionView {
                 .build();
     }
 
-    public static Competition initialize(CompetitionId competitionId, @Nullable CompetitionRules rules, ZonedDateTime initializeDateTime) {
+    public static Competition initialize(CompetitionId competitionId, @Nullable CompetitionRules rules,
+                                         BusinessDateTime initializeDateTime) {
         return ImmutableCompetition.builder()
                 .competitionId(competitionId)
                 .rules(rulesOrDefault(rules))
