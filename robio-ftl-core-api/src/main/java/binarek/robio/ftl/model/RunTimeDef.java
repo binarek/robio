@@ -2,8 +2,8 @@ package binarek.robio.ftl.model;
 
 import binarek.robio.util.codegen.AbstractSingleValue;
 import binarek.robio.util.codegen.ValueDefStyle;
+import org.apache.commons.lang3.Validate;
 import org.immutables.value.Value;
-import org.springframework.util.Assert;
 
 @Value.Immutable
 @ValueDefStyle
@@ -15,6 +15,6 @@ abstract class RunTimeDef extends AbstractSingleValue<Long> {
 
     @Value.Check
     protected void validate() {
-        Assert.state(getValue() >= 0, "Time needs to be positive");
+        Validate.isTrue(getValue() >= 0, "Time needs to be positive");
     }
 }

@@ -2,9 +2,9 @@ package binarek.robio.auth.model;
 
 import binarek.robio.shared.model.CompetitorId;
 import binarek.robio.util.codegen.BaseStyle;
+import org.apache.commons.lang3.Validate;
 import org.immutables.value.Value;
 import org.springframework.lang.Nullable;
-import org.springframework.util.Assert;
 
 @Value.Immutable
 @BaseStyle
@@ -42,7 +42,7 @@ public abstract class User {
     @Value.Check
     protected void validate() {
         if (Username.DEFAULT_ADMIN_USERNAME.equals(getUsername())) {
-            Assert.state(getRole() == UserRole.ADMIN, "Default admin must have ADMIN role");
+            Validate.isTrue(getRole() == UserRole.ADMIN, "Default admin must have ADMIN role");
         }
     }
 

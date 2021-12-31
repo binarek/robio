@@ -1,9 +1,9 @@
 package binarek.robio.auth.model;
 
 import binarek.robio.util.codegen.AbstractSingleValue;
+import org.apache.commons.lang3.Validate;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.immutables.value.Value;
-import org.springframework.util.Assert;
 
 import static binarek.robio.util.StringUtil.isTrimmed;
 
@@ -36,7 +36,7 @@ public abstract class Username extends AbstractSingleValue<String> {
         if (!isTrimmed(username)) {
             return ImmutableUsername.of(username.trim());
         } else {
-            Assert.state(isValidUsername(getValue()), () -> getValue() + " is not valid username");
+            Validate.isTrue(isValidUsername(getValue()), "%s is not valid username", getValue());
             return this;
         }
     }
