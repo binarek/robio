@@ -1,4 +1,4 @@
-package binarek.robio.auth.adapter.web;
+package binarek.robio.auth.adapter.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;

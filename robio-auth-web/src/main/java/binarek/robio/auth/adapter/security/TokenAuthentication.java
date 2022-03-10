@@ -1,6 +1,6 @@
-package binarek.robio.auth.adapter.web;
+package binarek.robio.auth.adapter.security;
 
-import binarek.robio.auth.view.TokenView;
+import binarek.robio.auth.model.Token;
 import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -11,7 +11,7 @@ public class TokenAuthentication extends AbstractAuthenticationToken {
 
     private final Object principal;
 
-    public TokenAuthentication(TokenView token, HttpServletRequest request) {
+    public TokenAuthentication(Token token, HttpServletRequest request) {
         super(token.getAuthorities());
         this.principal = token;
         setAuthenticated(true);

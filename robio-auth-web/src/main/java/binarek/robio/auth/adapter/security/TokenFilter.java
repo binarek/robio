@@ -1,4 +1,4 @@
-package binarek.robio.auth.adapter.web;
+package binarek.robio.auth.adapter.security;
 
 import binarek.robio.auth.AuthAppService;
 import binarek.robio.auth.exception.JwtValidationException;
@@ -17,7 +17,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 public class TokenFilter extends OncePerRequestFilter {
 
     private static final String AUTH_HEADER_SCHEME_PREFIX = "Bearer ";
-    private static final int AUTH_HEADER_SCHEME_PREFIX_LENGTH = 7;  // "Bearer ".length()
+    private static final int AUTH_HEADER_SCHEME_PREFIX_LENGTH = AUTH_HEADER_SCHEME_PREFIX.length();
 
     private final AuthAppService authAppService;
 

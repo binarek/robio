@@ -1,7 +1,7 @@
 package binarek.robio.auth;
 
-import binarek.robio.auth.view.TokenView;
-import binarek.robio.auth.view.TokensPairView;
+import binarek.robio.auth.model.Token;
+import binarek.robio.auth.model.TokensPair;
 
 public interface AuthAppService {
 
@@ -13,7 +13,7 @@ public interface AuthAppService {
      * @param authenticationPrincipal authentication principal - user details or refresh token
      * @return access token and refresh token
      */
-    TokensPairView generateTokens(Object authenticationPrincipal);
+    TokensPair generateTokens(Object authenticationPrincipal);
 
     /**
      * Validates given JWT and parse it to token object. It may be refresh or access token.
@@ -21,5 +21,5 @@ public interface AuthAppService {
      * @param jwt refresh or access JWT
      * @return refresh or access token
      */
-    TokenView validateAndParseJwt(String jwt);
+    Token validateAndParseJwt(String jwt);
 }

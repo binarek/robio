@@ -1,10 +1,10 @@
-package binarek.robio.auth.view;
+package binarek.robio.auth.model;
 
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 
-public interface TokenView {
+public interface Token {
 
     String getJwt();
 

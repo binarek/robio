@@ -1,4 +1,4 @@
-package binarek.robio.auth.adapter.web;
+package binarek.robio.auth.adapter.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;

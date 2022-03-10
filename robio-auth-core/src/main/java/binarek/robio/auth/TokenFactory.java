@@ -3,7 +3,7 @@ package binarek.robio.auth;
 import binarek.robio.auth.configuration.AuthTokenProperties;
 import binarek.robio.auth.exception.JwtValidationException;
 import binarek.robio.auth.model.*;
-import binarek.robio.auth.view.TokenView;
+import binarek.robio.auth.model.Token;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -27,7 +27,7 @@ public class TokenFactory {
         return TokensPair.of(refreshToken, accessToken);
     }
 
-    public TokenView createValidTokenFromJwt(String jwt) {
+    public Token createValidTokenFromJwt(String jwt) {
         try {
             return AccessToken.of(jwt, jwtService.validateAndParseAccessJwtClaims(jwt));
         } catch (JwtValidationException e) {

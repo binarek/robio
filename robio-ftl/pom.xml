@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>binarek.robio</groupId>
-            <artifactId>robio-ftl-core-api</artifactId>
+            <artifactId>robio-ftl-api</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>

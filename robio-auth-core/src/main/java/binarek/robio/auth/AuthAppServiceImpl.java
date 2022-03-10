@@ -3,7 +3,7 @@ package binarek.robio.auth;
 import binarek.robio.auth.model.AccessToken;
 import binarek.robio.auth.model.RefreshToken;
 import binarek.robio.auth.model.TokensPair;
-import binarek.robio.auth.view.TokenView;
+import binarek.robio.auth.model.Token;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
@@ -40,7 +40,7 @@ class AuthAppServiceImpl implements AuthAppService {
     }
 
     @Override
-    public TokenView validateAndParseJwt(String jwt) {
+    public Token validateAndParseJwt(String jwt) {
         return tokenFactory.createValidTokenFromJwt(jwt);
     }
 

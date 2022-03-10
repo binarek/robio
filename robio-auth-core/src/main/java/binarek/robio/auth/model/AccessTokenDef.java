@@ -1,6 +1,5 @@
 package binarek.robio.auth.model;
 
-import binarek.robio.auth.view.TokenView;
 import binarek.robio.util.codegen.ValueDefStyle;
 import org.immutables.value.Value;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,7 +10,7 @@ import java.util.Set;
 
 @Value.Immutable
 @ValueDefStyle
-abstract class AccessTokenDef implements TokenView {
+abstract class AccessTokenDef implements Token {
 
     @Override
     @Value.Parameter
