@@ -31,9 +31,12 @@ public class TokenFilter extends OncePerRequestFilter {
         try {
             final var jwt = readJwt(request);
             if (jwt != null) {
-                final var token = authAppService.validateAndParseJwt(jwt);
+                final var token = authAppService.parseJwtToValidToken(jwt);
                 final var authentication = new TokenAuthentication(token, request);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                final var securityContext = SecurityContextHolder.createEmptyContext();
+                securityContext.setAuthentication(authentication);
+                SecurityContextHolder.setContext(securityContext);
             }
         } catch (JwtValidationException e) {
             logger.debug(e.getLocalizedMessage(), e);

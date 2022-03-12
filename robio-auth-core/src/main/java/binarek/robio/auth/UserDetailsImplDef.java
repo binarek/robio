@@ -1,5 +1,6 @@
 package binarek.robio.auth;
 
+import binarek.robio.auth.model.Authorities;
 import binarek.robio.auth.model.User;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.immutables.value.Value;
@@ -26,7 +27,9 @@ abstract class UserDetailsImplDef implements UserDetails {
     @Override
     @Value.Derived
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Set.of(new SimpleGrantedAuthority(getUser().getRole().getSpringRole()));
+        return Set.of(
+                new SimpleGrantedAuthority(Authorities.getForRole(getUser().getRole())),
+                new SimpleGrantedAuthority(Authorities.GENERATE_TOKENS));
     }
 
     @Override

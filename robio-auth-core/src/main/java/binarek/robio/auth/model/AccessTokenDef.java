@@ -20,7 +20,12 @@ abstract class AccessTokenDef implements Token {
     public abstract AccessTokenClaims getClaims();
 
     @Override
+    public final UserId getUserId() {
+        return getClaims().getUserId();
+    }
+
+    @Override
     public final Collection<? extends GrantedAuthority> getAuthorities() {
-        return Set.of(new SimpleGrantedAuthority(getClaims().getRole().getSpringRole()));
+        return Set.of(new SimpleGrantedAuthority(Authorities.getForRole(getClaims().getRole())));
     }
 }

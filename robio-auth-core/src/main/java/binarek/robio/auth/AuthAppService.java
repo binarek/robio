@@ -2,18 +2,16 @@ package binarek.robio.auth;
 
 import binarek.robio.auth.model.Token;
 import binarek.robio.auth.model.TokensPair;
+import org.springframework.security.authentication.BadCredentialsException;
 
 public interface AuthAppService {
 
     /**
-     * Generates new access and refresh token from given principal.
-     * Principal may be user details in case of first token pair or refresh token if generating next tokens.
-     * It should be retrieved from current Spring Authentication object.
+     * Generates new access and refresh token.
      *
-     * @param authenticationPrincipal authentication principal - user details or refresh token
      * @return access token and refresh token
      */
-    TokensPair generateTokens(Object authenticationPrincipal);
+    TokensPair generateTokens();
 
     /**
      * Validates given JWT and parse it to token object. It may be refresh or access token.
@@ -21,5 +19,14 @@ public interface AuthAppService {
      * @param jwt refresh or access JWT
      * @return refresh or access token
      */
-    Token validateAndParseJwt(String jwt);
+    Token parseJwtToValidToken(String jwt);
+
+    /**
+     * Checks if given token credentials are valid.
+     * Note that method is not idempotent - it can change state of credentials.
+     *
+     * @param credentials token credentials
+     * @throws BadCredentialsException if credentials are invalid
+     */
+    void validateTokenCredentials(Token credentials);
 }
