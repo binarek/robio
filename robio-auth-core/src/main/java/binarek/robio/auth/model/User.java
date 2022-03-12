@@ -39,59 +39,12 @@ public abstract class User {
     @Nullable
     public abstract CompetitorId getCompetitorId();
 
-    @Value.Check
-    protected void validate() {
-        if (Username.DEFAULT_ADMIN_USERNAME.equals(getUsername())) {
-            Validate.isTrue(getRole() == UserRole.ADMIN, "Default admin must have ADMIN role");
-        }
-    }
-
-    public static User newDefaultAdminUser(UserId userId, HashedPassword hashedPassword) {
+    public static User newUser(UserId userId, Username username, HashedPassword hashedPassword, UserRole role) {
         return ImmutableUser.builder()
                 .userId(userId)
-                .username(Username.DEFAULT_ADMIN_USERNAME)
+                .username(username)
                 .hashedPassword(hashedPassword)
-                .role(UserRole.ADMIN)
-                .build();
-    }
-
-    public static User newAdmin(UserId userId, Email email, HashedPassword hashedPassword,
-                                FirstName firstName, LastName lastName) {
-        return ImmutableUser.builder()
-                .userId(userId)
-                .username(Username.of(email.getValue()))
-                .email(email)
-                .hashedPassword(hashedPassword)
-                .role(UserRole.ADMIN)
-                .firstName(firstName)
-                .lastName(lastName)
-                .build();
-    }
-
-    public static User newCompetitor(UserId userId, Email email, HashedPassword hashedPassword,
-                                     FirstName firstName, LastName lastName, CompetitorId competitorId) {
-        return ImmutableUser.builder()
-                .userId(userId)
-                .username(Username.of(email.getValue()))
-                .email(email)
-                .hashedPassword(hashedPassword)
-                .role(UserRole.COMPETITOR)
-                .firstName(firstName)
-                .lastName(lastName)
-                .competitorId(competitorId)
-                .build();
-    }
-
-    public static User newOrganizer(UserId userId, Email email, HashedPassword hashedPassword,
-                                    FirstName firstName, LastName lastName) {
-        return ImmutableUser.builder()
-                .userId(userId)
-                .username(Username.of(email.getValue()))
-                .email(email)
-                .hashedPassword(hashedPassword)
-                .role(UserRole.ORGANIZER)
-                .firstName(firstName)
-                .lastName(lastName)
+                .role(role)
                 .build();
     }
 }

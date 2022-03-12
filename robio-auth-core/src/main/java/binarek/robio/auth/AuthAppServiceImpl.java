@@ -1,6 +1,7 @@
 package binarek.robio.auth;
 
 import binarek.robio.auth.model.*;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,9 +31,9 @@ class AuthAppServiceImpl implements AuthAppService {
     @Override
     @PreAuthorize("hasAuthority('" + GENERATE_TOKENS + "')")
     public TokensPair generateTokens() {
-        final var user = retrieveUser();
+        final var userIdAndRole = retrieveUserIdAndRole();
 
-        final var tokens = tokenFactory.generateNewTokensForUser(user);
+        final var tokens = tokenFactory.generateNewTokensForUser(userIdAndRole.getLeft(), userIdAndRole.getRight());
         refreshTokenWhitelistRepository.add(tokens.getRefreshToken());
         return tokens;
     }
@@ -51,14 +52,18 @@ class AuthAppServiceImpl implements AuthAppService {
         }
     }
 
-    private User retrieveUser() {
+    private Pair<UserId, UserRole> retrieveUserIdAndRole() {
         final var principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (principal instanceof UserDetailsImpl userDetails) {
-            return userDetails.getUser();
+            final var user = userDetails.getUser();
+            return Pair.of(user.getUserId(), user.getRole());
+
         } else if (principal instanceof UserId userId) {
-            return userRepository.getByUserId(userId)
+            final var role = userRepository.getRoleByUserId(userId)
                     .orElseThrow(() -> new IllegalStateException("Cannot find user with id " + userId));
+            return Pair.of(userId, role);
+
         } else {
             throw new IllegalArgumentException("Cannot handle principal of type " + principal.getClass());
         }

@@ -4,6 +4,7 @@ import binarek.robio.auth.UserRepository;
 import binarek.robio.auth.adapter.persistence.configuration.AuthBeanNames;
 import binarek.robio.auth.model.User;
 import binarek.robio.auth.model.UserId;
+import binarek.robio.auth.model.UserRole;
 import binarek.robio.auth.model.Username;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,22 +27,16 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void saveIfNotExistByUsername(User user) {
+    public void save(User user) {
         final var record = dsl.newRecord(AUTH_USER);
         mapper.update(record, user);
 
         dsl.insertInto(AUTH_USER)
                 .set(record)
-                .onConflict(AUTH_USER.USERNAME)
-                .doNothing()
+                .onConflict(AUTH_USER.USER_ID)
+                .doUpdate()
+                .set(record)
                 .execute();
-    }
-
-    @Override
-    public Optional<User> getByUserId(UserId userId) {
-        return dsl.selectFrom(AUTH_USER)
-                .where(AUTH_USER.USER_ID.eq(userId.getValue()))
-                .fetchOptional(mapper::toUser);
     }
 
     @Override
@@ -49,5 +44,13 @@ public class UserRepositoryImpl implements UserRepository {
         return dsl.selectFrom(AUTH_USER)
                 .where(AUTH_USER.USERNAME.eq(username.getValue()))
                 .fetchOptional(mapper::toUser);
+    }
+
+    @Override
+    public Optional<UserRole> getRoleByUserId(UserId userId) {
+        return dsl.select(AUTH_USER.ROLE)
+                .from(AUTH_USER)
+                .where(AUTH_USER.USER_ID.eq(userId.getValue()))
+                .fetchOptional(record -> UserRole.valueOf(record.value1()));
     }
 }

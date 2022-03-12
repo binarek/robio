@@ -2,15 +2,16 @@ package binarek.robio.auth;
 
 import binarek.robio.auth.model.User;
 import binarek.robio.auth.model.UserId;
+import binarek.robio.auth.model.UserRole;
 import binarek.robio.auth.model.Username;
 
 import java.util.Optional;
 
 public interface UserRepository {
 
-    void saveIfNotExistByUsername(User user);
-
-    Optional<User> getByUserId(UserId userId);
+    void save(User user);
 
     Optional<User> getByUsername(Username username);
+
+    Optional<UserRole> getRoleByUserId(UserId userId);
 }

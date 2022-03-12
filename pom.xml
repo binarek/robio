@@ -18,6 +18,7 @@
 
     <modules>
         <module>robio-app</module>
+        <module>robio-app-initializer</module>
         <module>robio-auth-core</module>
         <module>robio-auth-persistence</module>
         <module>robio-auth-web</module>

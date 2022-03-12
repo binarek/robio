@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 @Service
 class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final UserService userService;
+    private final UserRepository userRepository;
 
-    UserDetailsServiceImpl(UserService userService) {
-        this.userService = userService;
+    UserDetailsServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -23,7 +23,7 @@ class UserDetailsServiceImpl implements UserDetailsService {
 
     private User getUser(String username) {
         if (Username.isValidUsername(username)) {
-            return userService.getUser(Username.of(username))
+            return userRepository.getByUsername(Username.of(username))
                     .orElseThrow(() -> buildUsernameException(username));
         } else {
             throw buildUsernameException(username);

@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:postgresql:robio-app
+    username: robio
+    password: robio
+    driverClassName: org.postgresql.Driver
+  main:
+    web-application-type: none
+    banner-mode: off
+robio:
+  auth:
+    core:
+      token:
+        key-secret: not_used
