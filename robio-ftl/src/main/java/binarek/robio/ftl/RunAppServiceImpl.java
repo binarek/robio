@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static binarek.robio.shared.SecurityExpressions.IS_ADMIN_OR_ORGANIZER;
 import static org.apache.commons.lang3.ObjectUtils.firstNonNull;
 
 @Service
@@ -29,7 +30,7 @@ class RunAppServiceImpl implements RunAppService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_ORGANIZER')")
+    @PreAuthorize(IS_ADMIN_OR_ORGANIZER)
     @Transactional
     public Integer addRun(AddRunCommand command) {
         final var competitionId = command.getCompetitionId();
@@ -44,7 +45,7 @@ class RunAppServiceImpl implements RunAppService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_ORGANIZER')")
+    @PreAuthorize(IS_ADMIN_OR_ORGANIZER)
     @Retryable(EntityHasChangedException.class)
     public void editRunResult(EditRunResultCommand command) {
         var run = getRun(command.getCompetitionId(), command.getRobotId(), command.getNumber());
@@ -57,7 +58,7 @@ class RunAppServiceImpl implements RunAppService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_ORGANIZER')")
+    @PreAuthorize(IS_ADMIN_OR_ORGANIZER)
     public RunView getRun(RunQuery query) {
         return getRun(query.getCompetitionId(), query.getRobotId(), query.getNumber());
     }

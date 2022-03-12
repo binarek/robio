@@ -15,6 +15,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static binarek.robio.shared.SecurityExpressions.IS_ADMIN;
+import static binarek.robio.shared.SecurityExpressions.IS_ADMIN_OR_ORGANIZER;
+
 @Service
 class CompetitionAppServiceImpl implements CompetitionAppService {
 
@@ -31,7 +34,7 @@ class CompetitionAppServiceImpl implements CompetitionAppService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize(IS_ADMIN)
     @Transactional
     public void initializeCompetition(InitializeCompetitionCommand command) {
         competitionService.validateIfCanInitializeCompetition(command.getCompetitionId());
@@ -40,7 +43,7 @@ class CompetitionAppServiceImpl implements CompetitionAppService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize(IS_ADMIN)
     @Retryable(EntityHasChangedException.class)
     public void startCompetition(StartCompetitionCommand command) {
         final var competitionId = command.getCompetitionId();
@@ -53,7 +56,7 @@ class CompetitionAppServiceImpl implements CompetitionAppService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize(IS_ADMIN)
     @Retryable(EntityHasChangedException.class)
     public void changeCompetitionRules(ChangeCompetitionRulesCommand command) {
         var competition = getCompetition(command.getCompetitionId())
@@ -62,7 +65,7 @@ class CompetitionAppServiceImpl implements CompetitionAppService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_ORGANIZER')")
+    @PreAuthorize(IS_ADMIN_OR_ORGANIZER)
     public CompetitionView getCompetition(CompetitionByIdQuery query) {
         return getCompetition(query.getCompetitionId());
     }
