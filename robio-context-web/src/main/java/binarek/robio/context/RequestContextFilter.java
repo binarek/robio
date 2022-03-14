@@ -33,7 +33,7 @@ public class RequestContextFilter extends OncePerRequestFilter {
     }
 
     private RequestContext createRequestContext() {
-        return new RequestContext(getUser());
+        return RequestContext.of(getUser());
     }
 
     private User getUser() {

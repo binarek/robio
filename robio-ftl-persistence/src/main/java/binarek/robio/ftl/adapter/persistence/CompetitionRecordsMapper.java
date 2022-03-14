@@ -14,6 +14,10 @@ import org.mapstruct.MappingTarget;
 abstract class CompetitionRecordsMapper {
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "modifiedAt", ignore = true)
+    @Mapping(target = "modifiedBy", ignore = true)
     abstract void update(@MappingTarget CompetitionRecord record, Competition competition);
 
     abstract ImmutableCompetition toCompetition(CompetitionRecord competitionRecord);

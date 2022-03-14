@@ -1,5 +1,6 @@
 package binarek.robio.ftl.adapter.persistence.configuration;
 
+import binarek.robio.ftl.adapter.persistence.FtlRecordListener;
 import org.flywaydb.core.Flyway;
 import org.jooq.ConnectionProvider;
 import org.jooq.DSLContext;
@@ -11,6 +12,7 @@ import org.jooq.conf.Settings;
 import org.jooq.impl.DataSourceConnectionProvider;
 import org.jooq.impl.DefaultConfiguration;
 import org.jooq.impl.DefaultExecuteListenerProvider;
+import org.jooq.impl.DefaultRecordListenerProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -56,7 +58,9 @@ class FtlPersistenceConfiguration {
     }
 
     @Bean(name = FtlBeanNames.DSL_CONTEXT)
-    DSLContext ftlDSLContext(ConnectionProvider connectionProvider, FtlPersistenceProperties properties) {
+    DSLContext ftlDSLContext(ConnectionProvider connectionProvider,
+                             FtlPersistenceProperties properties,
+                             FtlRecordListener ftlRecordListener) {
         var config = new DefaultConfiguration();
         config.set(connectionProvider);
         config.set(SQLDialect.POSTGRES);
@@ -67,6 +71,7 @@ class FtlPersistenceConfiguration {
                 .withRenderQuotedNames(RenderQuotedNames.NEVER)
                 .withExecuteWithOptimisticLocking(true));
         config.set(new DefaultExecuteListenerProvider(new JooqExceptionTranslator()));
+        config.set(new DefaultRecordListenerProvider(ftlRecordListener));
         return config.dsl();
     }
 }

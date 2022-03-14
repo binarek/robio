@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.util.Objects;
 
 @Component
-class RequestContextHolder implements RequestContextProvider {
+public class RequestContextHolder implements RequestContextProvider {
 
     private static final ThreadLocal<RequestContext> REQUEST_CONTEXT_HOLDER = new ThreadLocal<>();
 
