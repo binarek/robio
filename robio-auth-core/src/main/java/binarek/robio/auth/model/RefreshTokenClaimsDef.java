@@ -11,7 +11,7 @@ abstract class RefreshTokenClaimsDef {
 
     public abstract RefreshTokenId getTokenId();
 
-    public abstract UserId getUserId();
+    public abstract Username getUsername();
 
     public abstract Instant getIssuedAt();
 

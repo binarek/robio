@@ -1,14 +1,16 @@
 package binarek.robio;
 
 import binarek.robio.auth.UserRepository;
-import binarek.robio.auth.model.*;
+import binarek.robio.auth.model.HashedPassword;
+import binarek.robio.auth.model.User;
+import binarek.robio.auth.model.UserRole;
+import binarek.robio.auth.model.Username;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.io.Console;
-import java.util.UUID;
 
 @SpringBootApplication
 public class RobioInitializerApplication implements CommandLineRunner {
@@ -56,12 +58,9 @@ public class RobioInitializerApplication implements CommandLineRunner {
         console.printf("Setting password for " + username + " user...\n");
 
         final var adminUsername = Username.of(username);
-        final var adminUserId = userRepository.getByUsername(adminUsername)
-                .map(User::getUserId)
-                .orElseGet(() -> UserId.of(UUID.randomUUID()));
         final var adminPassword = HashedPassword.of(passwordEncoder.encode(String.valueOf(password)));
 
-        final var adminUser = User.newUser(adminUserId, adminUsername, adminPassword, UserRole.ADMIN);
+        final var adminUser = User.newUser(adminUsername, adminPassword, UserRole.ADMIN);
 
         userRepository.save(adminUser);
     }

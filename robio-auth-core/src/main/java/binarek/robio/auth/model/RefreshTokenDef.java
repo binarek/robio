@@ -20,8 +20,8 @@ abstract class RefreshTokenDef implements Token {
     public abstract RefreshTokenClaims getClaims();
 
     @Override
-    public final UserId getUserId() {
-        return getClaims().getUserId();
+    public final Username getUsername() {
+        return getClaims().getUsername();
     }
 
     @Override

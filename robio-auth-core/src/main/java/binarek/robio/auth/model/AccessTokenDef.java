@@ -20,8 +20,8 @@ abstract class AccessTokenDef implements Token {
     public abstract AccessTokenClaims getClaims();
 
     @Override
-    public final UserId getUserId() {
-        return getClaims().getUserId();
+    public final Username getUsername() {
+        return getClaims().getUsername();
     }
 
     @Override

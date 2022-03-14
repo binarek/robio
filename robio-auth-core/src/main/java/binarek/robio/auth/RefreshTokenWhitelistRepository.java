@@ -2,7 +2,7 @@ package binarek.robio.auth;
 
 import binarek.robio.auth.model.RefreshToken;
 import binarek.robio.auth.model.RefreshTokenId;
-import binarek.robio.auth.model.UserId;
+import binarek.robio.auth.model.Username;
 
 import java.time.Instant;
 
@@ -12,7 +12,7 @@ public interface RefreshTokenWhitelistRepository {
 
     boolean removeByTokenId(RefreshTokenId refreshTokenId);
 
-    void removeAllByUserId(UserId userId);
+    void removeAllByUsername(Username username);
 
     void removeByExpireAtBefore(Instant dateTime);
 }

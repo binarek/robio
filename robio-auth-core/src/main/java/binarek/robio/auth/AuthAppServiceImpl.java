@@ -31,9 +31,9 @@ class AuthAppServiceImpl implements AuthAppService {
     @Override
     @PreAuthorize("hasAuthority('" + GENERATE_TOKENS + "')")
     public TokensPair generateTokens() {
-        final var userIdAndRole = retrieveUserIdAndRole();
+        final var usernameAndRole = retrieveUsernameAndRole();
 
-        final var tokens = tokenFactory.generateNewTokensForUser(userIdAndRole.getLeft(), userIdAndRole.getRight());
+        final var tokens = tokenFactory.generateNewTokensForUser(usernameAndRole.getLeft(), usernameAndRole.getRight());
         refreshTokenWhitelistRepository.add(tokens.getRefreshToken());
         return tokens;
     }
@@ -52,17 +52,17 @@ class AuthAppServiceImpl implements AuthAppService {
         }
     }
 
-    private Pair<UserId, UserRole> retrieveUserIdAndRole() {
+    private Pair<Username, UserRole> retrieveUsernameAndRole() {
         final var principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (principal instanceof UserDetailsImpl userDetails) {
             final var user = userDetails.getUser();
-            return Pair.of(user.getUserId(), user.getRole());
+            return Pair.of(user.getUsername(), user.getRole());
 
-        } else if (principal instanceof UserId userId) {
-            final var role = userRepository.getRoleByUserId(userId)
-                    .orElseThrow(() -> new IllegalStateException("Cannot find user with id " + userId));
-            return Pair.of(userId, role);
+        } else if (principal instanceof Username username) {
+            final var role = userRepository.getRoleByUsername(username)
+                    .orElseThrow(() -> new IllegalStateException("Cannot find user with username " + username));
+            return Pair.of(username, role);
 
         } else {
             throw new IllegalArgumentException("Cannot handle principal of type " + principal.getClass());
@@ -72,9 +72,9 @@ class AuthAppServiceImpl implements AuthAppService {
     private void validateRefreshTokenCredentials(RefreshToken refreshToken) {
         final boolean tokenDeletedFromWhitelist = refreshTokenWhitelistRepository.removeByTokenId(refreshToken.getClaims().getTokenId());
         if (!tokenDeletedFromWhitelist) {
-            final var userId = refreshToken.getUserId();
-            logger.warn("Suspicious request for user id {} - refresh token is not in whitelist. Removing all user tokens.", userId);
-            refreshTokenWhitelistRepository.removeAllByUserId(userId);
+            final var username = refreshToken.getUsername();
+            logger.warn("Suspicious request for username {} - refresh token is not in whitelist. Removing all user tokens.", username);
+            refreshTokenWhitelistRepository.removeAllByUsername(username);
             throw new BadCredentialsException("Refresh token is missing in whitelist");
         }
     }

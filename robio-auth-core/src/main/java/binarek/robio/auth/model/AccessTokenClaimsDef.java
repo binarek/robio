@@ -9,7 +9,7 @@ import java.time.Instant;
 @ValueDefStyle
 abstract class AccessTokenClaimsDef {
 
-    public abstract UserId getUserId();
+    public abstract Username getUsername();
 
     public abstract Instant getIssuedAt();
 

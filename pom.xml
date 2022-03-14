@@ -22,6 +22,7 @@
         <module>robio-auth-core</module>
         <module>robio-auth-persistence</module>
         <module>robio-auth-web</module>
+        <module>robio-context-web</module>
         <module>robio-ftl</module>
         <module>robio-ftl-api</module>
         <module>robio-ftl-persistence</module>

@@ -2,7 +2,6 @@ package binarek.robio.auth.model;
 
 import binarek.robio.shared.model.CompetitorId;
 import binarek.robio.util.codegen.BaseStyle;
-import org.apache.commons.lang3.Validate;
 import org.immutables.value.Value;
 import org.springframework.lang.Nullable;
 
@@ -12,8 +11,6 @@ public abstract class User {
 
     User() {
     }
-
-    public abstract UserId getUserId();
 
     public abstract Username getUsername();
 
@@ -39,9 +36,8 @@ public abstract class User {
     @Nullable
     public abstract CompetitorId getCompetitorId();
 
-    public static User newUser(UserId userId, Username username, HashedPassword hashedPassword, UserRole role) {
+    public static User newUser(Username username, HashedPassword hashedPassword, UserRole role) {
         return ImmutableUser.builder()
-                .userId(userId)
                 .username(username)
                 .hashedPassword(hashedPassword)
                 .role(role)

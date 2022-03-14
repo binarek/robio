@@ -3,7 +3,6 @@ package binarek.robio.auth.adapter.persistence;
 import binarek.robio.auth.UserRepository;
 import binarek.robio.auth.adapter.persistence.configuration.AuthBeanNames;
 import binarek.robio.auth.model.User;
-import binarek.robio.auth.model.UserId;
 import binarek.robio.auth.model.UserRole;
 import binarek.robio.auth.model.Username;
 import org.jooq.DSLContext;
@@ -33,7 +32,7 @@ public class UserRepositoryImpl implements UserRepository {
 
         dsl.insertInto(AUTH_USER)
                 .set(record)
-                .onConflict(AUTH_USER.USER_ID)
+                .onConflict(AUTH_USER.USERNAME)
                 .doUpdate()
                 .set(record)
                 .execute();
@@ -47,10 +46,10 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<UserRole> getRoleByUserId(UserId userId) {
+    public Optional<UserRole> getRoleByUsername(Username username) {
         return dsl.select(AUTH_USER.ROLE)
                 .from(AUTH_USER)
-                .where(AUTH_USER.USER_ID.eq(userId.getValue()))
+                .where(AUTH_USER.USERNAME.eq(username.getValue()))
                 .fetchOptional(record -> UserRole.valueOf(record.value1()));
     }
 }

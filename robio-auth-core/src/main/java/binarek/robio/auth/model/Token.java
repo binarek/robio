@@ -8,7 +8,7 @@ public interface Token {
 
     String getJwt();
 
-    UserId getUserId();
+    Username getUsername();
 
     Collection<? extends GrantedAuthority> getAuthorities();
 }

@@ -46,7 +46,7 @@ public class JwtService {
     public String createRefreshJwt(RefreshTokenClaims claims) {
         return JWT.create()
                 .withJWTId(claims.getTokenId().getValue().toString())
-                .withSubject(claims.getUserId().getValue().toString())
+                .withSubject(claims.getUsername().getValue().toString())
                 .withExpiresAt(Date.from(claims.getExpiredAt()))
                 .withIssuer(issuer)
                 .withIssuedAt(Date.from(claims.getIssuedAt()))
@@ -61,7 +61,7 @@ public class JwtService {
      */
     public String createAccessJwt(AccessTokenClaims claims) {
         return JWT.create()
-                .withSubject(claims.getUserId().getValue().toString())
+                .withSubject(claims.getUsername().getValue().toString())
                 .withExpiresAt(Date.from(claims.getExpiredAt()))
                 .withIssuer(issuer)
                 .withIssuedAt(Date.from(claims.getIssuedAt()))
@@ -81,7 +81,7 @@ public class JwtService {
 
         return RefreshTokenClaims.builder()
                 .tokenId(getAndValidateJwtId(decodedJwt))
-                .userId(getAndValidateSubject(decodedJwt))
+                .username(getAndValidateSubject(decodedJwt))
                 .issuedAt(decodedJwt.getIssuedAt().toInstant())
                 .expiredAt(decodedJwt.getExpiresAt().toInstant())
                 .build();
@@ -98,7 +98,7 @@ public class JwtService {
         validateDecodedAccessJwt(decodedJwt);
 
         return AccessTokenClaims.builder()
-                .userId(getAndValidateSubject(decodedJwt))
+                .username(getAndValidateSubject(decodedJwt))
                 .issuedAt(decodedJwt.getIssuedAt().toInstant())
                 .expiredAt(decodedJwt.getExpiresAt().toInstant())
                 .role(getAndValidateRole(decodedJwt))
@@ -168,15 +168,8 @@ public class JwtService {
         return RefreshTokenId.of(idUuid);
     }
 
-    private static UserId getAndValidateSubject(DecodedJWT decodedJwt) {
-        final var subject = decodedJwt.getSubject();
-        UUID subjectUuid;
-        try {
-            subjectUuid = UUID.fromString(subject);
-        } catch (IllegalArgumentException e) {
-            throw new JwtValidationException("Token contains invalid subject " + subject);
-        }
-        return UserId.of(subjectUuid);
+    private static Username getAndValidateSubject(DecodedJWT decodedJwt) {
+        return Username.of(decodedJwt.getSubject());
     }
 
     private static UserRole getAndValidateRole(DecodedJWT decodedJwt) {

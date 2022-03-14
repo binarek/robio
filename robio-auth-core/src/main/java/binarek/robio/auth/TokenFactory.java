@@ -21,8 +21,8 @@ public class TokenFactory {
         this.jwtService = jwtService;
     }
 
-    public TokensPair generateNewTokensForUser(UserId userId, UserRole userRole) {
-        final var refreshToken = createRefreshToken(userId);
+    public TokensPair generateNewTokensForUser(Username username, UserRole userRole) {
+        final var refreshToken = createRefreshToken(username);
         final var accessToken = createAccessToken(refreshToken.getClaims(), userRole);
         return TokensPair.of(refreshToken, accessToken);
     }
@@ -35,11 +35,11 @@ public class TokenFactory {
         }
     }
 
-    private RefreshToken createRefreshToken(UserId userId) {
+    private RefreshToken createRefreshToken(Username username) {
         final var now = jwtService.getNow();
         final var claims = RefreshTokenClaims.builder()
                 .tokenId(RefreshTokenId.of(UUID.randomUUID()))
-                .userId(userId)
+                .username(username)
                 .issuedAt(now)
                 .expiredAt(resolveExpiredAtForRefreshToken(now))
                 .build();
@@ -48,7 +48,7 @@ public class TokenFactory {
 
     private AccessToken createAccessToken(RefreshTokenClaims refreshTokenClaims, UserRole userRole) {
         final var claims = AccessTokenClaims.builder()
-                .userId(refreshTokenClaims.getUserId())
+                .username(refreshTokenClaims.getUsername())
                 .issuedAt(refreshTokenClaims.getIssuedAt())
                 .expiredAt(resolveExpiredAtForAccessToken(refreshTokenClaims.getIssuedAt()))
                 .role(userRole)

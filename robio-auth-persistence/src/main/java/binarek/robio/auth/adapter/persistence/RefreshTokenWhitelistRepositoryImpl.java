@@ -4,7 +4,7 @@ import binarek.robio.auth.RefreshTokenWhitelistRepository;
 import binarek.robio.auth.adapter.persistence.configuration.AuthBeanNames;
 import binarek.robio.auth.model.RefreshToken;
 import binarek.robio.auth.model.RefreshTokenId;
-import binarek.robio.auth.model.UserId;
+import binarek.robio.auth.model.Username;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -46,9 +46,9 @@ public class RefreshTokenWhitelistRepositoryImpl implements RefreshTokenWhitelis
     }
 
     @Override
-    public void removeAllByUserId(UserId userId) {
+    public void removeAllByUsername(Username username) {
         dsl.deleteFrom(REFRESH_TOKEN_WHITELIST)
-                .where(REFRESH_TOKEN_WHITELIST.USER_ID.eq(userId.getValue()))
+                .where(REFRESH_TOKEN_WHITELIST.USERNAME.eq(username.getValue()))
                 .execute();
     }
 

@@ -20,7 +20,7 @@ import static binarek.robio.util.MapperUtil.mapNullSafe;
 interface RefreshTokenWhitelistRecordsMapper {
 
     @Mapping(target = "tokenId", source = "claims.tokenId")
-    @Mapping(target = "userId", source = "claims.userId")
+    @Mapping(target = "username", source = "claims.username")
     @Mapping(target = "expiredAt", source = "claims.expiredAt")
     void update(@MappingTarget RefreshTokenWhitelistRecord record, RefreshToken refreshToken);
 
