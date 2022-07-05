@@ -15,6 +15,13 @@ abstract class BusinessDateTimeDef extends AbstractSingleValue<ZonedDateTime> {
     @Override
     public abstract ZonedDateTime getValue();
 
+    public final BusinessDateTime plusDays(int days) {
+        if (days == 0) {
+            return (BusinessDateTime) this;
+        }
+        return BusinessDateTime.of(getValue().plusDays(days));
+    }
+
     @Value.Check
     protected BusinessDateTimeDef normalize() {
         if (getValue().getNano() == 0) {
