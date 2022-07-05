@@ -7,7 +7,8 @@ import org.immutables.value.Value;
         typeAbstract = "*Def",
         typeImmutable = "*",
         visibility = Value.Style.ImplementationVisibility.PACKAGE,
-        defaults = @Value.Immutable(copy = false)
+        defaults = @Value.Immutable(copy = false),
+        of = "ofCode"
 )
 interface RunAddValidationErrorImplDef extends RunAddValidationError {
 

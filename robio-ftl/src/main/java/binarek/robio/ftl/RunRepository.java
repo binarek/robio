@@ -4,6 +4,7 @@ import binarek.robio.ftl.model.Run;
 import binarek.robio.shared.model.CompetitionId;
 import binarek.robio.shared.model.RobotId;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface RunRepository {
@@ -15,4 +16,6 @@ public interface RunRepository {
     Optional<Run> getByCompetitionIdAndRobotIdAndNumber(CompetitionId competitionId, RobotId robotId, Integer number);
 
     Optional<Run> getByCompetitionIdAndRobotIdAndMaxNumber(CompetitionId competitionId, RobotId robotId);
+
+    List<Run> getByCompetitionId(CompetitionId competitionId);
 }

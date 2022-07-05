@@ -30,6 +30,10 @@ public abstract class Run implements RunView {
 
     public abstract RunTime getTime();
 
+    public final boolean isPassed() {
+        return getJudgement() == RunJudgement.PASSED;
+    }
+
     public static Run firstRun(CompetitionId competitionId, RobotId robotId, RunJudgement judgement, RunTime time) {
         return ImmutableRun.builder()
                 .competitionId(competitionId)

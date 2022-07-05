@@ -7,7 +7,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @ValueDefStyle
-abstract class RunTimeDef extends AbstractSingleValue<Long> {
+abstract class RunTimeDef extends AbstractSingleValue<Long> implements Comparable<RunTimeDef> {
 
     @Value.Parameter
     @Override
@@ -15,6 +15,11 @@ abstract class RunTimeDef extends AbstractSingleValue<Long> {
 
     @Value.Check
     protected void validate() {
-        Validate.isTrue(getValue() >= 0, "Time needs to be positive");
+        Validate.isTrue(getValue() > 0, "Time needs to be positive");
+    }
+
+    @Override
+    public int compareTo(RunTimeDef other) {
+        return getValue().compareTo(other.getValue());
     }
 }

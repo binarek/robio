@@ -81,7 +81,7 @@ public class CompetitionService {
 
     private CompetitionStartValidation canStartCompetitionValidation(Competition competition, Collection<Robot> robots) {
         final var minRobotsToStartCompetition = competition.getRules().getMinRobotsToStartCompetition();
-        final var robotsNumber = robots.stream().filter(Robot::canParticipateInCompetition).count();
+        final var robotsNumber = robots.stream().filter(Robot::participatesInCompetition).count();
 
         if (robotsNumber < minRobotsToStartCompetition) {
             return CompetitionStartValidation.error(NotEnoughRobotsToStartCompetitionValidationError.of(minRobotsToStartCompetition, robotsNumber));

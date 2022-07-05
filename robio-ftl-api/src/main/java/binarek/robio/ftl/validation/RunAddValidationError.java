@@ -4,7 +4,7 @@ import binarek.robio.shared.validation.BusinessValidationError;
 
 public interface RunAddValidationError extends BusinessValidationError<RunAddValidationCode> {
 
-    static RunAddValidationError defaultError(RunAddValidationCode code) {
-        return RunAddValidationErrorImpl.of(code);
+    static RunAddValidationError of(RunAddValidationCode code) {
+        return RunAddValidationErrorImpl.ofCode(code);
     }
 }

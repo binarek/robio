@@ -15,6 +15,7 @@ import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import static binarek.robio.ftl.adapter.persistence.db.tables.Run.RUN;
@@ -34,9 +35,9 @@ class RunRepositoryImpl implements RunRepository {
     @Override
     public void save(Run run) {
         dsl.fetchOptional(RUN,
-                RUN.COMPETITION_ID.eq(run.getCompetitionId().getValue()),
-                RUN.ROBOT_ID.eq(run.getRobotId().getValue()),
-                RUN.NUMBER.eq(run.getNumber()))
+                        RUN.COMPETITION_ID.eq(run.getCompetitionId().getValue()),
+                        RUN.ROBOT_ID.eq(run.getRobotId().getValue()),
+                        RUN.NUMBER.eq(run.getNumber()))
                 .ifPresentOrElse(
                         record -> update(record, run),
                         () -> insert(run));
@@ -63,6 +64,13 @@ class RunRepositoryImpl implements RunRepository {
                 .and(RUN.ROBOT_ID.eq(robotId.getValue()))
                 .and(RUN.NUMBER.eq(maxNumberQuery(competitionId, robotId)))
                 .fetchOptional(runRecordsMapper::toRun);
+    }
+
+    @Override
+    public List<Run> getByCompetitionId(CompetitionId competitionId) {
+        return dsl.selectFrom(RUN)
+                .where(RUN.COMPETITION_ID.eq(competitionId.getValue()))
+                .fetch(runRecordsMapper::toRun);
     }
 
     private Select<? extends Record1<Integer>> maxNumberQuery(CompetitionId competitionId, RobotId robotId) {

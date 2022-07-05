@@ -33,19 +33,16 @@ public abstract class Robot implements RobotView {
 
     public abstract RobotQualification getQualification();
 
-    public final boolean canParticipateInCompetition() {
+    public final boolean participatesInCompetition() {
         return getQualification() == RobotQualification.QUALIFIED;
     }
 
     public final RunAddValidation checkCanAddRun() {
-        switch (getQualification()) {
-            case PENDING:
-                return RunAddValidation.error(RunAddValidationError.defaultError(ROBOT_QUALIFICATION_PENDING));
-            case DISQUALIFIED:
-                return RunAddValidation.error(RunAddValidationError.defaultError(ROBOT_DISQUALIFIED));
-            default:
-                return RunAddValidation.success();
-        }
+        return switch (getQualification()) {
+            case PENDING -> RunAddValidation.error(RunAddValidationError.of(ROBOT_QUALIFICATION_PENDING));
+            case DISQUALIFIED -> RunAddValidation.error(RunAddValidationError.of(ROBOT_DISQUALIFIED));
+            default -> RunAddValidation.success();
+        };
     }
 
     public final CompetitionStartValidation checkIsReadyToStartCompetition() {

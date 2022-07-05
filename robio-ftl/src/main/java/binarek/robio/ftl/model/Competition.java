@@ -41,14 +41,11 @@ public abstract class Competition implements CompetitionView {
     }
 
     public final RunAddValidation checkCanAddRun() {
-        switch (getState()) {
-            case INITIALIZED:
-                return RunAddValidation.error(RunAddValidationError.defaultError(COMPETITION_NOT_STARTED));
-            case FINISHED:
-                return RunAddValidation.error(RunAddValidationError.defaultError(COMPETITION_FINISHED));
-            default:
-                return RunAddValidation.success();
-        }
+        return switch (getState()) {
+            case INITIALIZED -> RunAddValidation.error(RunAddValidationError.of(COMPETITION_NOT_STARTED));
+            case FINISHED -> RunAddValidation.error(RunAddValidationError.of(COMPETITION_FINISHED));
+            default -> RunAddValidation.success();
+        };
     }
 
     public final Competition start(BusinessDateTime startDateTime) {
