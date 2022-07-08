@@ -21,6 +21,7 @@ interface RunRecordsMapper {
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "modifiedAt", ignore = true)
     @Mapping(target = "modifiedBy", ignore = true)
+    @Mapping(target = "modifyProcess", ignore = true)
     void update(@MappingTarget RunRecord record, Run run);
 
     ImmutableRun toRun(RunRecord record);

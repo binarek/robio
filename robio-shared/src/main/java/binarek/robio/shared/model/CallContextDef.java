@@ -5,8 +5,14 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @ValueDefStyle
-interface RequestContextDef {
+interface CallContextDef {
 
     @Value.Parameter
     User getUser();
+
+    @Value.Parameter
+    String getProcessName();
+
+    @Value.Parameter
+    CorrelationId getCorrelationId();
 }

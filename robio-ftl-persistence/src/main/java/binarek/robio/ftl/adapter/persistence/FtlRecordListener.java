@@ -1,6 +1,6 @@
 package binarek.robio.ftl.adapter.persistence;
 
-import binarek.robio.shared.RequestContextProvider;
+import binarek.robio.shared.CallContextProvider;
 import org.jooq.Field;
 import org.jooq.Record;
 import org.jooq.RecordContext;
@@ -17,16 +17,18 @@ public class FtlRecordListener extends DefaultRecordListener {
     private static final Field<String> CREATED_BY = DSL.field(DSL.name("CREATED_BY"), String.class);
     private static final Field<OffsetDateTime> MODIFIED_AT = DSL.field(DSL.name("MODIFIED_AT"), OffsetDateTime.class);
     private static final Field<String> MODIFIED_BY = DSL.field(DSL.name("MODIFIED_BY"), String.class);
+    private static final Field<String> MODIFY_PROCESS = DSL.field(DSL.name("MODIFY_PROCESS"), String.class);
 
-    private final RequestContextProvider requestContextProvider;
+    private final CallContextProvider callContextProvider;
 
-    public FtlRecordListener(RequestContextProvider requestContextProvider) {
-        this.requestContextProvider = requestContextProvider;
+    public FtlRecordListener(CallContextProvider callContextProvider) {
+        this.callContextProvider = callContextProvider;
     }
 
     @Override
     public void insertStart(RecordContext ctx) {
-        final var username = requestContextProvider.getContext().getUser().getUsername();
+        final var username = callContextProvider.getContext().getUser().getUsername();
+        final var processName = callContextProvider.getContext().getProcessName();
         final var now = OffsetDateTime.now();
 
         final var record = ctx.record();
@@ -34,16 +36,19 @@ public class FtlRecordListener extends DefaultRecordListener {
         setCreatedBy(record, username);
         setModifiedAt(record, now);
         setModifiedBy(record, username);
+        setModifyProcess(record, processName);
     }
 
     @Override
     public void updateStart(RecordContext ctx) {
-        final var username = requestContextProvider.getContext().getUser().getUsername();
+        final var username = callContextProvider.getContext().getUser().getUsername();
+        final var processName = callContextProvider.getContext().getProcessName();
         final var now = OffsetDateTime.now();
 
         final var record = ctx.record();
         setModifiedAt(record, now);
         setModifiedBy(record, username);
+        setModifyProcess(record, processName);
     }
 
     private static void setCreatedAt(Record record, OffsetDateTime dateTime) {
@@ -60,5 +65,9 @@ public class FtlRecordListener extends DefaultRecordListener {
 
     private static void setModifiedBy(Record record, String username) {
         record.set(MODIFIED_BY, username);
+    }
+
+    private static void setModifyProcess(Record record, String processName) {
+        record.set(MODIFY_PROCESS, processName);
     }
 }

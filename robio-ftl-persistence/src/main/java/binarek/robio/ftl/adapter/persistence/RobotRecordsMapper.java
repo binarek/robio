@@ -17,6 +17,7 @@ interface RobotRecordsMapper {
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "modifiedAt", ignore = true)
     @Mapping(target = "modifiedBy", ignore = true)
+    @Mapping(target = "modifyProcess", ignore = true)
     void update(@MappingTarget RobotRecord record, Robot robot);
 
     ImmutableRobot toRobot(RobotRecord record);
