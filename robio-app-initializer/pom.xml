@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>binarek.robio</groupId>
-            <artifactId>robio-auth-core</artifactId>
+            <artifactId>robio-auth</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
