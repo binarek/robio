@@ -1,5 +1,6 @@
 package binarek.robio.ftl.model;
 
+import binarek.robio.ftl.view.ScoreView;
 import binarek.robio.shared.model.RobotId;
 import binarek.robio.util.codegen.BaseStyle;
 import org.apache.commons.lang3.Validate;
@@ -8,7 +9,7 @@ import org.springframework.lang.Nullable;
 
 @Value.Immutable
 @BaseStyle
-public abstract class Score {
+public abstract class Score implements ScoreView {
 
     Score() {
     }
@@ -22,7 +23,7 @@ public abstract class Score {
 
     @Nullable
     @Value.Parameter
-    public abstract RunTime getBestRunTime();
+    public abstract RunTime getBestTime();
 
     public static Score newEmptyScore(RobotId robotId) {
         return ImmutableScore.of(robotId, null, null);
@@ -39,6 +40,6 @@ public abstract class Score {
     }
 
     private boolean positionAndBestRuntimeDefinedOrNot() {
-        return (getPosition() != null && getBestRunTime() != null) || (getPosition() == null && getBestRunTime() == null);
+        return (getPosition() != null && getBestTime() != null) || (getPosition() == null && getBestTime() == null);
     }
 }

@@ -1,9 +1,12 @@
 package binarek.robio.ftl.adapter.rest.api;
 
 import binarek.robio.ftl.CompetitionAppService;
+import binarek.robio.ftl.ScoreboardAppService;
 import binarek.robio.ftl.adapter.rest.api.dto.CompetitionDto;
 import binarek.robio.ftl.adapter.rest.api.dto.CompetitionRulesDto;
 import binarek.robio.ftl.adapter.rest.api.dto.InitializeCompetitionCommandDto;
+import binarek.robio.ftl.adapter.rest.api.dto.ScoreboardDto;
+import binarek.robio.shared.model.CompetitionId;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +21,18 @@ import java.util.UUID;
 class FtlCompetitionController {
 
     private final CompetitionAppService competitionAppService;
+    private final ScoreboardAppService scoreboardAppService;
     private final FtlCompetitionDtoMapper competitionDtoMapper;
+    private final FtlScoreboardDtoMapper scoreboardDtoMapper;
 
     FtlCompetitionController(CompetitionAppService competitionAppService,
-                             FtlCompetitionDtoMapper competitionDtoMapper) {
+                             ScoreboardAppService scoreboardAppService,
+                             FtlCompetitionDtoMapper competitionDtoMapper,
+                             FtlScoreboardDtoMapper scoreboardDtoMapper) {
         this.competitionAppService = competitionAppService;
+        this.scoreboardAppService = scoreboardAppService;
         this.competitionDtoMapper = competitionDtoMapper;
+        this.scoreboardDtoMapper = scoreboardDtoMapper;
     }
 
     @PostMapping
@@ -43,6 +52,7 @@ class FtlCompetitionController {
     }
 
     @PutMapping("/{competitionId}/rules")
+    @Valid
     CompetitionRulesDto changeCompetitionRules(@PathVariable UUID competitionId, @RequestBody @Valid CompetitionRulesDto competitionRulesDto) {
         final var command = competitionDtoMapper.toChangeCompetitionRulesCommand(competitionId, competitionRulesDto);
         competitionAppService.changeCompetitionRules(command);
@@ -53,6 +63,12 @@ class FtlCompetitionController {
     @Valid
     CompetitionDto getCompetition(@PathVariable UUID competitionId) {
         return getCompetitionDto(competitionId);
+    }
+
+    @GetMapping("/{competitionId}/scoreboard")
+    @Valid
+    ScoreboardDto getScoreboard(@PathVariable UUID competitionId) {
+        return scoreboardDtoMapper.toScoreboardDto(scoreboardAppService.getScoreboard(CompetitionId.of(competitionId)));
     }
 
     private CompetitionDto getCompetitionDto(UUID competitionId) {
