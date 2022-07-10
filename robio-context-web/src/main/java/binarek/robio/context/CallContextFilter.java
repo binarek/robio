@@ -17,11 +17,11 @@ import java.io.IOException;
 public class CallContextFilter extends OncePerRequestFilter {
 
     private final CallContextHolder callContextHolder;
-    private final CorrelationIdUtil correlationIdUtil;
+    private final CorrelationIdFactory correlationIdFactory;
 
-    CallContextFilter(CallContextHolder callContextHolder, CorrelationIdUtil correlationIdUtil) {
+    CallContextFilter(CallContextHolder callContextHolder, CorrelationIdFactory correlationIdFactory) {
         this.callContextHolder = callContextHolder;
-        this.correlationIdUtil = correlationIdUtil;
+        this.correlationIdFactory = correlationIdFactory;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class CallContextFilter extends OncePerRequestFilter {
     }
 
     private CallContext createCallContext(HttpServletRequest request) {
-        return CallContext.of(getUser(), getProcessName(request), getOrGenerateCorrelationId(request));
+        return CallContext.of(getUser(), getProcessName(request), getCorrelationId(request));
     }
 
     private void setCallContext(CallContext callContext) {
@@ -57,8 +57,8 @@ public class CallContextFilter extends OncePerRequestFilter {
         return request.getServletPath();
     }
 
-    private CorrelationId getOrGenerateCorrelationId(HttpServletRequest request) {
-        return correlationIdUtil.getOrGenerate(request);
+    private CorrelationId getCorrelationId(HttpServletRequest request) {
+        return correlationIdFactory.create(request);
     }
 
     private User getUser() {

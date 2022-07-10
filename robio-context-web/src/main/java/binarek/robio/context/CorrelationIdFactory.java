@@ -10,15 +10,15 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Component
-public class CorrelationIdUtil {
+public class CorrelationIdFactory {
 
     private final List<CustomCorrelationIdGenerator> customCorrelationIdGenerators;
 
-    CorrelationIdUtil(List<CustomCorrelationIdGenerator> customCorrelationIdGenerators) {
+    CorrelationIdFactory(List<CustomCorrelationIdGenerator> customCorrelationIdGenerators) {
         this.customCorrelationIdGenerators = customCorrelationIdGenerators;
     }
 
-    public CorrelationId getOrGenerate(HttpServletRequest request) {
+    public CorrelationId create(HttpServletRequest request) {
         final var headerCorrelationId = request.getHeader(ContextHeaders.CORRELATION_ID);
         if (StringUtils.isNotBlank(headerCorrelationId)) {
             return CorrelationId.of(headerCorrelationId);
@@ -32,7 +32,7 @@ public class CorrelationIdUtil {
                 .map(generator -> generator.generate(request))
                 .filter(Objects::nonNull)
                 .findFirst()
-                .orElseGet(CorrelationIdUtil::generateDefault);
+                .orElseGet(CorrelationIdFactory::generateDefault);
     }
 
     private static CorrelationId generateDefault() {
