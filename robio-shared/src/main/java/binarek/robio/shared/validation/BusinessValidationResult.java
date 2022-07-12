@@ -1,7 +1,14 @@
 package binarek.robio.shared.validation;
 
-public enum BusinessValidationResult {
+import org.apache.commons.collections4.CollectionUtils;
 
-    VALIDATION_SUCCESS,
-    VALIDATION_ERROR,
+import java.util.Collection;
+
+public interface BusinessValidationResult<T extends BusinessValidationError<?>> {
+
+    Collection<T> getErrors();
+
+    default boolean isError() {
+        return CollectionUtils.isNotEmpty(getErrors());
+    }
 }

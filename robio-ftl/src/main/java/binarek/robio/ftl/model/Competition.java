@@ -1,6 +1,6 @@
 package binarek.robio.ftl.model;
 
-import binarek.robio.ftl.validation.RunAddValidation;
+import binarek.robio.ftl.validation.RunAddValidationResult;
 import binarek.robio.ftl.validation.RunAddValidationError;
 import binarek.robio.ftl.view.CompetitionView;
 import binarek.robio.shared.model.BusinessDateTime;
@@ -40,11 +40,11 @@ public abstract class Competition implements CompetitionView {
         return getState() != CompetitionState.INITIALIZED;
     }
 
-    public final RunAddValidation checkCanAddRun() {
+    public final RunAddValidationResult checkCanAddRun() {
         return switch (getState()) {
-            case INITIALIZED -> RunAddValidation.error(RunAddValidationError.of(COMPETITION_NOT_STARTED));
-            case FINISHED -> RunAddValidation.error(RunAddValidationError.of(COMPETITION_FINISHED));
-            default -> RunAddValidation.success();
+            case INITIALIZED -> RunAddValidationResult.error(RunAddValidationError.of(COMPETITION_NOT_STARTED));
+            case FINISHED -> RunAddValidationResult.error(RunAddValidationError.of(COMPETITION_FINISHED));
+            default -> RunAddValidationResult.success();
         };
     }
 

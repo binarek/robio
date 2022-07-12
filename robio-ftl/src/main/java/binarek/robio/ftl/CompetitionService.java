@@ -5,7 +5,7 @@ import binarek.robio.ftl.exception.CompetitionAlreadyStartedException;
 import binarek.robio.ftl.exception.CompetitionStartValidationException;
 import binarek.robio.ftl.model.Competition;
 import binarek.robio.ftl.model.Robot;
-import binarek.robio.ftl.validation.CompetitionStartValidation;
+import binarek.robio.ftl.validation.CompetitionStartValidationResult;
 import binarek.robio.ftl.validation.NotEnoughRobotsToStartCompetitionValidationError;
 import binarek.robio.shared.model.CompetitionId;
 import org.springframework.stereotype.Service;
@@ -57,36 +57,36 @@ public class CompetitionService {
     }
 
     private void validateIfCompetitionIsEligibleToStart(Competition competition) {
-        final var validations = new HashSet<CompetitionStartValidation>();
+        final var validations = new HashSet<CompetitionStartValidationResult>();
         final var robots = robotRepository.getByCompetitionId(competition.getCompetitionId());
 
         addCanStartCompetitionValidations(validations, competition, robots);
         addRobotsValidations(validations, robots);
 
-        final var finalValidation = CompetitionStartValidation.mergeValidations(validations);
-        if (!finalValidation.isSuccess()) {
+        final var finalValidation = CompetitionStartValidationResult.mergeValidations(validations);
+        if (finalValidation.isError()) {
             throw CompetitionStartValidationException.of(competition.getCompetitionId(), finalValidation);
         }
     }
 
-    private void addCanStartCompetitionValidations(Set<CompetitionStartValidation> validations, Competition competition, Collection<Robot> robots) {
+    private void addCanStartCompetitionValidations(Set<CompetitionStartValidationResult> validations, Competition competition, Collection<Robot> robots) {
         validations.add(canStartCompetitionValidation(competition, robots));
     }
 
-    private void addRobotsValidations(Set<CompetitionStartValidation> validations, Collection<Robot> robots) {
+    private void addRobotsValidations(Set<CompetitionStartValidationResult> validations, Collection<Robot> robots) {
         robots.stream()
                 .map(Robot::checkIsReadyToStartCompetition)
                 .forEach(validations::add);
     }
 
-    private CompetitionStartValidation canStartCompetitionValidation(Competition competition, Collection<Robot> robots) {
+    private CompetitionStartValidationResult canStartCompetitionValidation(Competition competition, Collection<Robot> robots) {
         final var minRobotsToStartCompetition = competition.getRules().getMinRobotsToStartCompetition();
         final var robotsNumber = robots.stream().filter(Robot::participatesInCompetition).count();
 
         if (robotsNumber < minRobotsToStartCompetition) {
-            return CompetitionStartValidation.error(NotEnoughRobotsToStartCompetitionValidationError.of(minRobotsToStartCompetition, robotsNumber));
+            return CompetitionStartValidationResult.error(NotEnoughRobotsToStartCompetitionValidationError.of(minRobotsToStartCompetition, robotsNumber));
         } else {
-            return CompetitionStartValidation.success();
+            return CompetitionStartValidationResult.success();
         }
     }
 }

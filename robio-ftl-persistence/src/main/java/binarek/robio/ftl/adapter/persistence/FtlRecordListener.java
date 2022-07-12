@@ -27,8 +27,9 @@ public class FtlRecordListener extends DefaultRecordListener {
 
     @Override
     public void insertStart(RecordContext ctx) {
-        final var username = callContextProvider.getContext().getUser().getUsername();
-        final var processName = callContextProvider.getContext().getProcessName();
+        final var callContext = callContextProvider.getContext();
+        final var username = callContext.getUser().getUsername();
+        final var processName = callContext.getProcessName();
         final var now = OffsetDateTime.now();
 
         final var record = ctx.record();
@@ -41,8 +42,9 @@ public class FtlRecordListener extends DefaultRecordListener {
 
     @Override
     public void updateStart(RecordContext ctx) {
-        final var username = callContextProvider.getContext().getUser().getUsername();
-        final var processName = callContextProvider.getContext().getProcessName();
+        final var callContext = callContextProvider.getContext();
+        final var username = callContext.getUser().getUsername();
+        final var processName = callContext.getProcessName();
         final var now = OffsetDateTime.now();
 
         final var record = ctx.record();

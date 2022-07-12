@@ -17,13 +17,11 @@ import static binarek.robio.ftl.adapter.persistence.db.tables.Competition.COMPET
 @Repository
 class CompetitionRepositoryImpl implements CompetitionRepository {
 
-    private final DSLContext dsl;
     private final CompetitionRecordsMapper mapper;
     private final AggregateRootEntityTableManager<CompetitionRecord> manager;
 
     CompetitionRepositoryImpl(@Qualifier(FtlBeanNames.DSL_CONTEXT) DSLContext dsl,
                               CompetitionRecordsMapper mapper) {
-        this.dsl = dsl;
         this.mapper = mapper;
         this.manager = new AggregateRootEntityTableManager<>(dsl, COMPETITION, COMPETITION.ID, COMPETITION.COMPETITION_ID);
     }

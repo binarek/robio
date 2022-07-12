@@ -1,9 +1,8 @@
 package binarek.robio.ftl.model;
 
-import binarek.robio.ftl.validation.CompetitionStartValidation;
-import binarek.robio.ftl.validation.RobotNotReadyToStartCompetitionValidationError;
-import binarek.robio.ftl.validation.RunAddValidation;
-import binarek.robio.ftl.validation.RunAddValidationError;
+import binarek.robio.ftl.validation.*;
+import binarek.robio.ftl.validation.CompetitionStartValidationResult;
+import binarek.robio.ftl.validation.RunAddValidationResult;
 import binarek.robio.ftl.view.RobotView;
 import binarek.robio.shared.model.CompetitionId;
 import binarek.robio.shared.model.RobotId;
@@ -37,19 +36,19 @@ public abstract class Robot implements RobotView {
         return getQualification() == RobotQualification.QUALIFIED;
     }
 
-    public final RunAddValidation checkCanAddRun() {
+    public final RunAddValidationResult checkCanAddRun() {
         return switch (getQualification()) {
-            case PENDING -> RunAddValidation.error(RunAddValidationError.of(ROBOT_QUALIFICATION_PENDING));
-            case DISQUALIFIED -> RunAddValidation.error(RunAddValidationError.of(ROBOT_DISQUALIFIED));
-            default -> RunAddValidation.success();
+            case PENDING -> RunAddValidationResult.error(RunAddValidationError.of(ROBOT_QUALIFICATION_PENDING));
+            case DISQUALIFIED -> RunAddValidationResult.error(RunAddValidationError.of(ROBOT_DISQUALIFIED));
+            default -> RunAddValidationResult.success();
         };
     }
 
-    public final CompetitionStartValidation checkIsReadyToStartCompetition() {
+    public final CompetitionStartValidationResult checkIsReadyToStartCompetition() {
         if (getQualification() == RobotQualification.PENDING) {
-            return CompetitionStartValidation.error(RobotNotReadyToStartCompetitionValidationError.of(getRobotId()));
+            return CompetitionStartValidationResult.error(RobotNotReadyToStartCompetitionValidationError.of(getRobotId()));
         } else {
-            return CompetitionStartValidation.success();
+            return CompetitionStartValidationResult.success();
         }
     }
 

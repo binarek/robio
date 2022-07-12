@@ -1,8 +1,10 @@
 package binarek.robio.ftl.adapter.persistence
 
+import binarek.robio.shared.CallContextProvider
 import binarek.robio.shared.RobioSharedPackage
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase
 import org.springframework.boot.test.context.TestConfiguration
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.TestPropertySource
@@ -22,5 +24,10 @@ import java.lang.annotation.Target
     @TestConfiguration
     @ComponentScan(basePackageClasses = [RobioSharedPackage, RobioFtlPersistencePackage])
     static class RequiredBeansConfiguration {
+
+        @Bean
+        CallContextProvider callContextProvider() {
+            return () -> CallContextFixture.callContext()
+        }
     }
 }

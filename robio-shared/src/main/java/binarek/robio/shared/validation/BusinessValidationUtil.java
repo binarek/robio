@@ -11,11 +11,11 @@ public final class BusinessValidationUtil {
     private BusinessValidationUtil() {
     }
 
-    public static <C, E extends BusinessValidationError<C>> Collection<E> mergeErrors(BusinessValidation<E>[] validations) {
+    public static <C, E extends BusinessValidationError<C>> Collection<E> mergeErrors(BusinessValidationResult<E>[] validations) {
         return mergeErrors(Arrays.asList(validations));
     }
 
-    public static <C, E extends BusinessValidationError<C>> Collection<E> mergeErrors(Collection<? extends BusinessValidation<E>> validations) {
+    public static <C, E extends BusinessValidationError<C>> Collection<E> mergeErrors(Collection<? extends BusinessValidationResult<E>> validations) {
         if (CollectionUtils.isEmpty(validations)) {
             return Set.of();
         }

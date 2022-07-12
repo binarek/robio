@@ -16,6 +16,7 @@ import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Subject
 
+import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
 import static binarek.robio.ftl.adapter.persistence.db.tables.Competition.COMPETITION
@@ -156,14 +157,26 @@ class CompetitionRepositoryIT extends Specification implements CompetitionFixtur
                         COMPETITION.RULES,
                         COMPETITION.INITIALIZE_DATE_TIME,
                         COMPETITION.START_DATE_TIME,
-                        COMPETITION.FINISH_DATE_TIME)
+                        COMPETITION.FINISH_DATE_TIME,
+                        COMPETITION.CREATED_AT,
+                        COMPETITION.CREATED_BY,
+                        COMPETITION.MODIFIED_AT,
+                        COMPETITION.MODIFIED_BY,
+                        COMPETITION.MODIFY_PROCESS,
+                )
                 .values(competition.competitionId.value,
                         competition.version ?: 1L,
                         competition.state.name(),
                         competitionRulesJson,
                         competition.initializeDateTime.value.toLocalDateTime(),
                         competition.startDateTime?.value?.toLocalDateTime(),
-                        competition.finishDateTime?.value?.toLocalDateTime())
+                        competition.finishDateTime?.value?.toLocalDateTime(),
+                        OffsetDateTime.parse('2021-08-01T07:15:32+01:00'),
+                        'testuser',
+                        OffsetDateTime.parse('2021-10-01T10:23:12+01:00'),
+                        'testuser',
+                        '/test-modify-process',
+                )
                 .execute()
     }
 

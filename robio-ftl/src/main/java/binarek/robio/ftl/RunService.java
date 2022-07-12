@@ -6,7 +6,7 @@ import binarek.robio.ftl.exception.RunAddValidationException;
 import binarek.robio.ftl.model.Competition;
 import binarek.robio.ftl.model.Robot;
 import binarek.robio.ftl.model.Run;
-import binarek.robio.ftl.validation.RunAddValidation;
+import binarek.robio.ftl.validation.RunAddValidationResult;
 import binarek.robio.ftl.validation.RunsLimitExceededValidationError;
 import binarek.robio.shared.model.CompetitionId;
 import binarek.robio.shared.model.RobotId;
@@ -53,26 +53,26 @@ public class RunService {
         final var competition = getCompetition(competitionId);
         final var robot = getRobot(competitionId, robotId);
 
-        final var finalValidation = RunAddValidation.mergeValidations(
+        final var finalValidation = RunAddValidationResult.mergeValidations(
                 competition.checkCanAddRun(),
                 robot.checkCanAddRun(),
                 checkIfAddRunMatchesRules(competition, robot));
 
-        if (!finalValidation.isSuccess()) {
+        if (finalValidation.isError()) {
             throw RunAddValidationException.of(competitionId, robotId, finalValidation);
         }
     }
 
-    private RunAddValidation checkIfAddRunMatchesRules(Competition competition, Robot robot) {
+    private RunAddValidationResult checkIfAddRunMatchesRules(Competition competition, Robot robot) {
         final var runLimitPerRobot = competition.getRules().getRunsLimitPerRobot();
         if (runLimitPerRobot != null) {
             final var robotRunsNumber = runRepository.countByCompetitionIdAndRobotId(robot.getCompetitionId(), robot.getRobotId());
 
             if (robotRunsNumber >= runLimitPerRobot) {
-                return RunAddValidation.error(RunsLimitExceededValidationError.of(robotRunsNumber));
+                return RunAddValidationResult.error(RunsLimitExceededValidationError.of(robotRunsNumber));
             }
         }
-        return RunAddValidation.success();
+        return RunAddValidationResult.success();
     }
 
     private Competition getCompetition(CompetitionId competitionId) {

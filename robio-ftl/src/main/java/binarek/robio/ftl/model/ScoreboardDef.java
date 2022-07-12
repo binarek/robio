@@ -6,7 +6,7 @@ import org.immutables.value.Value;
 
 import java.util.List;
 
-@Value.Immutable
+@Value.Immutable(builder = false)
 @ValueDefStyle
 abstract class ScoreboardDef implements ScoreboardView {
 
