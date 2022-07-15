@@ -6,6 +6,7 @@ public final class StringUtil {
     }
 
     public static boolean isTrimmed(String string) {
-        return string.length() == string.trim().length();
+        return string.length() == 0 ||
+                (!Character.isWhitespace(string.charAt(0)) && !Character.isWhitespace(string.charAt(string.length() - 1)));
     }
 }

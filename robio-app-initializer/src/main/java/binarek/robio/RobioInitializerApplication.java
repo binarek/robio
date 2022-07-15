@@ -12,6 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.io.Console;
 
+import static binarek.robio.shared.constraint.SharedConstraints.usernameConstraints;
+
 @SpringBootApplication
 public class RobioInitializerApplication implements CommandLineRunner {
 
@@ -66,7 +68,7 @@ public class RobioInitializerApplication implements CommandLineRunner {
     }
 
     private boolean invalidUsername(String username) {
-        return !username.isEmpty() && !Username.isValidUsername(username);
+        return !username.isEmpty() && !usernameConstraints().matchesAll(username);
     }
 
     private boolean invalidPassword(char[] password) {

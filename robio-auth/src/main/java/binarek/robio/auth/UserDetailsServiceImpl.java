@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import static binarek.robio.shared.constraint.SharedConstraints.usernameConstraints;
+
 @Service
 class UserDetailsServiceImpl implements UserDetailsService {
 
@@ -22,7 +24,7 @@ class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     private User getUser(String username) {
-        if (Username.isValidUsername(username)) {
+        if (usernameConstraints().matchesAll(username)) {
             return userRepository.getByUsername(Username.of(username))
                     .orElseThrow(() -> buildUsernameException(username));
         } else {
